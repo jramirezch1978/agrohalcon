@@ -27,3 +27,9 @@ Artículos citados en [25_referencias_mdpi](../25_referencias_mdpi.md). Todos so
 | [horticulturae9040489.pdf](horticulturae9040489.pdf) | Amaral, M.; McConchie, C.; Dickinson, G. et al. (2023). Growing Degree Day Targets for Fruit Development of Australian Mango Cultivars. *Horticulturae*, 9(4), 4 | https://doi.org/10.3390/horticulturae9040489 |
 | [plants9040510.pdf](plants9040510.pdf) | Mira-García, A.; Conejero, W.; Vera, J. et al. (2020). Leaf Water Relations in Lime Trees Grown under Shade Netting and Open-Air. *Plants*, 9(4), 510 | https://doi.org/10.3390/plants9040510 |
 | [foods14061002.pdf](foods14061002.pdf) | Li, X.; Huang, H.; Zhang, L. et al. (2025). Effect of Postharvest Storage Temperature and Duration on Tomato Fruit Quality. *Foods*, 14(6), 1002 | https://doi.org/10.3390/foods14061002 |
+
+## Otros papers (recomendados por el mentor)
+
+| PDF | Cita | Fuente |
+|---|---|---|
+| [galvis_mango_van_dyke.pdf](galvis_mango_van_dyke.pdf) | Galvis, J. A.; Arjona, H.; Fischer, G.; Landwehr, T.; Martínez, R. Influencia de la temperatura y el tiempo de almacenamiento en la conservación del fruto de mango (*Mangifera indica* L.) variedad Van Dyke. *Agronomía Colombiana* | Descargado por Jhonny desde [ResearchGate](https://www.researchgate.net/publication/256487172). ⚠️ Revista académica de acceso abierto (Universidad Nacional de Colombia); **confirmar la licencia** antes de la entrega |
