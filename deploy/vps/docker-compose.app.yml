@@ -1,0 +1,52 @@
+# Aplicacion AllpaShift (deploy.bat backend | frontend | all | <servicio>)
+name: allpashift
+
+services:
+  api-gateway:
+    image: ${IMAGE_REGISTRY:-allpashift}/api-gateway:${IMAGE_TAG:-latest}
+    container_name: allpashift-api-gateway
+    restart: unless-stopped
+    environment:
+      AGRO_SERVICE_URL: http://agro-service:8081
+      CLIMATE_SERVICE_URL: http://climate-service:8000
+    depends_on:
+      - agro-service
+      - climate-service
+    networks: [allpashift_net]
+
+  agro-service:
+    image: ${IMAGE_REGISTRY:-allpashift}/agro-service:${IMAGE_TAG:-latest}
+    container_name: allpashift-agro-service
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://allpashift-postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      CLIMATE_SERVICE_URL: http://climate-service:8000
+      TZ: America/Lima
+    networks: [allpashift_net]
+
+  climate-service:
+    image: ${IMAGE_REGISTRY:-allpashift}/climate-service:${IMAGE_TAG:-latest}
+    container_name: allpashift-climate-service
+    restart: unless-stopped
+    environment:
+      EARTHDATA_TOKEN: ${EARTHDATA_TOKEN:-}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@allpashift-postgres:5432/${POSTGRES_DB}
+      TZ: America/Lima
+    networks: [allpashift_net]
+
+  frontend:
+    image: ${IMAGE_REGISTRY:-allpashift}/frontend:${IMAGE_TAG:-latest}
+    container_name: allpashift-frontend
+    restart: unless-stopped
+    ports:
+      - "${PUBLIC_HTTP_PORT:-80}:80"
+    depends_on:
+      - api-gateway
+    networks: [allpashift_net]
+
+networks:
+  allpashift_net:
+    external: true
+    name: allpashift_net
