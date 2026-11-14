@@ -1,67 +1,63 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { estado, irA, type Ruta } from './estado'
-import { t } from './i18n'
-import Mapa from './vistas/Mapa.vue'
-import QueHago from './vistas/QueHago.vue'
-import QueSiembro from './vistas/QueSiembro.vue'
-import Funciona from './vistas/Funciona.vue'
-import Ayuda from './vistas/Ayuda.vue'
-import Asistente from './componentes/Asistente.vue'
-import Icono from './componentes/Icono.vue'
+import { computed, watchEffect } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
+import AssistantFab from '@/components/assistant/AssistantFab.vue'
+import AssistantSheet from '@/components/assistant/AssistantSheet.vue'
+import AppToasts from '@/components/layout/AppToasts.vue'
+import BottomNav from '@/components/layout/BottomNav.vue'
+import DataModeBanner from '@/components/layout/DataModeBanner.vue'
+import SideBar from '@/components/layout/SideBar.vue'
+import TopBar from '@/components/layout/TopBar.vue'
+import { useAppStore } from '@/stores/app'
+import { useAsistenteStore } from '@/stores/asistente'
 
-const menu = computed(() => [
-  { r: 'campana' as Ruta, txt: t('queHago'), ico: 'sol' },
-  { r: 'siembro' as Ruta, txt: t('queSiembro'), ico: 'brote' },
-  { r: 'mapa' as Ruta, txt: t('mapa'), ico: 'mapa' },
-  { r: 'funciona' as Ruta, txt: t('funciona'), ico: 'check' },
-  { r: 'ayuda' as Ruta, txt: t('ayuda'), ico: 'ayuda' },
-])
-const parcelaCorta = computed(() => estado.parcela.nombre.split(',')[0])
+const route = useRoute()
+const store = useAppStore()
+const chat = useAsistenteStore()
+const { t } = useI18n()
+const conNav = computed(() => !route.meta.sinNav)
+const completa = computed(() => !!route.meta.completa)
+const conFab = computed(() => !!route.meta.fabAsistente && !!store.parcela)
+
+watchEffect(() => {
+  const clave = route.meta.titulo as string | undefined
+  document.title = clave ? `${t(clave)} · AllpaShift` : 'AllpaShift'
+})
 </script>
 
 <template>
-  <div class="app">
-    <aside class="lateral">
-      <div class="marca">
-        <img src="/favicon.png" alt="" />
-        <div>
-          <b>AllpaShift</b>
-          <small>{{ t('sub') }}</small>
-        </div>
-      </div>
-      <nav>
-        <a v-for="m in menu" :key="m.r" :class="{ activo: estado.ruta === m.r }" :href="'#/' + m.r">
-          <Icono :n="m.ico" /> {{ m.txt }}
-        </a>
-      </nav>
-      <div class="lateral-pie">
-        <button class="parcela-chip" :title="estado.parcela.nombre" @click="irA('mapa')">
-          <Icono n="pin" /> <span>{{ parcelaCorta }}</span> <Icono n="abajo" />
-        </button>
-        <div class="ajustes">
-          <div class="idioma">
-            <button :class="{ on: estado.idioma === 'es' }" @click="estado.idioma = 'es'">ES</button>
-            <button :class="{ on: estado.idioma === 'en' }" @click="estado.idioma = 'en'">EN</button>
-          </div>
-          <button class="tema" :aria-label="estado.tema === 'oscuro' ? 'Modo claro' : 'Modo oscuro'" @click="estado.tema = estado.tema === 'oscuro' ? 'claro' : 'oscuro'">
-            <Icono :n="estado.tema === 'oscuro' ? 'sol' : 'luna'" />
-          </button>
-        </div>
-      </div>
-    </aside>
+  <div class="min-h-dvh">
+    <!-- Aviso fijo si hay datos de ejemplo en pantalla + avisos al cambiar de fuente -->
+    <DataModeBanner />
+    <AppToasts />
+    <template v-if="conNav">
+      <SideBar />
+      <TopBar />
+      <BottomNav />
+    </template>
+    <div :class="conNav && 'lg:pl-72'">
+      <main
+        :class="
+          completa
+            ? 'relative'
+            : conNav
+              ? ['mx-auto max-w-5xl px-4 pt-3 sm:px-6 lg:px-10 lg:pt-10', conFab ? 'pb-48 lg:pb-32' : 'pb-32 lg:pb-12']
+              : ''
+        "
+      >
+        <RouterView v-slot="{ Component }">
+          <Transition name="page" mode="out-in">
+            <component :is="Component" :key="route.path" />
+          </Transition>
+        </RouterView>
+      </main>
+    </div>
 
-    <main class="contenido">
-      <Mapa v-if="estado.ruta === 'mapa'" />
-      <QueHago v-else-if="estado.ruta === 'campana'" />
-      <QueSiembro v-else-if="estado.ruta === 'siembro'" />
-      <Funciona v-else-if="estado.ruta === 'funciona'" />
-      <Ayuda v-else />
-    </main>
-
-    <button v-if="estado.ruta !== 'mapa'" class="flotante" @click="estado.asistenteAbierto = !estado.asistenteAbierto">
-      <span class="flotante-ico"><Icono n="chispa" /></span> {{ t('pregunta') }}
-    </button>
-    <Asistente v-if="estado.asistenteAbierto" />
+    <!-- Asistente: botón flotante en /hoy y /campana, panel disponible en toda la app -->
+    <Transition enter-from-class="scale-75 opacity-0" leave-to-class="scale-75 opacity-0" enter-active-class="transition duration-300" leave-active-class="transition duration-150">
+      <AssistantFab v-if="conFab && !chat.panelAbierto" />
+    </Transition>
+    <AssistantSheet />
   </div>
 </template>

@@ -1,14 +1,12 @@
+import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import tailwindcss from '@tailwindcss/vite'
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue()],
-  server: {
-    proxy: {
-      // Igual que nginx.conf: ERDDAP (MUR SST) no permite CORS
-      '/nasa/erddap': { target: 'https://coastwatch.pfeg.noaa.gov', changeOrigin: true, rewrite: (p) => p.replace(/^\/nasa\/erddap/, '/erddap') },
-      '/api': { target: 'http://2.29.101.199', changeOrigin: true },
-    },
+  plugins: [vue(), tailwindcss()],
+  resolve: {
+    alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
   },
+  server: { host: true, port: 5173 },
 })
