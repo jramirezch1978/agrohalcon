@@ -15,6 +15,8 @@ from typing import Any, Literal
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from . import historico
+from . import maquina_tiempo as maquina
 from . import nasa_cliente as nasa
 from .crops import DatosInvalidos
 from .indicators import calcular_indicadores
@@ -274,31 +276,32 @@ def indicadores_punto(req: PuntoRequest) -> dict[str, Any]:
 
 @router.post("/validacion", summary="Máquina del tiempo: qué habría dicho AllpaShift ese año")
 def validacion(req: ValidacionRequest) -> dict[str, Any]:
+    """Lluvia (GPM IMERG en Piura, si no NASA POWER) + señal del mar (MUR SST semanal; antes de 2016, NOAA CPC mensual).
+    Cambia el aviso a la señal más temprana y calcula las semanas de anticipación (ver app/maquina_tiempo.py)."""
+    imerg = historico.lluvia_imerg(req.lat, req.lon, req.anio)
     try:
-        serie = nasa.mensual(req.lat, req.lon, req.anio)
-        clim = nasa.climatologia(req.lat, req.lon)
+        power, clim = nasa.mensual(req.lat, req.lon, req.anio), nasa.climatologia(req.lat, req.lon)
     except Exception as e:  # noqa: BLE001
-        raise HTTPException(status_code=503, detail=f"NASA POWER no respondió: {e}") from e
-    dias = [31, 29 if req.anio % 4 == 0 else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-    valores = [None if v is None else round(v * dias[m], 1) for m, v in enumerate(serie["PRECTOTCORR"])]
-    normal = [round(clim["PRECTOTCORR"][m] * dias[m], 1) for m in range(12)]
-    hum = [None if v is None else round(v, 2) for v in serie["GWETROOT"]]
-    hum_n = [round(v, 2) for v in clim["GWETROOT"]]
-    con_dato = [m for m in range(12) if valores[m] is not None]
-    mmax = max(con_dato, key=lambda m: valores[m]) if con_dato else None
+        if imerg is None:  # sin IMERG y sin POWER no hay serie de lluvia que mostrar
+            raise HTTPException(status_code=503, detail=f"NASA POWER no respondió: {e}") from e
+        power = clim = None  # con IMERG se responde igual, sin la serie de humedad
+    if imerg:
+        valores, normal, fuente = imerg["valores"], imerg["normal"], "GPM IMERG"
+        lluvia = {"unidad": "mm/mes", "fuente": fuente, "valores": valores, "normal": normal, "producto": imerg["producto"],
+                  "punto": imerg["punto"], "normalPeriodo": imerg["normalPeriodo"]}  # fmt: skip
+    else:
+        valores, normal = maquina.serie_power(power, clim, req.anio)
+        fuente = "NASA POWER"
+        lluvia = {"unidad": "mm/mes", "fuente": fuente, "valores": valores, "normal": normal, "producto": "POWER PRECTOTCORR"}
+    series: dict[str, Any] = {"lluvia": lluvia}
+    if power is not None:
+        series["humedadSuelo"] = {"unidad": "fracción 0-1", "fuente": "NASA POWER", "producto": "POWER GWETROOT",
+                                  "valores": [None if v is None else round(v, 2) for v in power["GWETROOT"]], "normal": [round(v, 2) for v in clim["GWETROOT"]]}  # fmt: skip
+
+    c = maquina.combinar(req.anio, valores, normal, fuente, req.lat, req.lon)
     alerta = None
-    for m in con_dato:
-        v, n = valores[m], normal[m]
-        if v > max(3 * n, 30):
-            fecha = f"{req.anio}-{m + 1:02d}-15"
-            motivo = f"En {MES_NOMBRE[m]} llovieron {v:.0f} mm frente a {n:.0f} mm normales ({v / max(n, 1):.1f} veces)"
-            alerta = {"fecha": fecha, "accion": "Preparar drenaje y no sembrar en zonas bajas", "motivo": motivo, "indicador": "lluvia",
-                      "nivel": "alto", "valor": v, "fuente": "NASA POWER", "alertaDrenaje": {"fecha": fecha, "valor": v, "fuente": "NASA POWER"},
-                      "nota": "Alerta calculada con la lluvia mensual de NASA POWER"}
-            break
-    semanas = None
-    if alerta and mmax is not None:
-        semanas = max(0, (date(req.anio, mmax + 1, 15) - date.fromisoformat(alerta["fecha"])).days // 7)
+    if c["primera"]:
+        alerta = {**c["primera"], "alertaDrenaje": ({"fecha": c["drenaje"]["fecha"], "valor": c["drenaje"]["valor"], "fuente": c["drenaje"]["fuente"]} if c["drenaje"] else None)}
     evento = next(({"nombre": e.nombre, "inicio": e.inicio.strftime("%Y-%m"), "fin": (e.fin or date.today()).strftime("%Y-%m")}
                    for e in req.eventos if e.inicio.year <= req.anio <= (e.fin or date.today()).year), None)
     realidad = {
@@ -306,17 +309,13 @@ def validacion(req: ValidacionRequest) -> dict[str, Any]:
         1998: {"resumen": "El Niño 1997-98 fue extraordinario: lluvias de hasta 16 mm/día en enero en Piura.", "fuente": "ENFEN"},
         2023: {"resumen": "El Niño costero de 2023 trajo calor y lluvias que afectaron mango y uva.", "fuente": "ENFEN"},
     }.get(req.anio)
-    previa = ({"tipo": "preparar drenaje", "accion": "Preparar drenaje y adelantar la cosecha", "motivo": alerta["motivo"], "fuente": "NASA POWER"}
-              if alerta else {"tipo": "sembrar", "accion": "Sembrar con normalidad", "motivo": "La lluvia del año estuvo dentro de lo normal", "fuente": "NASA POWER"})
-    mes_max = f"{req.anio}-{mmax + 1:02d}" if mmax is not None else None
     return {
-        "anio": req.anio, "lat": req.lat, "lon": req.lon, "evento": evento,
-        "series": {"lluvia": {"unidad": "mm/mes", "fuente": "NASA POWER", "valores": valores, "normal": normal, "producto": "POWER PRECTOTCORR"},
-                   "humedadSuelo": {"unidad": "fracción 0-1", "fuente": "NASA POWER", "valores": hum, "normal": hum_n, "producto": "POWER GWETROOT"}},
-        "alerta": alerta, "mesLluviaMaxima": mes_max, "semanasAnticipacion": semanas, "realidad": realidad, "recomendacionPrevia": previa,
-        "resumen": (f"AllpaShift habría dado la alerta el {alerta['fecha']}, {semanas} semanas antes del mes más lluvioso ({mes_max})."
-                    if alerta else "Ese año la lluvia no superó el umbral de alerta."),
-    }
+        "anio": req.anio, "lat": req.lat, "lon": req.lon, "evento": evento, "series": series,
+        "alerta": alerta, "mesLluviaMaxima": f"{req.anio}-{c['pico']:02d}" if c["pico"] else None, "semanasAnticipacion": c["semanas"],
+        "realidad": realidad, "recomendacionPrevia": maquina.recomendacion_previa(c), "resumen": maquina.resumen(req.anio, c),
+        # (extras opcionales) todos los avisos que se habrían dado y las semanas que da cada uno
+        "alertas": c["alertas"], "semanasAnticipacionDrenaje": c["semanasDrenaje"],
+    }  # fmt: skip
 
 
 def _datos_para_guardar(lat: float, lon: float, d: dict[str, Any]) -> list[dict[str, Any]]:

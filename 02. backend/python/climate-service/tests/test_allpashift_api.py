@@ -144,10 +144,10 @@ def test_con_noaa_en_vivo_no_hay_aviso_de_respaldo(cliente, nasa_falsa):
 
 def test_respaldo_real_solo_vale_en_la_costa_y_si_no_esta_vencido():
     archivo = json.loads(nasa_cliente.RESPALDO_NINO12.read_text(encoding="utf-8"))
-    ultima = max(archivo["semanas"], key=lambda s: s["semana"])
-    dia = date.fromisoformat(ultima["semana"])
+    semana, _, anomalia = max(archivo["mur"]["semanas"], key=lambda s: s[0])
+    dia = date.fromisoformat(semana)
     r = nasa_cliente.sst_respaldo(-5.19, -80.63, hoy=dia + timedelta(days=10))
-    assert r and r["semana"] == ultima["semana"] and r["anomalia"] == ultima["anomalia"]
+    assert r and r["semana"] == semana and r["anomalia"] == anomalia
     assert nasa_cliente.sst_respaldo(-5.19, -80.63, hoy=dia + timedelta(days=6 + nasa_cliente.MAX_DIAS_RESPALDO + 1)) is None  # vencido
     assert nasa_cliente.sst_respaldo(-5.19, -80.63, hoy=dia + timedelta(days=6 + nasa_cliente.MAX_DIAS_RESPALDO)) is not None  # justo en el límite
     assert nasa_cliente.sst_respaldo(-7.0, -70.0, hoy=dia) is None  # selva: El Niño costero no aplica
@@ -209,24 +209,69 @@ def test_indicadores_punto_da_el_nivel_del_peor_indicador(cliente, nasa_falsa):
 
 
 # ------------------------------------------------------------------ POST /validacion (máquina del tiempo)
-def test_validacion_2017_da_alerta_y_semanas_de_anticipacion(cliente, nasa_falsa):
-    r = cliente.post("/validacion", json={"anio": 2017, "lat": -5.19, "lon": -80.63,
-                                           "eventos": [{"nombre": "El Niño costero 2017", "inicio": "2017-01-01", "fin": "2017-04-30"}]})
-    assert r.status_code == 200, r.text
-    v = r.json()
+PIURA, TUMBES = (-5.19, -80.63), (-3.57, -80.45)  # Piura tiene punto IMERG; Tumbes cae fuera y usa NASA POWER
+
+
+def validar(cliente, anio, punto, **extra):
+    return cliente.post("/validacion", json={"anio": anio, "lat": punto[0], "lon": punto[1], **extra}).json()
+
+
+def test_validacion_2017_en_piura_avisa_semanas_antes_con_el_mar_y_la_lluvia_de_imerg(cliente, nasa_falsa):
+    v = validar(cliente, 2017, PIURA, eventos=[{"nombre": "El Niño costero 2017", "inicio": "2017-01-01", "fin": "2017-04-30"}])
     assert v["anio"] == 2017 and v["evento"]["nombre"].startswith("El Niño")
-    assert len(v["series"]["lluvia"]["valores"]) == len(v["series"]["lluvia"]["normal"]) == 12
-    assert v["series"]["lluvia"]["fuente"] == "NASA POWER"
-    assert v["alerta"]["indicador"] == "lluvia" and v["alerta"]["fecha"] == "2017-03-15" and v["alerta"]["nivel"] == "alto"
-    assert v["mesLluviaMaxima"] == "2017-03"
-    assert v["realidad"]["fuente"] == "INDECI / SENASA"
-    assert v["recomendacionPrevia"]["tipo"] == "preparar drenaje" and v["resumen"]
+    ll = v["series"]["lluvia"]
+    assert ll["fuente"] == "GPM IMERG" and ll["punto"]["id"] == "piura" and len(ll["valores"]) == len(ll["normal"]) == 12
+    assert ll["valores"][2] > 500 and ll["valores"][2] > 4 * ll["normal"][2]  # marzo de 2017: más de 4 veces su normal
+    assert v["series"]["humedadSuelo"]["fuente"] == "NASA POWER"
+    # primer aviso: el mar (MUR SST, NASA), semanas antes de la lluvia; el drenaje se pide con la señal ALTA
+    a = v["alerta"]
+    assert (a["indicador"], a["nivel"], a["fecha"], a["fuente"]) == ("elNino", "medio", "2016-12-11", "MUR SST")
+    assert a["alertaDrenaje"] == {"fecha": "2017-01-22", "valor": 1.85, "fuente": "MUR SST"}
+    assert v["mesLluviaMaxima"] == "2017-03" and v["semanasAnticipacion"] == 11 and v["semanasAnticipacionDrenaje"] == 5
+    assert [(x["indicador"], x["nivel"], x["fecha"]) for x in v["alertas"]] == [("elNino", "medio", "2016-12-11"), ("elNino", "alto", "2017-01-22"), ("lluvia", "alto", "2017-02-28")]
+    assert v["realidad"]["fuente"] == "INDECI / SENASA" and v["recomendacionPrevia"]["tipo"] == "preparar drenaje"
+    assert "11 semanas" in v["resumen"] and "5 semanas" in v["resumen"] and "2017-01-22" in v["resumen"]
 
 
-def test_validacion_de_un_anio_normal_no_inventa_alerta(cliente, nasa_falsa):
-    v = cliente.post("/validacion", json={"anio": 2019, "lat": -5.19, "lon": -80.63}).json()
-    assert v["alerta"] is None and v["semanasAnticipacion"] is None and v["evento"] is None
-    assert v["recomendacionPrevia"]["tipo"] == "sembrar"
+def test_la_lluvia_extrema_se_fecha_al_ultimo_dia_del_mes_porque_antes_no_se_conoce(cliente, nasa_falsa):
+    v = validar(cliente, 2017, TUMBES)  # sin IMERG: NASA POWER (marzo de 2017 con 14,2 mm/día)
+    llu = next(x for x in v["alertas"] if x["indicador"] == "lluvia")
+    assert llu["fecha"] == "2017-03-31" and llu["fuente"] == "NASA POWER" and v["series"]["lluvia"]["fuente"] == "NASA POWER"
+    assert v["alerta"]["fecha"] == "2016-12-11" and v["semanasAnticipacion"] == 11  # el mar sigue avisando antes que la lluvia
+
+
+def test_antes_de_2016_la_senal_del_mar_viene_de_noaa_y_lo_dice(cliente, nasa_falsa):
+    a = validar(cliente, 1998, TUMBES)["alerta"]
+    assert a["fuente"] == "NOAA CPC Niño 1+2" and a["fecha"] == "1997-12-31" and "no es NASA" in a["nota"] and "promedio mensual" in a["motivo"]
+
+
+def test_un_anio_sin_senales_no_inventa_alerta(cliente, nasa_falsa):
+    v = validar(cliente, 2014, TUMBES)
+    assert v["alerta"] is None and v["alertas"] == [] and v["semanasAnticipacion"] is None and v["evento"] is None
+    assert v["recomendacionPrevia"]["tipo"] == "sembrar" and "no superaron" in v["resumen"]
+
+
+def test_una_falsa_alarma_del_mar_pide_vigilar_no_drenar_y_no_cuenta_semanas(cliente, nasa_falsa):
+    """2019: el mar llegó a nivel medio (+1,4 °C) y no hubo lluvia extrema ni señal alta."""
+    v = validar(cliente, 2019, TUMBES)
+    assert v["alerta"]["nivel"] == "medio" and v["alerta"]["alertaDrenaje"] is None
+    assert v["semanasAnticipacion"] is None and v["recomendacionPrevia"]["tipo"] == "esperar" and "falsa alarma" in v["resumen"]
+
+
+def test_sin_nasa_power_piura_responde_con_imerg_y_fuera_de_piura_da_503(cliente, nasa_falsa, monkeypatch):
+    def cae(*a, **k):
+        raise RuntimeError("sin red")
+
+    monkeypatch.setattr(nasa_cliente, "mensual", cae)
+    v = cliente.post("/validacion", json={"anio": 2017, "lat": PIURA[0], "lon": PIURA[1]})
+    assert v.status_code == 200 and "humedadSuelo" not in v.json()["series"] and v.json()["semanasAnticipacion"] == 11
+    assert cliente.post("/validacion", json={"anio": 2017, "lat": TUMBES[0], "lon": TUMBES[1]}).status_code == 503
+
+
+def test_en_la_selva_no_aplica_la_senal_del_mar_solo_la_lluvia(cliente, nasa_falsa):
+    v = validar(cliente, 2017, (-6.03, -76.97))  # Alto Mayo, Moyobamba
+    assert [a["indicador"] for a in v["alertas"]] == ["lluvia"] and v["alerta"]["indicador"] == "lluvia"
+    assert v["alerta"]["fecha"] == "2017-03-31" and v["semanasAnticipacion"] == 0  # la lluvia avisa al terminar marzo: nada que anticipar
 
 
 # ------------------------------------------------------------------ funciones puras

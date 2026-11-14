@@ -19,9 +19,9 @@ import httpx
 
 POWER = "https://power.larc.nasa.gov/api/temporal"
 ERDDAP = "https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41anom1day.json"
-# Respaldo de El Niño si el ERDDAP de NOAA no responde: últimas semanas de MUR SST en la caja Niño 1+2 (datos de Sheila).
-# Vive dentro de app/ para viajar en la imagen de Docker. Se regenera con `python -m etl.respaldo_nino12`.
-RESPALDO_NINO12 = Path(__file__).resolve().parent / "datos_respaldo" / "mur_nino12_semanal.json"
+# Respaldo de El Niño si el ERDDAP de NOAA no responde: la serie semanal de MUR SST en la caja Niño 1+2 (datos de Sheila).
+# Vive dentro de app/ para viajar en la imagen de Docker. Se regenera con `python -m etl.respaldo_validacion`.
+RESPALDO_NINO12 = Path(__file__).resolve().parent / "datos_respaldo" / "nino12_historico.json"
 MAX_DIAS_RESPALDO = 21  # más viejo que esto ya no es "el estado actual": mejor no mostrar El Niño que mostrar uno viejo
 MESES = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
 _cache: dict[str, tuple[float, Any]] = {}
@@ -101,14 +101,13 @@ def sst_respaldo(lat: float, lon: float, hoy: date | None = None) -> dict[str, A
     if lon > -78 or lat < -20 or lat > 5:
         return None
     try:
-        semanas = json.loads(RESPALDO_NINO12.read_text(encoding="utf-8"))["semanas"]
-        ultima = max((s for s in semanas if s.get("anomalia") is not None), key=lambda s: s["semana"])
-    except (OSError, ValueError, KeyError):
+        semana, sst, anomalia = max(json.loads(RESPALDO_NINO12.read_text(encoding="utf-8"))["mur"]["semanas"], key=lambda s: s[0])
+    except (OSError, ValueError, KeyError, TypeError):
         return None
-    fin_semana = date.fromisoformat(ultima["semana"]) + timedelta(days=6)
+    fin_semana = date.fromisoformat(semana) + timedelta(days=6)
     if ((hoy or date.today()) - fin_semana).days > MAX_DIAS_RESPALDO:
         return None
-    return {"anomalia": float(ultima["anomalia"]), "sst": ultima.get("sst"), "semana": ultima["semana"], "dias": ultima.get("dias")}
+    return {"anomalia": float(anomalia), "sst": sst, "semana": semana, "dias": None}
 
 
 def mensual(lat: float, lon: float, anio: int) -> dict[str, list[float | None]]:
