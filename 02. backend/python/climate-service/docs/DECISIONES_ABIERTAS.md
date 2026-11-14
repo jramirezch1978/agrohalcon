@@ -95,11 +95,19 @@ Reglas del equipo: *“Después de aprobar el contrato nadie cambia un campo sin
 23. **IMERG y MUR Niño 1+2 los bajó Sheila (con su cuenta de Earthdata), no David.** Están en la base (`en_uso`) y en *References* hay que decirlo así: el token de David sigue sin poder leer IMERG (punto 18).
     Contraste real: MUR vs NOAA CPC en Niño 1+2 **r = 0,987** (126 meses); IMERG vs POWER en lluvia mensual **r = 0,69-0,91** (297 meses). IMERG llueve más que POWER (+0,2 a +1,0 mm/día): en marzo de 2017 (Bajo Piura)
     IMERG dio 6,1 veces su normal y POWER 8,6 veces la suya. **Nunca mezclar valores de las dos fuentes; comparar anomalías de la misma fuente.**
-24. **Respaldo de El Niño dentro del servicio** (`app/datos_respaldo/mur_nino12_semanal.json`): si el ERDDAP de NOAA no responde, se usa la última semana de MUR SST (caja Niño 1+2) siempre que tenga ≤ 21 días; el indicador lo avisa en `aviso`
-    y conserva `fuente = "MUR SST"`. La serie de Sheila llega hasta la semana del **2026-11-09**: vence alrededor del 30-nov-2026. Para renovarlo: que Sheila corra `scripts.descargar_mur_sst --actualizar` y luego `python -m etl.respaldo_nino12`.
+24. **Respaldo de El Niño dentro del servicio** (`app/datos_respaldo/nino12_historico.json`): si el ERDDAP de NOAA no responde, se usa la última semana de MUR SST (caja Niño 1+2) siempre que tenga ≤ 21 días; el indicador lo avisa en `aviso`
+    y conserva `fuente = "MUR SST"`. La serie de Sheila llega hasta la semana del **2026-11-09**: vence alrededor del 30-nov-2026. Para renovarlo: que Sheila corra `scripts.descargar_mur_sst --actualizar` y luego `python -m etl.respaldo_validacion`.
 25. **Hay dos esquemas de PostgreSQL**: el de David (`db/postgres/01_schema.sql`, modelo en estrella, para pruebas locales y el panel) y el de Jhonny (`04. base de datos/ddl/00-schema.sql`, el que lee y graba Java). **El oficial es el de Jhonny.**
     `db/export_allpashift.py` lleva los datos reales a sus tablas (`seed/02-datos-nasa.sql`); verificado en PostgreSQL 16.2 real. `database-deploy.bat` aún no ejecuta ese archivo (línea para agregar en `REVISION_CALCULOS_SHEILA.md`, sección 6).
 26. **`feature/frontend-sheila` duplica `03. frontend/`** (solo cambian el renombre AgroShift → AllpaShift y un `||` por `??`): no abrir ese Pull Request. `calculos/` queda en la raíz del repositorio; se sugiere moverla a `02. backend/python/calculos-sheila/`.
+
+27. **Asistente de IA: Groq con `openai/gpt-oss-20b`, llamado desde Python (decisión del equipo, 14-nov).** Licencia Apache 2.0; la clave `GROQ_API_KEY` solo en el servidor porque el repositorio es público.
+    Implementado en `climate-service`: `POST /asistente/preguntar` (Groq → validación sin IA → Plan B), `GET /asistente/estado`, límites de preguntas y 18 pruebas con un transporte simulado. **No se probó contra Groq real: no hay clave.**
+    ⚠ La rama `feature/integracion-sheila` pone el asistente con Groq **en Java** (`GroqClient.java`, `GROQ_API_KEY` en `agro-service`): hay que elegir un solo lugar. Si queda en Python, Java solo llama a `/asistente/preguntar` y no necesita la clave.
+28. **Máquina del tiempo con la señal del mar (`/validacion`).** Antes el aviso de 2017 salía el 15-mar con **0 semanas** de anticipación (solo miraba la lluvia mensual de POWER). Ahora usa el primer aviso entre el mar y la lluvia:
+    en Piura 2017, **MUR SST (NASA) pasó a nivel medio el 11-dic-2016 (11 semanas antes del mes más lluvioso) y a nivel alto el 22-ene-2017 (5 semanas antes)**; la lluvia de IMERG llegó a 3 veces lo normal recién al terminar febrero.
+    Solo cuenta como anticipación si la lluvia extrema realmente ocurrió. ⚠ **El nivel medio de MUR se activa también en años sin inundación** (2018, 2019, 2020, 2021, 2022: falsas alarmas; la base climática de MUR 2003-2014 da +0,4 °C más que la de NOAA 1991-2020),
+    por eso solo el nivel **alto** pide drenar (en 2018-2022 nunca llegó a alto). Antes de 2016 se usa el índice mensual de NOAA CPC (no es NASA) y llega con 0-1 semanas (1998). Datos dentro de `app/datos_respaldo/` (MUR, CPC, IMERG de Piura).
 
 ## D. References / documentos de entrega (de `python -m etl.verificar_enlaces`)
 

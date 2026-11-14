@@ -65,7 +65,7 @@ No se cambió ningún umbral: es una decisión del equipo (afecta lo que ve el a
    Tambogrande, Huancabamba); los otros seis se guardan como zonas de *referencia* (ids 201-206), sin inventarles valle.
    `fuente_dato`: IMERG pasa a `en_uso`, con la nota de que **lo bajó Sheila, no David** (el token de David sigue bloqueado por el acuerdo de GES DISC).
 2. **MUR SST, caja Niño 1+2, semanal 2016-05…2026-11** → `indice_climatico` (`MUR_NINO12`, `MUR_NINO12_ANOM`, 1 092 filas).
-3. **Respaldo de El Niño en el servicio** (`app/datos_respaldo/mur_nino12_semanal.json`, 26 semanas). El indicador en vivo usa el ERDDAP de
+3. **Respaldo de El Niño en el servicio** (`app/datos_respaldo/nino12_historico.json`: MUR semanal 2016-2026 y NOAA CPC mensual 1982-2026). El indicador en vivo usa el ERDDAP de
    NOAA, que **no responde desde la red de David** (y puede fallar en el VPS): sin respaldo la tarjeta de El Niño desaparecía de la app.
    Ahora, si NOAA falla y la última semana tiene ≤ 21 días, se usa ese dato y el indicador lo dice en `aviso`
    (la fuente sigue siendo `MUR SST`, que es lo que el frontend reconoce). Probado en vivo: `POST /indicadores-punto` da El Niño **alto, +6,0 °C**.
