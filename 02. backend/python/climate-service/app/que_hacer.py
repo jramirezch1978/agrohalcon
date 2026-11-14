@@ -42,6 +42,12 @@ def construir_que_hacer(
         )
         # En una inundación el dato que respalda la decisión es la lluvia, aunque otro indicador empate
         nombre, dominante = "lluvia", ind.lluvia
+    elif ind.elNino.valor >= T.EL_NINO_EXTREMO_C:
+        accion = (
+            "Señal de El Niño extraordinaria: sigue los avisos de ENFEN y consulta a un técnico agrario antes de sembrar. "
+            f"Si debes sembrar, la opción menos riesgosa es {mejor.resultado.nombre}"
+        )
+        nombre, dominante = "elNino", ind.elNino
     elif mejor.resultado.riesgo == "alto":
         accion = (
             f"Riesgo alto en todas las rotaciones; la menos riesgosa es {mejor.resultado.nombre}. "

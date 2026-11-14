@@ -4,10 +4,17 @@ Regla única: anomalía = valor actual frente al normal histórico de esa zona y
 nivel = bajo / medio / alto según el tamaño de la anomalía (umbrales en thresholds.py).
 """
 
+from decimal import ROUND_HALF_UP, Decimal
+
 from . import thresholds as T
 from .schemas import Indicador, IndicadoresRequest, IndicadoresResponse, Nivel
 
 ETIQUETA = {"lluvia": "La lluvia", "humedadSuelo": "La humedad del suelo"}
+
+
+def fmt1(x: float) -> str:
+    """Un decimal con redondeo 'de escuela' (5,25 -> 5,3), no el de Python (5,25 -> 5,2)."""
+    return str(Decimal(str(round(x, 6))).quantize(Decimal("0.1"), rounding=ROUND_HALF_UP))
 
 
 def anomalia(nombre: str, valor: float, normal: float) -> float:
@@ -46,14 +53,17 @@ def describir(nombre: str, ind: Indicador) -> str:
         if ind.nivel == "bajo":
             return f"{ETIQUETA[nombre]} está dentro de lo normal"
         sentido = "por debajo" if a < 0 else "por encima"
+        if nombre == "lluvia" and ind.normal < T.LLUVIA_NORMAL_MIN_MM:
+            # Donde casi nunca llueve el porcentaje engaña (el piso de 3 mm lo achica): se dicen las cifras reales
+            return f"La lluvia está {sentido} de lo normal: {fmt1(ind.valor)} mm/día frente a {fmt1(ind.normal)} mm/día"
         return f"{ETIQUETA[nombre]} está {round(abs(a) * 100)} % {sentido} de lo normal"
     if nombre == "calor":
         if ind.nivel == "bajo":
             return "La temperatura máxima está dentro de lo normal"
-        return f"La temperatura máxima está {a:.1f} °C por encima de lo normal"
+        return f"La temperatura máxima está {fmt1(a)} °C por encima de lo normal"
     if ind.nivel == "bajo":
         return "El mar frente a la costa está dentro de lo normal"
-    return f"El mar frente a la costa está {a:.1f} °C más caliente de lo normal (señal de El Niño)"
+    return f"El mar frente a la costa está {fmt1(a)} °C más caliente de lo normal (señal de El Niño)"
 
 
 def _indicador(nombre: str, req: IndicadoresRequest, valor: float, normal: float) -> Indicador:

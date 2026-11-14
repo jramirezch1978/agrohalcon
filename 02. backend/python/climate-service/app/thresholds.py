@@ -71,6 +71,11 @@ CALOR_MAX_PTS = 35
 
 # Señal de El Niño: anticipa exceso de lluvia en los próximos meses (mismo factor que el exceso).
 EL_NINO_PTS = {"bajo": 0, "medio": 4, "alto": 10}
+# Señal EXTRAORDINARIA (>= +3 °C en el mar): en el registro NOAA 1982-2026 solo la superan 1982-83, 1997-98 y 2023-26, años de
+# lluvias e inundaciones catastróficas en el norte. Afecta a TODOS los cultivos (también al arroz): se ignora el factor.
+# SUPUESTO por validar con ENFEN / la mentoría agro-clima.
+EL_NINO_EXTREMO_C = 3.0
+EL_NINO_EXTREMO_PTS = 35
 
 # Sembrar fuera de la ventana de siembra del catálogo (solo cuenta para el primer cultivo).
 FUERA_DE_TEMPORADA_PTS = 15
@@ -85,6 +90,19 @@ MONOCULTIVO_PTS = 5
 
 # Un descuento menor a esto no se menciona en la explicación.
 DESCUENTO_MINIMO_EXPLICADO = 3.0
+
+# ---------------------------------------------------------------- incertidumbre (opcional: "incertidumbre": true)
+# Error típico de cada dato satelital (1 σ). El puntaje se recalcula con todos los indicadores empujados K·σ hacia el
+# lado malo (puntajeMin) y hacia el lado bueno (puntajeMax). Referencias: SMAP exige ubRMSE <= 0,04 m3/m3.
+INCERTIDUMBRE_K = 1.0
+INCERTIDUMBRE = {
+    "lluvia": ("rel", 0.25),  # 25 % del valor (error típico de la lluvia de satélite frente a pluviómetros)
+    "humedadSuelo": ("abs", 0.04),  # m3/m3
+    "calor": ("abs", 1.5),  # °C (temperatura en rejilla frente a estación)
+    "elNino": ("abs", 0.3),  # °C
+}
+CONFIANZA_ALTA_HASTA = 10  # ancho del rango (puntajeMax - puntajeMin) hasta el cual la confianza es alta
+CONFIANZA_MEDIA_HASTA = 25
 
 # Riesgo de la rotación según su puntaje
 RIESGO_BAJO_DESDE = 70

@@ -115,6 +115,9 @@ class RotacionesOpciones(_Base):
         default=None, description="(extra) Rotación que hoy usa el agricultor: siempre se incluye."
     )
     top: int = Field(default=3, ge=1, le=10, description="(extra) Cuántas rotaciones devolver")
+    incertidumbre: bool = Field(
+        default=False, description="(extra) Añade puntajeMin, puntajeMax y confianza a cada rotación"
+    )
 
 
 class RotacionesRequest(RotacionesOpciones):
@@ -127,6 +130,10 @@ class RotacionResultado(_Base):
     puntaje: int = Field(ge=0, le=100)
     riesgo: Nivel
     explicacion: str
+    # (extra, solo con "incertidumbre": true) rango del puntaje si los datos satelitales se equivocan 1 σ
+    puntajeMin: int | None = Field(default=None, ge=0, le=100)
+    puntajeMax: int | None = Field(default=None, ge=0, le=100)
+    confianza: Literal["alta", "media", "baja"] | None = None
 
 
 # ------------------------------------------------------------------ POST /recomendacion (propuesto)

@@ -105,6 +105,33 @@ def test_inundacion_extrema_nino_costero_2017(client, req_contrato, catalogo_jso
     assert qh["motivo"].startswith("La lluvia está") and qh["fuente"] == "GPM IMERG"
 
 
+def test_el_nino_extraordinario_no_deja_al_arroz_con_riesgo_bajo(client, req_contrato, catalogo_json):
+    """Niño 1+2 a +5,25 °C (octubre 2026): ni el arroz se salva. Antes salía 'bajo' (86/100) por su tolerancia a la lluvia."""
+    req = copy.deepcopy(req_contrato)
+    req["actual"] = {"lluviaMm": 2.9, "humedadSuelo": 0.25, "tempMaxC": 33.9, "sstAnomaliaC": 5.25}
+    req["historico"] = {"lluviaMm": 0.1, "humedadSuelo": 0.13, "tempMaxC": 33.7}
+    d = pedir(client, req, catalogo_json, rotacionActualId=1)
+    assert d["indicadores"]["elNino"]["nivel"] == "alto"
+    assert all(r["riesgo"] != "bajo" for r in d["rotaciones"]), d["rotaciones"]
+    assert any("extraordinaria" in r["explicacion"] for r in d["rotaciones"])
+    qh = d["queHacer"]
+    assert qh["accion"].startswith("Señal de El Niño extraordinaria") and "ENFEN" in qh["accion"]
+    assert qh["fuente"] == "MUR SST"
+    assert any(x in qh["motivo"] for x in ("5.2 °C", "5.3 °C"))
+
+
+def test_lluvia_en_zona_arida_se_describe_con_cifras_reales(client, req_contrato, catalogo_json):
+    """2,9 mm/día frente a 0,1 normales NO es '95 % por encima' (el piso de 3 mm achicaba el porcentaje)."""
+    req = copy.deepcopy(req_contrato)
+    req["actual"] = {"lluviaMm": 2.9, "humedadSuelo": 0.25, "tempMaxC": 33.9, "sstAnomaliaC": 0.0}
+    req["historico"] = {"lluviaMm": 0.1, "humedadSuelo": 0.13, "tempMaxC": 33.7}
+    ind = client.post("/indicadores", json=req).json()
+    from app.indicators import describir
+    from app.schemas import Indicador
+
+    assert describir("lluvia", Indicador(**ind["lluvia"])) == "La lluvia está por encima de lo normal: 2.9 mm/día frente a 0.1 mm/día"
+
+
 def test_fuera_de_temporada_descuenta(client, req_contrato, catalogo_json):
     en_epoca = pedir(client, req_contrato, catalogo_json, fecha="2026-12-01")
     fuera = pedir(client, req_contrato, catalogo_json, fecha="2026-07-01")  # julio: nadie siembra

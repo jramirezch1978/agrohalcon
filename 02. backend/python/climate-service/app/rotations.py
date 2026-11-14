@@ -3,18 +3,22 @@ choca con lo que el cultivo necesita. Todas las reglas y números están en thre
 
 from dataclasses import dataclass
 from datetime import date
+from typing import Literal
 
 from . import thresholds as T
 from .crops import DatosInvalidos, generar_candidatas, indexar
-from .indicators import anomalia, describir
+from .indicators import anomalia, describir, fmt1, nivel_de
 from .meses import NOMBRES_MES
 from .schemas import (
     Cultivo,
+    Indicador,
     IndicadoresResponse,
     Nivel,
     RotacionCandidata,
     RotacionResultado,
 )
+
+Nivel2 = Literal["alta", "media", "baja"]
 
 AGUA_TXT = {"alta": "mucha agua", "media": "agua moderada", "baja": "poca agua"}
 
@@ -24,6 +28,7 @@ class Descuento:
     indicador: str  # lluvia | humedadSuelo | calor | elNino | temporada
     puntos: float
     frase: str  # empieza en minúscula; se une al nombre del cultivo
+    generico: bool = False  # True = habla del clima, no del cultivo: se dice una vez, sin nombre de cultivo
 
 
 @dataclass(frozen=True)
@@ -69,7 +74,7 @@ def descuentos_cultivo(
     if a_lluvia < 0:
         pts = T.SEQUIA_PTS[agua][ind.lluvia.nivel] * T.LLUVIA_DEFICIT_FACTOR
         if pts:
-            out.append(Descuento("lluvia", pts, _minuscula(describir("lluvia", ind.lluvia))))
+            out.append(Descuento("lluvia", pts, _minuscula(describir("lluvia", ind.lluvia)), generico=True))
     elif a_lluvia > 0:
         pts = T.EXCESO_PTS[ind.lluvia.nivel] * T.EXCESO_FACTOR[agua]
         riesgo_inundacion = a_lluvia >= T.LLUVIA_EXCESO_EXTREMO_REL
@@ -78,7 +83,7 @@ def descuentos_cultivo(
         if pts:
             cola = "hay riesgo de inundación" if riesgo_inundacion else "puede encharcar el cultivo"
             frase = f"{_minuscula(describir('lluvia', ind.lluvia))} y {cola}"
-            out.append(Descuento("lluvia", pts, frase))
+            out.append(Descuento("lluvia", pts, frase, generico=True))
 
     # 3) Calor frente al máximo que tolera el cultivo
     margen = c.tempMaxC - ind.calor.valor
@@ -97,9 +102,13 @@ def descuentos_cultivo(
 
     # 4) Señal de El Niño: anticipa exceso de lluvia
     pts = T.EL_NINO_PTS[ind.elNino.nivel] * T.EXCESO_FACTOR[agua]
-    if pts:
-        frase = f"hay señal de El Niño (+{ind.elNino.valor:.1f} °C en el mar) y puede traer exceso de lluvia"
-        out.append(Descuento("elNino", pts, frase))
+    if ind.elNino.valor >= T.EL_NINO_EXTREMO_C:
+        pts = max(pts, T.EL_NINO_EXTREMO_PTS)
+        frase = f"hay una señal de El Niño extraordinaria (+{fmt1(ind.elNino.valor)} °C en el mar) con riesgo de lluvias e inundaciones"
+        out.append(Descuento("elNino", pts, frase, generico=True))
+    elif pts:
+        frase = f"hay señal de El Niño (+{fmt1(ind.elNino.valor)} °C en el mar) y puede traer exceso de lluvia"
+        out.append(Descuento("elNino", pts, frase, generico=True))
 
     # 5) Época de siembra (solo el cultivo que se siembra ahora)
     if es_primero and c.mesesSiembra and mes not in c.mesesSiembra:
@@ -115,10 +124,10 @@ def descuentos_cultivo(
 
 def _explicar(c1: Cultivo, c2: Cultivo, d1: list[Descuento], d2: list[Descuento]) -> str:
     # Peso de cada descuento en el puntaje final; el mismo cultivo repetido suma ambos pesos
-    acumulado: dict[tuple[str, str, str], float] = {}
+    acumulado: dict[tuple[str | None, str, str], float] = {}
     for c, descuentos, peso in ((c1, d1, T.PESO_CULTIVO1), (c2, d2, T.PESO_CULTIVO2)):
         for d in descuentos:
-            clave = (c.nombre, d.indicador, d.frase)
+            clave = (None if d.generico else c.nombre, d.indicador, d.frase)  # lo genérico se dice una sola vez
             acumulado[clave] = acumulado.get(clave, 0.0) + d.puntos * peso
     relevantes = sorted(
         (kv for kv in acumulado.items() if kv[1] >= T.DESCUENTO_MINIMO_EXPLICADO),
@@ -134,14 +143,15 @@ def _explicar(c1: Cultivo, c2: Cultivo, d1: list[Descuento], d2: list[Descuento]
         return "Los indicadores actuales casi no afectan a esta rotación" + nota_plagas
 
     # Agrupa por cultivo para no repetir su nombre en cada frase
-    por_cultivo: dict[str, list[str]] = {}
+    por_cultivo: dict[str | None, list[str]] = {}
     for (nombre, _indicador, frase), _pts in relevantes:
         por_cultivo.setdefault(nombre, []).append(frase)
 
-    partes = [
-        _mayuscula(" y ".join(frases) if mismo_cultivo else f"{nombre.lower()} {' y '.join(frases)}")
-        for nombre, frases in por_cultivo.items()
-    ]
+    partes = []
+    for nombre, frases in por_cultivo.items():
+        cuerpo = " y ".join(frases)
+        # Lo del clima (nombre None) y el monocultivo van sin nombre; lo propio de cada cultivo, con "Cultivo: ..."
+        partes.append(_mayuscula(cuerpo) if nombre is None or mismo_cultivo else f"{nombre}: {cuerpo}")
     return "; ".join(partes) + nota_plagas
 
 
@@ -215,6 +225,67 @@ def seleccionar(
     return sorted(elegidas, key=lambda e: (-e.resultado.puntaje, e.resultado.id))
 
 
+INDICADORES = ("lluvia", "humedadSuelo", "calor", "elNino")
+
+
+def perturbar(ind: IndicadoresResponse, signo: int, solo: str | None = None) -> IndicadoresResponse:
+    """Empuja un indicador (o todos, si `solo` es None) K·σ hacia el lado malo (signo=+1) o el bueno (signo=-1)
+    y recalcula sus niveles. 'Malo' = más lejos de lo normal en la dirección que daña (más déficit de agua, más
+    calor, más señal de El Niño; la lluvia daña en ambos sentidos: se aleja o se acerca a su normal)."""
+    nuevos = {}
+    for nombre in INDICADORES:
+        i: Indicador = getattr(ind, nombre)
+        if solo is not None and nombre != solo:
+            nuevos[nombre] = i
+            continue
+        tipo, magnitud = T.INCERTIDUMBRE[nombre]
+        sigma = T.INCERTIDUMBRE_K * (magnitud * abs(i.valor) if tipo == "rel" else magnitud)
+        if nombre == "lluvia":
+            direccion = 1 if i.valor >= i.normal else -1  # alejarse de lo normal
+            valor = i.valor + signo * direccion * sigma
+        elif nombre == "humedadSuelo":
+            valor = i.valor - signo * sigma  # malo = menos humedad
+        else:
+            valor = i.valor + signo * sigma  # malo = más calor / más señal de El Niño
+        valor = max(0.0, valor) if nombre in ("lluvia", "humedadSuelo") else valor
+        if nombre == "humedadSuelo":
+            valor = min(valor, 1.0)
+        nuevos[nombre] = i.model_copy(update={"valor": valor, "nivel": nivel_de(nombre, valor, i.normal)})
+    return IndicadoresResponse(**nuevos)
+
+
+def _confianza(ancho: int) -> Nivel2:
+    if ancho <= T.CONFIANZA_ALTA_HASTA:
+        return "alta"
+    return "media" if ancho <= T.CONFIANZA_MEDIA_HASTA else "baja"
+
+
+def con_incertidumbre(
+    elegidas: list[Evaluacion], ind: IndicadoresResponse, fecha: date, candidatas: list[RotacionCandidata]
+) -> list[Evaluacion]:
+    """Añade puntajeMin / puntajeMax / confianza por propagación de errores INDEPENDIENTES: se mueve cada indicador
+    1 σ por separado, se mide cuánto cambia el puntaje y los cambios se suman en cuadratura (raíz de la suma de cuadrados).
+    (Empujar los 4 a la vez al peor lado sería un caso extremo muy poco probable, no un rango de 1 σ.)"""
+    por_id = {r.id: r for r in candidatas}
+    salida = []
+    for e in elegidas:
+        rot = por_id.get(e.resultado.id) or RotacionCandidata(
+            id=e.resultado.id, nombre=e.resultado.nombre, cultivo1Id=e.cultivo1.id, cultivo2Id=e.cultivo2.id
+        )
+        base = e.resultado.puntaje
+        bajan, suben = [], []
+        for nombre in INDICADORES:
+            for signo, lista in ((+1, bajan), (-1, suben)):
+                p = evaluar_rotacion(rot, e.cultivo1, e.cultivo2, perturbar(ind, signo, nombre), fecha.month).resultado.puntaje
+                lista.append(p - base)
+        baja = sum(min(d, 0) ** 2 for d in bajan + suben) ** 0.5  # solo cuenta lo que empeora el puntaje
+        sube = sum(max(d, 0) ** 2 for d in bajan + suben) ** 0.5
+        p_min, p_max = max(0, round(base - baja)), min(100, round(base + sube))
+        r = e.resultado.model_copy(update={"puntajeMin": p_min, "puntajeMax": p_max, "confianza": _confianza(p_max - p_min)})
+        salida.append(Evaluacion(r, e.cultivo1, e.cultivo2))
+    return salida
+
+
 def rotaciones_para(
     ind: IndicadoresResponse,
     cultivos: list[Cultivo],
@@ -222,9 +293,13 @@ def rotaciones_para(
     fecha: date,
     top: int,
     actual_id: int | None,
+    incertidumbre: bool = False,
 ) -> tuple[list[Evaluacion], list[Evaluacion]]:
     """Devuelve (las elegidas para mostrar, todas las evaluadas). 'Qué hago' mira todas."""
     variadas = candidatas is None
     candidatas = candidatas if candidatas is not None else generar_candidatas(cultivos)
     todas = evaluar_todas(ind, cultivos, candidatas, fecha)
-    return seleccionar(todas, top, actual_id, variadas), todas
+    elegidas = seleccionar(todas, top, actual_id, variadas)
+    if incertidumbre:
+        elegidas = con_incertidumbre(elegidas, ind, fecha, candidatas)
+    return elegidas, todas
