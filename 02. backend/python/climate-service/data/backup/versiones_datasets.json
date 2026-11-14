@@ -1,0 +1,102 @@
+{
+  "consultado": "2026-11-14",
+  "fuente": "NASA CMR (cmr.earthdata.nasa.gov)",
+  "datasets": [
+    {
+      "uso": "SMAP humedad del suelo 9 km",
+      "buscado": "SPL3SMP_E v006",
+      "shortName": "SPL3SMP_E",
+      "version": "006",
+      "titulo": "SMAP Enhanced L3 Radiometer Global and Polar Grid Daily 9 km EASE-Grid Soil Moisture V006",
+      "desde": "2015-03-31",
+      "hasta": "vigente",
+      "doi": "10.5067/M20OXIZHY3RJ",
+      "doiUrl": "https://doi.org/10.5067/M20OXIZHY3RJ",
+      "idCmr": "C2938664763-NSIDC_CPRD"
+    },
+    {
+      "uso": "SMAP L4 humedad de raíz",
+      "buscado": "SPL4SMGP v008",
+      "shortName": "SPL4SMGP",
+      "version": "008",
+      "titulo": "SMAP L4 Global 3-hourly 9 km EASE-Grid Surface and Root Zone Soil Moisture Geophysical Data V008",
+      "desde": "2015-03-31",
+      "hasta": "vigente",
+      "doi": "10.5067/T5RUATAQREF8",
+      "doiUrl": "https://doi.org/10.5067/T5RUATAQREF8",
+      "idCmr": "C3480440870-NSIDC_CPRD"
+    },
+    {
+      "uso": "GPM IMERG diario (final)",
+      "buscado": "GPM_3IMERGDF v07",
+      "shortName": "GPM_3IMERGDF",
+      "version": "07",
+      "titulo": "GPM IMERG Final Precipitation L3 1 day 0.1 degree x 0.1 degree V07 (GPM_3IMERGDF)",
+      "desde": "1998-01-01",
+      "hasta": "2025-09-30",
+      "doi": "10.5067/GPM/IMERGDF/DAY/07",
+      "doiUrl": "https://doi.org/10.5067/GPM/IMERGDF/DAY/07",
+      "idCmr": "C2723754864-GES_DISC"
+    },
+    {
+      "uso": "GPM IMERG diario (rápido, para el dato actual)",
+      "buscado": "GPM_3IMERGDL v07",
+      "shortName": "GPM_3IMERGDL",
+      "version": "07",
+      "titulo": "GPM IMERG Late Precipitation L3 1 day 0.1 degree x 0.1 degree V07 (GPM_3IMERGDL)",
+      "desde": "1998-01-01",
+      "hasta": "vigente",
+      "doi": "10.5067/GPM/IMERGDL/DAY/07",
+      "doiUrl": "https://doi.org/10.5067/GPM/IMERGDL/DAY/07",
+      "idCmr": "C2723754859-GES_DISC"
+    },
+    {
+      "uso": "MODIS NDVI 250 m",
+      "buscado": "MOD13Q1 v061",
+      "shortName": "MOD13Q1",
+      "version": "061",
+      "titulo": "MODIS/Terra Vegetation Indices 16-Day L3 Global 250m SIN Grid V061",
+      "desde": "2000-02-18",
+      "hasta": "vigente",
+      "doi": "10.5067/MODIS/MOD13Q1.061",
+      "doiUrl": "https://doi.org/10.5067/MODIS/MOD13Q1.061",
+      "idCmr": "C1748066515-LPCLOUD"
+    },
+    {
+      "uso": "MUR SST",
+      "buscado": "MUR-JPL-L4-GLOB-v4.1",
+      "shortName": "MUR-JPL-L4-GLOB-v4.1",
+      "version": "4.1",
+      "titulo": "GHRSST Level 4 MUR Global Foundation Sea Surface Temperature Analysis (v4.1)",
+      "desde": "2002-05-31",
+      "hasta": "vigente",
+      "doi": "10.5067/GHGMR-4FJ04",
+      "doiUrl": "https://doi.org/10.5067/GHGMR-4FJ04",
+      "idCmr": "C1996881146-POCLOUD"
+    },
+    {
+      "uso": "SRTM elevación 30 m",
+      "buscado": "SRTMGL1 v003",
+      "shortName": "SRTMGL1",
+      "version": "003",
+      "titulo": "NASA Shuttle Radar Topography Mission Global 1 arc second V003",
+      "desde": "2000-02-11",
+      "hasta": "2000-02-21",
+      "doi": "10.5067/MEASURES/SRTM/SRTMGL1.003",
+      "doiUrl": "https://doi.org/10.5067/MEASURES/SRTM/SRTMGL1.003",
+      "idCmr": "C2763266360-LPCLOUD"
+    },
+    {
+      "uso": "ECOSTRESS evapotranspiración",
+      "buscado": "ECO_L3T_JET v003",
+      "shortName": "ECO_L3T_JET",
+      "version": "003",
+      "titulo": "ECOSTRESS Tiled Evapotranspiration PT-JPL Instantaneous and Daytime L3 Global 70 m v003",
+      "desde": "2018-07-09",
+      "hasta": "vigente",
+      "doi": "10.5067/ECOSTRESS/ECO_L3T_JET.003",
+      "doiUrl": "https://doi.org/10.5067/ECOSTRESS/ECO_L3T_JET.003",
+      "idCmr": "C4057232489-LPCLOUD"
+    }
+  ]
+}
