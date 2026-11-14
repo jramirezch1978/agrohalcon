@@ -28,6 +28,7 @@ Cada documento está en **Markdown**, **Word (docx)** y **PDF**. Responsable de 
 | 21_preparacion_entorno | [md](21_preparacion_entorno.md) | [docx](docx/21_preparacion_entorno.docx) | [pdf](pdf/21_preparacion_entorno.pdf) |
 | 22_servidores_despliegue | [md](22_servidores_despliegue.md) | [docx](docx/22_servidores_despliegue.docx) | [pdf](pdf/22_servidores_despliegue.pdf) |
 | 23_propuestas_equipo_y_ramas | [md](23_propuestas_equipo_y_ramas.md) | [docx](docx/23_propuestas_equipo_y_ramas.docx) | [pdf](pdf/23_propuestas_equipo_y_ramas.pdf) |
+| 24_exploracion_apis_nasa | [md](24_exploracion_apis_nasa.md) | [docx](docx/24_exploracion_apis_nasa.docx) | [pdf](pdf/24_exploracion_apis_nasa.pdf) |
 
 ## Datos de la NASA (resumen)
 
@@ -35,6 +36,7 @@ Cada documento está en **Markdown**, **Word (docx)** y **PDF**. Responsable de 
 - [11_reto_field_shift](11_reto_field_shift.md) y [12_field_shift_fuente_completa](12_field_shift_fuente_completa.md): el reto, el video y los recursos oficiales.
 - [15_plan_datos](15_plan_datos.md): datasets oficiales publicados por la NASA (SMAP, GPM/IMERG, Landsat, MODIS/VIIRS, POWER, SRTM, ECOSTRESS, GLDAS, FAO GAEZ) y cómo los usamos.
 - [23_propuestas_equipo_y_ramas](23_propuestas_equipo_y_ramas.md): ciclo completo del cultivo, señal de El Niño con MUR SST, estrategia de ramas.
+- [24_exploracion_apis_nasa](24_exploracion_apis_nasa.md): pruebas en vivo de los datasets oficiales en 17 valles del norte (POWER, IMERG, SMAP, MODIS, MUR SST, CMR, AppEEARS, FIRMS).
 
 ## Documentos oficiales del evento
 
