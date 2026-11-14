@@ -59,7 +59,7 @@ Con token de Earthdata, para descargar un archivo: `curl.exe -L -H "Authorizatio
 |---|---|---|---|
 | `EARTHDATA_TOKEN` | Descargar SMAP, IMERG, MODIS, ECOSTRESS | **David** (cuenta propia) | `climate-service/.env` |
 | `EARTHDATA_USERNAME` / `PASSWORD` | Solo AppEEARS por API | David | `climate-service/.env` |
-| `GROQ_API_KEY` | Asistente de IA (Llama) | **Jhonny** (backend Java) | `deploy/vps/.env` del servidor; **nunca** en la app ni en el repo |
+| `GROQ_API_KEY` | Asistente de IA (`openai/gpt-oss-20b`, Apache 2.0) | **climate-service** (Python), decisión del 14-nov | `.env` en tu PC y `deploy/vps/.env` del servidor; **nunca** en la app, en el código ni en el repo (es público) |
 | NASA POWER, CMR, ONI, MUR (ERDDAP) | — | no necesitan llave | — |
 | Azure / Hetzner | Despliegue | Jhonny | — |
 
@@ -71,7 +71,7 @@ Con token de Earthdata, para descargar un archivo: `curl.exe -L -H "Authorizatio
 | earthaccess | https://earthaccess.readthedocs.io/ | descargas con token |
 | pandas · scipy · xarray · h5py | https://pandas.pydata.org/ · https://scipy.org/ · https://docs.xarray.dev/ · https://www.h5py.org/ | datos y archivos HDF5/NetCDF |
 | pymannkendall | https://pypi.org/project/pymannkendall/ | tendencias (Mann-Kendall y Sen) |
-| Groq API (Jhonny) | https://console.groq.com/docs | modelos Llama: elegir uno vigente en `/docs/models` |
+| Groq API | https://console.groq.com/docs | modelo `openai/gpt-oss-20b` (https://console.groq.com/docs/model/openai/gpt-oss-20b); `POST https://api.groq.com/openai/v1/chat/completions` |
 | Leaflet · Chart.js · Vue · Capacitor (Sheila) | https://leafletjs.com/ · https://www.chartjs.org/ · https://vuejs.org/ · https://capacitorjs.com/ | — |
 
 ## 5. Fuentes locales (Alejandro y la validación 2017)

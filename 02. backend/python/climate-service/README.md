@@ -32,6 +32,8 @@ uvicorn app.main:app --reload --port 8000   # docs: http://localhost:8000/docs �
 | POST | `/recomendacion` | **propuesto** | Todo en una llamada (`lat, lon, fecha, indicadores, rotaciones, queHacer`) |
 | POST | `/asistente/contexto` | **propuesto** | Mensajes listos para Groq: reglas + solo datos calculados + la pregunta |
 | POST | `/asistente/validar` | **propuesto** | Revisa la respuesta del modelo; si inventa algo, devuelve el Plan B |
+| POST | `/asistente/preguntar` | **propuesto** | El asistente completo: llama a Groq (`openai/gpt-oss-20b`) desde aquí, valida la respuesta y, si algo falla o falta la clave, responde con plantillas |
+| GET | `/asistente/estado` | **propuesto** | ¿Hay clave de Groq? modelo y límites (nunca devuelve la clave) |
 | POST | `/asistente/plan-b` | **propuesto** | Explicación con plantillas (sin IA) cuando Groq no responde |
 
 **Campos extra (opcionales):** `meta` (fuente real de un dato), `fecha`, `rotaciones`, `rotacionActualId`, `top`, `incertidumbre`.
