@@ -171,9 +171,16 @@ CREATE TABLE IF NOT EXISTS agro.consultas (
     parcela_id                 BIGINT  REFERENCES agro.parcelas(id) ON DELETE SET NULL,
     indicadores                JSONB,                 -- lo que devolvio climate-service
     resultado                  JSONB,                 -- recomendacion completa mostrada al usuario
+    tipo                       VARCHAR(20),           -- recomendacion | mapa | validacion
+    clave                      VARCHAR(160),          -- punto + parametros: Java busca aqui antes de pedir a Python (doc 29)
+    contrato                   JSONB,                 -- respuesta en forma del contrato (la usa el asistente)
     creado_en                  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 CREATE INDEX IF NOT EXISTS ix_consultas_fecha ON agro.consultas (fecha);
+ALTER TABLE agro.consultas ADD COLUMN IF NOT EXISTS tipo VARCHAR(20);
+ALTER TABLE agro.consultas ADD COLUMN IF NOT EXISTS clave VARCHAR(160);
+ALTER TABLE agro.consultas ADD COLUMN IF NOT EXISTS contrato JSONB;
+CREATE INDEX IF NOT EXISTS ix_consultas_clave ON agro.consultas (clave, creado_en DESC);
 
 -- "Perspectiva de la campana": riesgo de cada mes del ciclo (verde / ambar / rojo)
 CREATE TABLE IF NOT EXISTS agro.riesgo_mensual (
