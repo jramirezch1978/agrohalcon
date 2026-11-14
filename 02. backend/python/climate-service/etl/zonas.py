@@ -49,5 +49,12 @@ PUNTO_DEMO = (-5.19, -80.63)
 PUNTO_MAR_PIURA = (-5.5, -81.5)
 
 
+# Puntos de mar (no son zonas agrícolas): señal de El Niño costero.
+PUNTOS_MAR: list[Zona] = [
+    Zona(101, "Mar frente a Piura", "mar_piura", -5.5, -81.5),
+    Zona(102, "Mar frente a Paita", "mar_piura", -5.1, -81.3),  # punto de la exploración de Jhonny (doc 24)
+]
+
+
 def por_region(region: str) -> list[Zona]:
     return [z for z in ZONAS if z.region == region]

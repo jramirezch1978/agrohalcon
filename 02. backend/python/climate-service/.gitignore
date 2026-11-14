@@ -6,6 +6,9 @@ __pycache__/
 
 # Descargas pesadas de la NASA (HDF5, NetCDF, GeoTIFF): no se suben al repositorio
 data/raw/
+# Bases generadas (se reconstruyen con `python -m db.build`)
+*.sqlite
+*.sqlite3
 *.h5
 *.nc
 *.nc4

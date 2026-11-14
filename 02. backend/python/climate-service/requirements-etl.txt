@@ -11,3 +11,7 @@ earthaccess>=0.10
 xarray>=2024.6
 h5netcdf>=1.3
 h5py>=3.11
+# Rejillas satelitales (SMAP EASE-Grid 2.0) y capa de bases de datos
+pyproj>=3.6
+sqlalchemy>=2.0
+sqlglot>=25

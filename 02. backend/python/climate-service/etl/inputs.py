@@ -42,6 +42,8 @@ def construir_entrada(
     sst_anomalia_c: float | None,
     ventana_dias: int = 14,
     variable_calor: str = "T2M_MAX",
+    fuente_sst: str = "MUR SST",
+    humedad_smap: tuple[float, float] | None = None,
 ) -> tuple[dict, dict]:
     """Devuelve (cuerpo para POST /indicadores, trazabilidad). La trazabilidad NO se envía al servicio:
     se guarda al lado para saber de qué días salió cada número."""
@@ -56,13 +58,13 @@ def construir_entrada(
         "lluvia": {"fuente": "NASA POWER (PRECTOTCORR)"},
         "humedadSuelo": {"fuente": "NASA POWER (GWETTOP)", "unidad": "fracción 0-1"},
         "calor": {"fuente": f"NASA POWER ({variable_calor})"},
-        "elNino": {"fuente": "MUR SST"},
+        "elNino": {"fuente": fuente_sst},
     }
     advertencias = []
     if sst_anomalia_c is None:
         sst_anomalia_c = 0.0
-        meta["elNino"] = {"fuente": "MUR SST (sin dato: se asumió anomalía 0)"}
-        advertencias.append("MUR SST no disponible: la anomalía del mar se fijó en 0 °C")
+        meta["elNino"] = {"fuente": f"{fuente_sst} (sin dato: se asumió anomalía 0)"}
+        advertencias.append(f"{fuente_sst} no disponible: la anomalía del mar se fijó en 0 °C")
 
     cuerpo = {
         "lat": lat,
@@ -82,6 +84,10 @@ def construir_entrada(
         },
         "meta": meta,
     }
+    if humedad_smap is not None:  # (valor actual, normal) de SMAP m3/m3: reemplaza a GWETTOP de POWER
+        cuerpo["actual"]["humedadSuelo"] = round(humedad_smap[0], 4)
+        cuerpo["historico"]["humedadSuelo"] = round(humedad_smap[1], 4)
+        cuerpo["meta"]["humedadSuelo"] = {"fuente": "SMAP SPL3SMP_E v006", "unidad": "m3/m3"}
     trazabilidad = {
         "ventanaDias": ventana_dias,
         "ultimoDiaConDato": ultimo_dia.isoformat(),
