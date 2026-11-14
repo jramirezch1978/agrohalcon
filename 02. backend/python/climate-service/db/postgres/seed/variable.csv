@@ -14,3 +14,4 @@ id,codigo,nombre,unidad,fuente_id,descripcion
 13,VNP13A1_NDVI,NDVI VIIRS (16 días),índice,6,"NDVI de la compuesta de 16 días, píxel de 500 m"
 14,MUR_SST,Temperatura del mar MUR,°C,7,analysed_sst convertida de kelvin
 15,MUR_SST_ANOM,Anomalía de MUR SST vs 2003-2022,°C,7,Calculada aquí: SST del día menos la climatología del mismo día del año
+16,IMERG_PRECIP_M,Precipitación IMERG mensual (corrida final),mm/día,17,mm/mes de IMERG Final dividido por los días del mes: comparable con PRECTOTCORR

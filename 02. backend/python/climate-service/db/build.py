@@ -25,7 +25,7 @@ from etl.config import DATA
 from etl.inputs import BASE_NORMAL, construir_entrada
 from etl.zonas import PUNTOS_MAR, ZONAS
 
-from . import analisis, catalogos, schema
+from . import analisis, aportes, catalogos, schema
 
 RUTA_DB = DATA / "agroshift.sqlite"
 SAMPLE_CATALOGO = DATA.parent / "samples" / "catalogo_cultivos_ejemplo.json"
@@ -59,8 +59,12 @@ def sembrar_catalogos(con) -> None:
     con.execute(insert(schema.region), [{"id": i, "codigo": c, "nombre": n} for i, c, n in catalogos.REGIONES])
     columnas = ("id", "codigo", "nombre", "institucion", "producto", "version", "doi", "resolucion", "cobertura", "url", "acceso", "estado", "nota")
     filas = [dict(zip(columnas, f, strict=True)) for f in catalogos.FUENTES]
+    hay_aportes = aportes.localizar() is not None  # datos que bajó Sheila (IMERG y MUR Niño 1+2)
     for f in filas:
         f["estado"] = estados.get(f["codigo"], f["estado"])
+        if hay_aportes and f["codigo"] in {"IMERG_DL", "IMERG_M", "MUR_NINO12"}:
+            f["estado"] = "en_uso"
+            f["nota"] = (f["nota"] or "") + " DATOS APORTADOS POR SHEILA (feature/calculos-sheila): no se bajaron con el token de David."
     con.execute(insert(schema.fuente_dato), filas)
     variables = [*catalogos.VARIABLES, (15, "MUR_SST_ANOM", "Anomalía de MUR SST vs 2003-2022", "°C", 7, "Calculada aquí: SST del día menos la climatología del mismo día del año")]
     con.execute(insert(schema.variable), [dict(zip(("id", "codigo", "nombre", "unidad", "fuente_id", "descripcion"), v, strict=True)) for v in variables])
@@ -328,6 +332,7 @@ def construir(ruta: Path = RUTA_DB, catalogo_ruta: Path | None = None) -> dict:
         resumen["normales"] = calcular_normales(con)
         resumen["indices"], resumen["episodios"] = cargar_indices(con)
         resumen["satelites"] = cargar_satelites(con, zid)
+        resumen["aportes_sheila"] = aportes.cargar(con, zid)
         es_prueba = cargar_cultivos(con, catalogo_ruta)
         catalogo = None if es_prueba else cargar_catalogo(catalogo_ruta)  # recomendaciones solo con catálogo real
         resumen["analisis"] = cargar_analisis(con)

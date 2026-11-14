@@ -13,7 +13,8 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from . import __version__, asistente
-from .allpashift_api import router as router_allpashift  # Java → Python: descargas NASA y cálculo (doc 29)
+from .allpashift_api import router as router_allpashift  # Java → Python (doc 29)
+from .asistente_ia import router as router_asistente_ia  # asistente con Groq, la clave vive aquí
 from .crops import DatosInvalidos
 from .indicators import calcular_indicadores
 from .que_hacer import construir_que_hacer
@@ -36,6 +37,7 @@ app = FastAPI(
 
 
 app.include_router(router_allpashift)
+app.include_router(router_asistente_ia)
 
 
 @app.get("/salud", summary="Estado del servicio")
@@ -111,13 +113,13 @@ class AsistenteValidarRequest(BaseModel):
 @app.post(
     "/asistente/contexto",
     tags=["asistente (propuesto)"],
-    summary="Mensajes listos para enviar a Groq: reglas + solo datos ya calculados + la pregunta",
+    summary="Mensajes para Groq: reglas + solo datos ya calculados + la pregunta (el servicio ya llama a Groq en /asistente/preguntar)",
 )
 def asistente_contexto(req: AsistenteContextoRequest) -> dict:
     return {
         "mensajes": asistente.mensajes(req.pregunta, req.recomendacion, req.idioma),
         "parametrosSugeridos": {"temperature": 0.2, "max_tokens": 350},
-        "nota": "Java envía estos mensajes a Groq (GROQ_API_KEY vive en el backend) y luego llama a /asistente/validar.",
+        "nota": "Uso avanzado: normalmente basta POST /asistente/preguntar, que llama a Groq desde este servicio (la clave no sale de aquí) y valida la respuesta.",
     }
 
 

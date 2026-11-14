@@ -71,7 +71,7 @@ Reglas del equipo: *“Después de aprobar el contrato nadie cambia un campo sin
 18. **GES DISC (IMERG y GLDAS) está BLOQUEADO hasta que el usuario acepte el acuerdo:** responde `403 EULA Acceptance Failure`. Acción de David (1 clic, con la sesión de Earthdata iniciada):
     https://urs.earthdata.nasa.gov/approve_app?client_id=e2WVk8Pw6weeLUKZYOxvTQ → después `python -m etl.jobs imerg` y `python -m db.build`. SMAP (NSIDC), LP DAAC (SRTM, MOD13Q1, VNP13A1, ECOSTRESS) y PO.DAAC (MUR) **ya están autorizados**.
 19. **SoilGrids (ISRIC, no NASA)** devuelve suelo solo donde está mapeado: 5 de 16 valles tienen pH, carbono, arcilla y arena; el resto queda `NULL` (urbano o sin dato). No se inventa.
-20. **La web en línea del equipo (http://2.29.101.199) se llama "AllpaShift"**; el repo dice "agrohalcon" y el equipo eligió "AgroShift". Hay **tres nombres**: decidir uno antes del Submit (portada, README, logo, APK, textos en inglés).
+20. **La web en línea del equipo (http://2.29.101.199) se llama "AllpaShift"**; el repo dice "agrohalcon" y el equipo eligió "AgroShift". Hay **tres nombres**: decidir uno antes del Submit (portada, README, logo, APK, textos en inglés). **David confirmó el 14-nov: AllpaShift** (falta renombrar los textos de `climate-service/`).
     Además su sección "Datos de la NASA que usamos" lista SMAP, GPM/IMERG, ECOSTRESS, MODIS/VIIRS y SRTM: hoy el código solo usa POWER, SMAP, MUR, VIIRS y SRTM; **IMERG** está bloqueado y **ECOSTRESS** no está integrado. Lo no usado debe decir *planned*.
 
 21. ⚠️ **La "caída del NDVI" de 2017 NO aparece con este método; el NDVI SUBIÓ.** VIIRS VNP13A1 (566 valores válidos, solo píxeles con confiabilidad buena o marginal) en el punto central de cada valle: de dic-2016/ene-2017 a mar-may-2017
@@ -80,6 +80,34 @@ Reglas del equipo: *“Después de aprobar el contrato nadie cambia un campo sin
     (a) comparar el NDVI con el **mismo periodo de años normales** (anomalía de NDVI, no antes/después), (b) medir solo **píxeles de cultivo** (máscara de ESA WorldCover o MIDAGRI) y no el punto central del valle, (c) mirar **abril-junio** (después de las inundaciones), cuando se pierden cultivos,
     (d) usar como verdad de campo las **hectáreas perdidas de INDECI/SENASA** (ya están en *References*) en vez de NDVI. Lo que sí está respaldado por datos: la lluvia y la señal del mar anticiparon el evento semanas antes (alerta MEDIA el 15-ene-2017 y ALTA el 31-ene en Bajo Piura).
     Nubes: el filtro de confiabilidad deja pocos píxeles en la temporada de lluvias (solo 12 de 16 valles tienen ≥ 3 valores en mar-may; Alto Piura, Olmos, Huancabamba y Cajamarca quedan sin dato en ese periodo).
+
+22. **Los umbrales de `calculos/` (Sheila) y de `climate-service` (David) no coinciden: decidir una sola regla** (`REVISION_CALCULOS_SHEILA.md`, sección 3). No se cambió ninguno: afecta lo que ve el agricultor.
+
+    | | Sheila (`umbrales.yaml`) | David (`app/thresholds.py`, en producción) |
+    |---|---|---|
+    | Lluvia medio / alto (anomalía) | 20 % / 40 % | 25 % / 50 % |
+    | Lluvia sin señal si valor y normal están bajo | 1 mm/día | 3 mm/día |
+    | Humedad del suelo (déficit) | 20 % / 40 % | 15 % / 30 % |
+    | Calor (°C sobre lo normal) | +1,5 / +3,0 | +1,5 / +4,0 |
+    | Normal climática | 2001-2025 | 1991-2020 |
+
+    Propuesta: quedarse con los de David (normal de 30 años estándar, probados con 2017 y con los 16 valles) y documentar los de Sheila como alternativa en la entrega.
+23. **IMERG y MUR Niño 1+2 los bajó Sheila (con su cuenta de Earthdata), no David.** Están en la base (`en_uso`) y en *References* hay que decirlo así: el token de David sigue sin poder leer IMERG (punto 18).
+    Contraste real: MUR vs NOAA CPC en Niño 1+2 **r = 0,987** (126 meses); IMERG vs POWER en lluvia mensual **r = 0,69-0,91** (297 meses). IMERG llueve más que POWER (+0,2 a +1,0 mm/día): en marzo de 2017 (Bajo Piura)
+    IMERG dio 6,1 veces su normal y POWER 8,6 veces la suya. **Nunca mezclar valores de las dos fuentes; comparar anomalías de la misma fuente.**
+24. **Respaldo de El Niño dentro del servicio** (`app/datos_respaldo/nino12_historico.json`): si el ERDDAP de NOAA no responde, se usa la última semana de MUR SST (caja Niño 1+2) siempre que tenga ≤ 21 días; el indicador lo avisa en `aviso`
+    y conserva `fuente = "MUR SST"`. La serie de Sheila llega hasta la semana del **2026-11-09**: vence alrededor del 30-nov-2026. Para renovarlo: que Sheila corra `scripts.descargar_mur_sst --actualizar` y luego `python -m etl.respaldo_validacion`.
+25. **Hay dos esquemas de PostgreSQL**: el de David (`db/postgres/01_schema.sql`, modelo en estrella, para pruebas locales y el panel) y el de Jhonny (`04. base de datos/ddl/00-schema.sql`, el que lee y graba Java). **El oficial es el de Jhonny.**
+    `db/export_allpashift.py` lleva los datos reales a sus tablas (`seed/02-datos-nasa.sql`); verificado en PostgreSQL 16.2 real. `database-deploy.bat` aún no ejecuta ese archivo (línea para agregar en `REVISION_CALCULOS_SHEILA.md`, sección 6).
+26. **`feature/frontend-sheila` duplica `03. frontend/`** (solo cambian el renombre AgroShift → AllpaShift y un `||` por `??`): no abrir ese Pull Request. `calculos/` queda en la raíz del repositorio; se sugiere moverla a `02. backend/python/calculos-sheila/`.
+
+27. **Asistente de IA: Groq con `openai/gpt-oss-20b`, llamado desde Python (decisión del equipo, 14-nov).** Licencia Apache 2.0; la clave `GROQ_API_KEY` solo en el servidor porque el repositorio es público.
+    Implementado en `climate-service`: `POST /asistente/preguntar` (Groq → validación sin IA → Plan B), `GET /asistente/estado`, límites de preguntas y 18 pruebas con un transporte simulado. **No se probó contra Groq real: no hay clave.**
+    ⚠ La rama `feature/integracion-sheila` pone el asistente con Groq **en Java** (`GroqClient.java`, `GROQ_API_KEY` en `agro-service`): hay que elegir un solo lugar. Si queda en Python, Java solo llama a `/asistente/preguntar` y no necesita la clave.
+28. **Máquina del tiempo con la señal del mar (`/validacion`).** Antes el aviso de 2017 salía el 15-mar con **0 semanas** de anticipación (solo miraba la lluvia mensual de POWER). Ahora usa el primer aviso entre el mar y la lluvia:
+    en Piura 2017, **MUR SST (NASA) pasó a nivel medio el 11-dic-2016 (11 semanas antes del mes más lluvioso) y a nivel alto el 22-ene-2017 (5 semanas antes)**; la lluvia de IMERG llegó a 3 veces lo normal recién al terminar febrero.
+    Solo cuenta como anticipación si la lluvia extrema realmente ocurrió. ⚠ **El nivel medio de MUR se activa también en años sin inundación** (2018, 2019, 2020, 2021, 2022: falsas alarmas; la base climática de MUR 2003-2014 da +0,4 °C más que la de NOAA 1991-2020),
+    por eso solo el nivel **alto** pide drenar (en 2018-2022 nunca llegó a alto). Antes de 2016 se usa el índice mensual de NOAA CPC (no es NASA) y llega con 0-1 semanas (1998). Datos dentro de `app/datos_respaldo/` (MUR, CPC, IMERG de Piura).
 
 ## D. References / documentos de entrega (de `python -m etl.verificar_enlaces`)
 

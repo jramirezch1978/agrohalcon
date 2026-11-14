@@ -46,6 +46,12 @@ FUENTES = [
      "https://gaez.fao.org/pages/ecocrop", "pública", "planeado", "Fuente del catálogo de cultivos (Alejandro)."),
     (16, "MIDAGRI", "Calendarios de siembra MIDAGRI", "MIDAGRI Perú", "calendarios agrícolas", None, None, "por región", "n/a",
      "https://www.gob.pe/midagri", "pública", "planeado", "Meses de siembra y cosecha (Alejandro)."),
+    (17, "IMERG_M", "GPM IMERG mensual, corrida final", "NASA GES DISC", "GPM_3IMERGM", "07", "10.5067/GPM/IMERG/3B-MONTH/07", "0,1° (~11 km)", "1998-01 a 2025-09",
+     "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGM_07/summary", "Earthdata + acuerdo GES DISC (lo bajó Sheila por OPeNDAP)", "bloqueado",
+     "Datos de 12 puntos de Piura aportados por Sheila (feature/calculos-sheila). 'en_uso' cuando se cargan."),
+    (18, "MUR_NINO12", "MUR SST, promedio semanal de la caja Niño 1+2", "NASA JPL / PO.DAAC (vía NOAA CoastWatch)", "jplMURSST41 / jplMURSST41anom1day", "4.1", "10.5067/GHGMR-4FJ04", "0,25° usada sobre la rejilla de 0,01°", "2016-05 a hoy",
+     "https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41anom1day.html", "ERDDAP pública (lo bajó Sheila)", "planeado",
+     "Caja 0-10°S, 90-80°O, ponderada por cos(lat). Anomalía vs climatología MUR 2003-2014. 'en_uso' cuando se cargan."),
 ]  # fmt: skip
 
 # (id, codigo, nombre, unidad, fuente_id, descripcion)
@@ -64,6 +70,8 @@ VARIABLES = [
     (12, "IMERG_PRECIP", "Precipitación IMERG", "mm/día", 3, "Lluvia diaria de satélite"),
     (13, "VNP13A1_NDVI", "NDVI VIIRS (16 días)", "índice", 6, "NDVI de la compuesta de 16 días, píxel de 500 m"),
     (14, "MUR_SST", "Temperatura del mar MUR", "°C", 7, "analysed_sst convertida de kelvin"),
+    # (15 = MUR_SST_ANOM se agrega en build.sembrar_catalogos)
+    (16, "IMERG_PRECIP_M", "Precipitación IMERG mensual (corrida final)", "mm/día", 17, "mm/mes de IMERG Final dividido por los días del mes: comparable con PRECTOTCORR"),
 ]  # fmt: skip
 
 CODIGO_VARIABLE = {v[1]: v[0] for v in VARIABLES}

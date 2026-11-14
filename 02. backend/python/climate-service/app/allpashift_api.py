@@ -15,6 +15,8 @@ from typing import Any, Literal
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from . import historico
+from . import maquina_tiempo as maquina
 from . import nasa_cliente as nasa
 from .crops import DatosInvalidos
 from .indicators import calcular_indicadores
@@ -76,7 +78,11 @@ def datos_nasa(lat: float, lon: float) -> dict[str, Any]:
         clim = nasa.climatologia(lat, lon)
     except Exception as e:  # noqa: BLE001
         raise HTTPException(status_code=503, detail=f"NASA POWER no respondió: {e}") from e
-    return {"climatologia": clim, "reciente": nasa.reciente(lat, lon), "sstAnomalia": nasa.sst_anomalia(lat, lon), "fuente": "NASA POWER"}
+    sst, respaldo = nasa.sst_anomalia(lat, lon), None
+    if sst is None:  # ERDDAP de NOAA caído o sin respuesta: Plan B con la última semana de MUR SST en la caja Niño 1+2
+        respaldo = nasa.sst_respaldo(lat, lon)
+        sst = respaldo["anomalia"] if respaldo else None
+    return {"climatologia": clim, "reciente": nasa.reciente(lat, lon), "sstAnomalia": sst, "sstRespaldo": respaldo, "fuente": "NASA POWER"}
 
 
 def entrada_contrato(lat: float, lon: float, d: dict[str, Any]) -> IndicadoresRequest:
@@ -94,13 +100,16 @@ def entrada_contrato(lat: float, lon: float, d: dict[str, Any]) -> IndicadoresRe
     return IndicadoresRequest(lat=lat, lon=lon, actual=act, historico=hist, meta=meta)
 
 
-def indicadores_app(ind: Any, hay_sst: bool) -> dict[str, Any]:
-    """Indicadores con el campo opcional 'detalle'; sin MUR SST no se muestra El Niño."""
+def indicadores_app(ind: Any, hay_sst: bool, sst_respaldo: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Indicadores con los campos opcionales 'detalle' y 'aviso'; sin MUR SST no se muestra El Niño."""
     out = {}
     for k, v in ind.model_dump().items():
         if k == "elNino" and not hay_sst:
             continue
         v["detalle"] = _detalle(k, v["valor"], v["normal"])
+        if k == "elNino" and sst_respaldo:  # la fuente sigue siendo MUR SST (NASA); el aviso dice que es el promedio semanal de la caja
+            v["aviso"] = (f"Dato de respaldo: promedio de la caja Niño 1+2 de la semana del {sst_respaldo['semana']} "
+                          "(el servidor de NOAA no respondió)")
         out[k] = v
     return out
 
@@ -200,11 +209,12 @@ def tipo_accion(accion: str) -> str:
     a = (accion or "").lower()
     if "drena" in a:
         return "preparar drenaje"
-    if "esper" in a or "no siembres" in a or "todavía no" in a:
+    # Los textos de que_hacer.py: inundación y El Niño extraordinario piden esperar y consultar (no es "sembrar")
+    if "esper" in a or "no siembres" in a or "todavía no" in a or "consulta" in a:
         return "esperar"
     if "proteg" in a:
         return "proteger"
-    if "reg" in a:
+    if "rieg" in a or "reg" in a:
         return "regar"
     return "sembrar"
 
@@ -220,7 +230,7 @@ def calcular(req: CalcularRequest) -> dict[str, Any]:
     d = datos_nasa(req.lat, req.lon)
     entrada = entrada_contrato(req.lat, req.lon, d)
     ind_obj = calcular_indicadores(entrada)
-    ind = indicadores_app(ind_obj, d["sstAnomalia"] is not None)
+    ind = indicadores_app(ind_obj, d["sstAnomalia"] is not None, d["sstRespaldo"])
     contrato = None
     reco: dict[str, Any] = {"lat": req.lat, "lon": req.lon, "fecha": hoy.isoformat(), "indicadores": ind}
 
@@ -258,7 +268,7 @@ def calcular(req: CalcularRequest) -> dict[str, Any]:
 @router.post("/indicadores-punto", summary="Datos NASA + los 4 indicadores de un punto (mapa)")
 def indicadores_punto(req: PuntoRequest) -> dict[str, Any]:
     d = datos_nasa(req.lat, req.lon)
-    ind = indicadores_app(calcular_indicadores(entrada_contrato(req.lat, req.lon, d)), d["sstAnomalia"] is not None)
+    ind = indicadores_app(calcular_indicadores(entrada_contrato(req.lat, req.lon, d)), d["sstAnomalia"] is not None, d["sstRespaldo"])
     orden = {"alto": 2, "medio": 1, "bajo": 0}
     nivel = max((v["nivel"] for v in ind.values()), key=lambda n: orden[n], default=None)
     return {"datosNasa": _datos_para_guardar(req.lat, req.lon, d), "indicadores": ind, "nivel": nivel}
@@ -266,31 +276,32 @@ def indicadores_punto(req: PuntoRequest) -> dict[str, Any]:
 
 @router.post("/validacion", summary="Máquina del tiempo: qué habría dicho AllpaShift ese año")
 def validacion(req: ValidacionRequest) -> dict[str, Any]:
+    """Lluvia (GPM IMERG en Piura, si no NASA POWER) + señal del mar (MUR SST semanal; antes de 2016, NOAA CPC mensual).
+    Cambia el aviso a la señal más temprana y calcula las semanas de anticipación (ver app/maquina_tiempo.py)."""
+    imerg = historico.lluvia_imerg(req.lat, req.lon, req.anio)
     try:
-        serie = nasa.mensual(req.lat, req.lon, req.anio)
-        clim = nasa.climatologia(req.lat, req.lon)
+        power, clim = nasa.mensual(req.lat, req.lon, req.anio), nasa.climatologia(req.lat, req.lon)
     except Exception as e:  # noqa: BLE001
-        raise HTTPException(status_code=503, detail=f"NASA POWER no respondió: {e}") from e
-    dias = [31, 29 if req.anio % 4 == 0 else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-    valores = [None if v is None else round(v * dias[m], 1) for m, v in enumerate(serie["PRECTOTCORR"])]
-    normal = [round(clim["PRECTOTCORR"][m] * dias[m], 1) for m in range(12)]
-    hum = [None if v is None else round(v, 2) for v in serie["GWETROOT"]]
-    hum_n = [round(v, 2) for v in clim["GWETROOT"]]
-    con_dato = [m for m in range(12) if valores[m] is not None]
-    mmax = max(con_dato, key=lambda m: valores[m]) if con_dato else None
+        if imerg is None:  # sin IMERG y sin POWER no hay serie de lluvia que mostrar
+            raise HTTPException(status_code=503, detail=f"NASA POWER no respondió: {e}") from e
+        power = clim = None  # con IMERG se responde igual, sin la serie de humedad
+    if imerg:
+        valores, normal, fuente = imerg["valores"], imerg["normal"], "GPM IMERG"
+        lluvia = {"unidad": "mm/mes", "fuente": fuente, "valores": valores, "normal": normal, "producto": imerg["producto"],
+                  "punto": imerg["punto"], "normalPeriodo": imerg["normalPeriodo"]}  # fmt: skip
+    else:
+        valores, normal = maquina.serie_power(power, clim, req.anio)
+        fuente = "NASA POWER"
+        lluvia = {"unidad": "mm/mes", "fuente": fuente, "valores": valores, "normal": normal, "producto": "POWER PRECTOTCORR"}
+    series: dict[str, Any] = {"lluvia": lluvia}
+    if power is not None:
+        series["humedadSuelo"] = {"unidad": "fracción 0-1", "fuente": "NASA POWER", "producto": "POWER GWETROOT",
+                                  "valores": [None if v is None else round(v, 2) for v in power["GWETROOT"]], "normal": [round(v, 2) for v in clim["GWETROOT"]]}  # fmt: skip
+
+    c = maquina.combinar(req.anio, valores, normal, fuente, req.lat, req.lon)
     alerta = None
-    for m in con_dato:
-        v, n = valores[m], normal[m]
-        if v > max(3 * n, 30):
-            fecha = f"{req.anio}-{m + 1:02d}-15"
-            motivo = f"En {MES_NOMBRE[m]} llovieron {v:.0f} mm frente a {n:.0f} mm normales ({v / max(n, 1):.1f} veces)"
-            alerta = {"fecha": fecha, "accion": "Preparar drenaje y no sembrar en zonas bajas", "motivo": motivo, "indicador": "lluvia",
-                      "nivel": "alto", "valor": v, "fuente": "NASA POWER", "alertaDrenaje": {"fecha": fecha, "valor": v, "fuente": "NASA POWER"},
-                      "nota": "Alerta calculada con la lluvia mensual de NASA POWER"}
-            break
-    semanas = None
-    if alerta and mmax is not None:
-        semanas = max(0, (date(req.anio, mmax + 1, 15) - date.fromisoformat(alerta["fecha"])).days // 7)
+    if c["primera"]:
+        alerta = {**c["primera"], "alertaDrenaje": ({"fecha": c["drenaje"]["fecha"], "valor": c["drenaje"]["valor"], "fuente": c["drenaje"]["fuente"]} if c["drenaje"] else None)}
     evento = next(({"nombre": e.nombre, "inicio": e.inicio.strftime("%Y-%m"), "fin": (e.fin or date.today()).strftime("%Y-%m")}
                    for e in req.eventos if e.inicio.year <= req.anio <= (e.fin or date.today()).year), None)
     realidad = {
@@ -298,17 +309,13 @@ def validacion(req: ValidacionRequest) -> dict[str, Any]:
         1998: {"resumen": "El Niño 1997-98 fue extraordinario: lluvias de hasta 16 mm/día en enero en Piura.", "fuente": "ENFEN"},
         2023: {"resumen": "El Niño costero de 2023 trajo calor y lluvias que afectaron mango y uva.", "fuente": "ENFEN"},
     }.get(req.anio)
-    previa = ({"tipo": "preparar drenaje", "accion": "Preparar drenaje y adelantar la cosecha", "motivo": alerta["motivo"], "fuente": "NASA POWER"}
-              if alerta else {"tipo": "sembrar", "accion": "Sembrar con normalidad", "motivo": "La lluvia del año estuvo dentro de lo normal", "fuente": "NASA POWER"})
-    mes_max = f"{req.anio}-{mmax + 1:02d}" if mmax is not None else None
     return {
-        "anio": req.anio, "lat": req.lat, "lon": req.lon, "evento": evento,
-        "series": {"lluvia": {"unidad": "mm/mes", "fuente": "NASA POWER", "valores": valores, "normal": normal, "producto": "POWER PRECTOTCORR"},
-                   "humedadSuelo": {"unidad": "fracción 0-1", "fuente": "NASA POWER", "valores": hum, "normal": hum_n, "producto": "POWER GWETROOT"}},
-        "alerta": alerta, "mesLluviaMaxima": mes_max, "semanasAnticipacion": semanas, "realidad": realidad, "recomendacionPrevia": previa,
-        "resumen": (f"AllpaShift habría dado la alerta el {alerta['fecha']}, {semanas} semanas antes del mes más lluvioso ({mes_max})."
-                    if alerta else "Ese año la lluvia no superó el umbral de alerta."),
-    }
+        "anio": req.anio, "lat": req.lat, "lon": req.lon, "evento": evento, "series": series,
+        "alerta": alerta, "mesLluviaMaxima": f"{req.anio}-{c['pico']:02d}" if c["pico"] else None, "semanasAnticipacion": c["semanas"],
+        "realidad": realidad, "recomendacionPrevia": maquina.recomendacion_previa(c), "resumen": maquina.resumen(req.anio, c),
+        # (extras opcionales) todos los avisos que se habrían dado y las semanas que da cada uno
+        "alertas": c["alertas"], "semanasAnticipacionDrenaje": c["semanasDrenaje"],
+    }  # fmt: skip
 
 
 def _datos_para_guardar(lat: float, lon: float, d: dict[str, Any]) -> list[dict[str, Any]]:
@@ -320,6 +327,9 @@ def _datos_para_guardar(lat: float, lon: float, d: dict[str, Any]) -> list[dict[
         for var, val in (("PRECTOTCORR:lluviaMm", r["lluviaMmDia"]), ("GWETTOP:humedadSuelo", r["humedadSup"]),
                          ("T2M_MAX:tempMaxC", r["tMax"]), ("T2M_MIN:tempMinC", r["tMin"])):
             filas.append({"lat": lat, "lon": lon, "fecha": f, "fuente": "NASA POWER", "variable": var + ":prom30d", "valor": round(val, 4)})
-    if d["sstAnomalia"] is not None:
+    if d["sstRespaldo"]:  # no se graba como "hoy en este punto": es la semana de la caja Niño 1+2
+        filas.append({"lat": lat, "lon": lon, "fecha": d["sstRespaldo"]["semana"], "fuente": "MUR SST",
+                      "variable": "sstAnom:sstAnomaliaC:nino12semanal", "valor": round(d["sstRespaldo"]["anomalia"], 3), "version": "4.1"})
+    elif d["sstAnomalia"] is not None:
         filas.append({"lat": lat, "lon": lon, "fecha": date.today().isoformat(), "fuente": "MUR SST", "variable": "sstAnom:sstAnomaliaC", "valor": round(d["sstAnomalia"], 3), "version": "4.1"})
     return filas

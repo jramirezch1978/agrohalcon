@@ -1,6 +1,7 @@
 """Guardas del asistente de IA: "la IA explica, no inventa".
 
-La IA (Llama vía Groq) la llama la API en Java (contrato: la clave GROQ_API_KEY vive allá). Este módulo pone las reglas
+La IA (Groq, modelo openai/gpt-oss-20b) se llama desde este servicio Python (`app/groq_cliente.py`, endpoint POST /asistente/preguntar): la clave
+GROQ_API_KEY vive solo aquí. Este módulo pone las reglas
 alrededor de esa llamada, todo con código verificable (sin IA):
 
   1. `mensajes()`  arma el prompt: reglas del sistema + SOLO los datos ya calculados + la pregunta (no confiable).
