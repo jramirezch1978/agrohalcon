@@ -1,0 +1,19 @@
+id,nombre,region_id,tipo,lat,lon,aproximada,elevacion_m,pendiente_pct,suelo_ph,suelo_carbono_g_kg,suelo_arcilla_pct,suelo_arena_pct
+1,Bajo Piura,1,agricola,-5.35,-80.7,1,19.0,2.87,7.68,14.13,6.38,78.37
+2,Valle del Chira,1,agricola,-4.9,-80.85,1,26.0,7.0,7.13,21.52,9.05,72.82
+3,Medio Piura - Castilla,1,agricola,-5.2,-80.62,1,34.0,4.04,,,,
+4,San Lorenzo - Tambogrande,1,agricola,-4.93,-80.34,1,87.0,17.01,,,,
+5,Alto Piura - Chulucanas,1,agricola,-5.1,-80.16,1,95.0,4.2,,,,
+6,Sechura - Bernal / Vice,1,agricola,-5.45,-80.8,1,8.0,3.59,7.85,11.4,11.43,69.3
+7,Sierra - Huancabamba,1,agricola,-5.24,-79.45,1,1921.0,25.15,,,,
+8,Valle de Tumbes,2,agricola,-3.57,-80.45,1,30.0,7.22,,,,
+9,Chancay-Lambayeque,3,agricola,-6.7,-79.9,1,18.0,2.49,7.9,10.23,8.22,76.82
+10,Olmos,3,agricola,-5.99,-79.74,1,179.0,5.85,7.4,23.03,27.18,44.88
+11,Jequetepeque,4,agricola,-7.2,-79.45,1,108.0,2.6,7.78,14.25,6.45,81.22
+12,Chavimochic - Virú,4,agricola,-8.41,-78.75,1,77.0,4.47,7.7,13.4,8.92,76.97
+13,Jaén,5,agricola,-5.71,-78.81,1,741.0,4.75,,,,
+14,Valle de Cajamarca,5,agricola,-7.16,-78.5,1,2682.0,4.26,,,,
+15,Bagua - Utcubamba,6,agricola,-5.64,-78.53,1,421.0,5.29,,,,
+16,Alto Mayo - Moyobamba,7,agricola,-6.03,-76.97,1,877.0,4.04,,,,
+101,Mar frente a Piura,8,mar,-5.5,-81.5,0,,,,,,
+102,Mar frente a Paita,8,mar,-5.1,-81.3,0,,,,,,

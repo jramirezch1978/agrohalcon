@@ -1,0 +1,6 @@
+-r requirements-etl.txt
+pytest>=8
+ruff>=0.6
+# Solo para db/probar_postgres.py (PostgreSQL real embebido, sin Docker)
+pgserver>=0.1
+psycopg[binary]>=3.1
