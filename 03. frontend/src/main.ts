@@ -12,6 +12,9 @@ app.use(i18n)
 app.use(router)
 app.mount('#app')
 
+// App móvil (Capacitor): barra de estado, splash y botón atrás. En la web no hace nada.
+void import('./movil/nativo').then((m) => m.iniciarNativo(router))
+
 // PWA: service worker solo en producción (en desarrollo interfiere con la recarga en caliente)
 // En Android (Capacitor) los archivos ya están dentro del APK: no hace falta
 if (import.meta.env.PROD && !Capacitor.isNativePlatform() && 'serviceWorker' in navigator) {
