@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">AgroShift</string>
+    <string name="title_activity_main">AgroShift</string>
+    <string name="package_name">com.agroshift.app</string>
+    <string name="custom_url_scheme">com.agroshift.app</string>
+</resources>
