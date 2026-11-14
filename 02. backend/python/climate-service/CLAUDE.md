@@ -10,7 +10,7 @@ Este directorio es el **servicio de cálculo en Python** (FastAPI). Dueño: Davi
 1. **Contrato del backend**: JSON en **camelCase**, fechas `YYYY-MM-DD`, coordenadas en grados decimales, unidades en el
    nombre del campo (`lluviaMm`). **Nadie cambia ni quita un campo sin avisar al equipo.** Agregar campos opcionales sí se puede,
    y hay que anotarlo en `docs/DECISIONES_ABIERTAS.md`.
-2. **Python solo calcula.** No llama a la NASA ni a la base de datos desde `app/` (eso lo hace Java). Las descargas viven en `etl/`.
+2. **Python consulta la NASA y calcula; nunca toca la base de datos** (decisión de Jhonny, 14-nov, `01. documentacion/29_arquitectura_reglas.md`). Las descargas en línea viven en `app/nasa_cliente.py` y los endpoints para Java en `app/allpashift_api.py` (`/calcular`, `/indicadores-punto`, `/validacion`). Java es la única que lee y graba PostgreSQL. `db/` queda solo para pruebas locales.
 3. **Cero IA en los cálculos.** Indicadores, puntajes y recomendaciones salen de reglas verificables con números en
    `app/thresholds.py`. La IA (Llama vía Groq) solo redacta en Java.
 4. **Transparencia**: cada resultado muestra el dato que lo respalda y su fuente real. Si un dato viene de respaldo (p. ej. POWER en vez
