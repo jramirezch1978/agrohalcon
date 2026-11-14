@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AgroShift · Panel técnico</title>
+<title>AllpaShift · Panel técnico</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
   :root{--bg:#0E1E14;--panel:#14291c;--panel2:#193324;--line:#264a33;--txt:#e8f3ea;--mut:#9db8a4;--verde:#78CD6E;--oro:#E8B740;
@@ -47,12 +47,18 @@
   .mut{color:var(--mut)} .peq{font-size:12.5px}
   select{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
   .hall{display:grid;gap:8px;margin:0;padding-left:18px}
+  input[type=text]{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit}
+  button{background:var(--verde);color:#0E1E14;border:0;border-radius:8px;padding:8px 14px;font:inherit;font-weight:700;cursor:pointer}
+  button:disabled{opacity:.5;cursor:wait}
+  .chip{display:inline-block;margin:3px 4px 0 0;padding:3px 10px;border:1px solid var(--line);border-radius:99px;font-size:12px;color:var(--mut);cursor:pointer;background:var(--panel2)}
+  .chip:hover{color:var(--txt);border-color:var(--verde)}
+  .resp{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:10px}
   footer{color:var(--mut);font-size:12px;padding:0 20px 24px}
 </style>
 </head>
 <body>
 <header>
-  <h1><b>AgroShift</b> · Panel técnico</h1>
+  <h1><b>AllpaShift</b> · Panel técnico</h1>
   <span class="sub" id="sub">cargando…</span>
 </header>
 <div class="aviso">Herramienta interna de David para ver la base de datos y el servicio <code>climate-service</code> funcionando. No es la app de Sheila. Datos: NASA POWER, SMAP, MUR SST, VIIRS NDVI, SRTM · NOAA CPC · ISRIC SoilGrids. El comparador usa un catálogo de <b>PRUEBA</b> (no validado).</div>
@@ -88,6 +94,20 @@
       <div class="mut peq" style="margin-top:8px">Si dos fuentes distintas cuentan lo mismo, el dato es más confiable. Los datos de IMERG y de la caja Niño 1+2 de MUR los bajó Sheila (rama <code>feature/calculos-sheila</code>).</div></div>
   </section>
 
+  <section class="grid2">
+    <div class="card"><h2 id="tMaq">Máquina del tiempo en vivo · <code>POST /validacion</code></h2>
+      <div class="mut peq" style="margin-bottom:8px">Año: <select id="selAnio"><option>2017</option><option>2023</option><option>2019</option><option>1998</option><option>2026</option></select>
+        <span id="maqFuente"></span></div>
+      <div id="maqResumen" class="peq">elige un valle…</div>
+      <div class="chart" style="height:230px;margin-top:8px"><canvas id="cMaq"></canvas></div>
+      <div style="overflow:auto"><table id="tMaqAvisos"></table></div></div>
+    <div class="card"><h2>Pregúntale al asistente · <code>POST /asistente/preguntar</code></h2>
+      <div class="mut peq" id="chatEstado">…</div>
+      <div id="chatChips"></div>
+      <div style="display:flex;gap:8px;margin-top:8px"><input type="text" id="chatQ" maxlength="400" placeholder="¿Por qué no me conviene sembrar arroz?" style="flex:1"><button id="chatBtn">Preguntar</button></div>
+      <div id="chatR" class="mut peq" style="margin-top:8px">La IA solo redacta lo que ya calcularon las reglas; si inventa un número, un cultivo o un satélite, se rechaza y sale el Plan B.</div></div>
+  </section>
+
   <section class="card"><h2>Bases de datos y fuentes (tabla <code>fuente_dato</code>)</h2><div style="overflow:auto"><table id="tFuentes"></table></div></section>
 </main>
 <footer id="pie"></footer>
@@ -99,12 +119,12 @@ const COL = {bajo:'#4caf50', medio:'#E8B740', alto:'#e5533d'};
 const NOM = {lluvia:'Lluvia', humedadSuelo:'Humedad del suelo', calor:'Calor (máx.)', elNino:'Señal de El Niño'};
 const fmt = (x, d=2) => x==null ? '—' : Number(x).toLocaleString('es-PE', {maximumFractionDigits:d, minimumFractionDigits:0});
 const $ = id => document.getElementById(id);
-let D, CAT, charts = {}, mapa, marcadores = {};
+let D, CAT, RECO = null, charts = {}, mapa, marcadores = {};
 
 async function cargar(){
   const [a, b] = await Promise.all([fetch('datos/panel.json'), fetch('datos/catalogo_prueba.json')]);
   D = await a.json(); CAT = (await b.json()).cultivos;
-  pintarKpis(); pintarHallazgos(); pintarMapa(); pintarNino(); pintarFuentes(); pintarContrastes();
+  pintarKpis(); pintarHallazgos(); pintarMapa(); pintarNino(); pintarFuentes(); pintarContrastes(); estadoAsistente(); $('selAnio').onchange = () => maquina(D.zonas.find(z => z.id === +$('selZona').value));
   const sel = $('selZona'); sel.innerHTML = D.zonas.map(z => `<option value="${z.id}">${z.nombre}</option>`).join('');
   sel.onchange = () => elegir(+sel.value);
   $('sub').textContent = `datos al ${D.resumen.fecha_datos} · base generada el ${D.generado} · ${fmt(D.resumen.filas.observacion,0)} observaciones`;
@@ -129,7 +149,7 @@ function pintarHallazgos(){
   const li = [];
   if (e26) li.push(`El episodio de <b>2026</b> (desde ${e26.inicio.slice(0,7)}) ya llega a <b>+${fmt(e26.pico_anomalia_c)} °C</b> en Niño 1+2, por encima de 1983 (+4,03), 1998 (+3,73) y 2023 (+3,30). Verificar con ENFEN/IGP antes de presentarlo.`);
   if (mur) li.push(`MUR SST (NASA) mar adentro frente a Piura: <b>${fmt(sst.valor,1)} °C</b> el ${sst.fecha}, <b>+${fmt(mur.valor,1)} °C</b> sobre su climatología 2003-2022 del mismo día (cálculo propio). Confirma que el +9 °C que vio Jhonny no era un error del dataset.`);
-  if (e17) li.push(`2017 fue un evento corto (pico +${fmt(e17.pico_anomalia_c)} °C): el <b>ONI lo marcó neutral</b>; la señal local y la lluvia de POWER sí lo vieron. Por eso AgroShift usa la señal del mar de la costa.`);
+  if (e17) li.push(`2017 fue un evento corto (pico +${fmt(e17.pico_anomalia_c)} °C): el <b>ONI lo marcó neutral</b>; la señal local y la lluvia de POWER sí lo vieron. Por eso AllpaShift usa la señal del mar de la costa.`);
   const z = D.zonas.find(z => z.nombre==='Bajo Piura');
   const m = z?.composite_lluvia.find(c => c.mes===3);
   if (m) li.push(`En Bajo Piura, la lluvia de marzo en años de Niño costero (${m.nino} mm/día) fue <b>${fmt(m.razon,1)} veces</b> la de años normales (${m.normal} mm/día).`);
@@ -184,7 +204,7 @@ function elegir(id){
     ${h?.trazabilidad?.advertencias?.length ? `<div class="mut peq" style="margin-top:8px">⚠ ${h.trazabilidad.advertencias.join(' · ')}</div>`:''}
     <div class="mut peq" style="margin-top:8px">Selector: <select id="selZona2"></select></div>`;
   const s2 = $('selZona2'); s2.innerHTML = D.zonas.map(q => `<option value="${q.id}" ${q.id===id?'selected':''}>${q.nombre}</option>`).join(''); s2.onchange = () => elegir(+s2.value);
-  pintar2017(z); pintarIm17(z); pintarSat(z); comparar(z);
+  pintar2017(z); pintarIm17(z); pintarSat(z); comparar(z); maquina(z);
 }
 
 function destruir(k){ if(charts[k]){ charts[k].destroy(); delete charts[k]; } }
@@ -237,7 +257,7 @@ async function comparar(z){
     const cuerpo = { ...z.hoy.entrada, cultivos: CAT, fecha: z.hoy.fecha, incertidumbre: true, rotacionActualId: 1 };
     const r = await fetch('/recomendacion', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(cuerpo)});
     if(!r.ok) throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,160));
-    const reco = await r.json();
+    const reco = await r.json(); RECO = reco;
     cont.innerHTML = `<div class="peq"><b>${reco.queHacer.accion}</b><br><span class="mut">Motivo: ${reco.queHacer.motivo} (${reco.queHacer.fuente})</span></div>` +
       reco.rotaciones.map(o => `<div class="fila"><div style="display:flex;justify-content:space-between;gap:8px"><b>${o.nombre}</b><span><span class="pill ${o.riesgo}">${o.riesgo}</span> <b>${o.puntaje}</b>/100</span></div>
         <div class="barra"><div class="rango" style="left:${o.puntajeMin}%;width:${o.puntajeMax-o.puntajeMin}%;background:${COL[o.riesgo]}"></div><div class="p" style="width:${o.puntaje}%;background:${COL[o.riesgo]}"></div></div>
@@ -246,6 +266,57 @@ async function comparar(z){
     const e = await (await fetch('/asistente/plan-b', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({recomendacion:reco})})).json();
     exp.innerHTML = `<div class="peq" style="color:var(--txt)">${e.respuesta}</div><div class="mut peq" style="margin-top:6px">Origen: ${e.origen} · fuentes: ${e.fuentes.join(', ')}</div>`;
   }catch(err){ cont.innerHTML = `<div class="alto peq">No pude llamar al servicio: ${err.message}<br>Abre esta página desde <code>http://localhost:8000/panel/</code> con <code>uvicorn app.main:app</code> encendido.</div>`; exp.textContent=''; }
+}
+
+const PREGUNTAS = ['¿Por qué esa rotación?', '¿Me conviene sembrar arroz?', '¿Qué significa la señal de El Niño?', '¿De dónde salen estos datos?'];
+async function estadoAsistente(){
+  $('chatChips').innerHTML = PREGUNTAS.map(p => `<span class="chip">${p}</span>`).join('');
+  document.querySelectorAll('#chatChips .chip').forEach(c => c.onclick = () => { $('chatQ').value = c.textContent; preguntar(); });
+  $('chatBtn').onclick = preguntar; $('chatQ').onkeydown = e => { if(e.key === 'Enter') preguntar(); };
+  try{
+    const e = await (await fetch('/asistente/estado')).json();
+    $('chatEstado').innerHTML = e.groq
+      ? `<span class="pill en_uso">Groq activo</span> modelo <code>${e.modelo}</code> (licencia ${e.licenciaModelo}) · la clave vive solo en el servidor · límite ${e.limites.porMinutoPorCliente} preguntas/min por cliente`
+      : `<span class="pill planeado">Sin clave de Groq</span> responde con plantillas (Plan B, sin IA). Para activar Groq: pon <code>GROQ_API_KEY</code> en <code>.env</code> y reinicia el servicio. Modelo previsto: <code>${e.modelo}</code> (${e.licenciaModelo}).`;
+  }catch(err){ $('chatEstado').textContent = 'No pude consultar /asistente/estado: ' + err.message; }
+}
+async function preguntar(){
+  const q = $('chatQ').value.trim(), out = $('chatR'); if(!q) return;
+  if(!RECO){ out.textContent = 'Elige un valle y espera a que se calcule la recomendación.'; return; }
+  $('chatBtn').disabled = true; out.innerHTML = '<span class="mut">pensando…</span>';
+  try{
+    const r = await fetch('/asistente/preguntar', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({pregunta:q, idioma:'es', recomendacion:RECO})});
+    if(!r.ok) throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,160));
+    const a = await r.json(), ia = a.origen.startsWith('groq');
+    const v = a.validacion && !a.validacion.ok ? `<div class="alto peq" style="margin-top:6px">La respuesta del modelo se rechazó: ${a.validacion.problemas.join(' · ')}</div>` : '';
+    out.innerHTML = `<div class="resp"><div style="color:var(--txt)">${a.respuesta}</div>${v}
+      <div class="mut peq" style="margin-top:6px"><span class="pill ${ia ? 'en_uso' : 'planeado'}">${ia ? 'IA validada' : 'sin IA'}</span> origen: ${a.origen}${a.ms ? ' · ' + a.ms + ' ms' : ''} · fuentes: ${a.fuentes.join(', ')}</div></div>`;
+  }catch(err){ out.innerHTML = `<div class="alto peq">${err.message}</div>`; }
+  $('chatBtn').disabled = false;
+}
+
+async function maquina(z){
+  destruir('cMaq'); const anio = +$('selAnio').value;
+  $('tMaq').innerHTML = `Máquina del tiempo en vivo · ${z.nombre} · <code>POST /validacion</code>`;
+  $('maqResumen').textContent = 'consultando al servicio…'; $('tMaqAvisos').innerHTML = ''; $('maqFuente').textContent = '';
+  try{
+    const eventos = [{nombre:'El Niño costero 2017', inicio:'2017-01-01', fin:'2017-04-30'}];
+    const r = await fetch('/validacion', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({anio, lat:z.lat, lon:z.lon, eventos})});
+    if(!r.ok) throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,160));
+    const v = await r.json(), ll = v.series.lluvia;
+    $('maqFuente').innerHTML = `· lluvia: <b>${ll.fuente}</b>${ll.punto ? ' (punto ' + ll.punto.nombre + ', a ' + ll.punto.distanciaKm + ' km)' : ''}`;
+    const anticip = v.semanasAnticipacion != null ? `<span class="pill bajo">${v.semanasAnticipacion} semanas de anticipación</span>` : '<span class="pill planeado">sin lluvia extrema que anticipar</span>';
+    $('maqResumen').innerHTML = `${anticip} ${v.semanasAnticipacionDrenaje != null ? `<span class="pill medio">drenaje: ${v.semanasAnticipacionDrenaje} sem.</span>` : ''}<div style="margin-top:6px">${v.resumen}</div>`
+      + (v.realidad ? `<div class="mut peq" style="margin-top:4px">Lo que pasó (${v.realidad.fuente}): ${v.realidad.resumen}</div>` : '');
+    const meses = ['E','F','M','A','M','J','J','A','S','O','N','D'];
+    charts.cMaq = new Chart($('cMaq'), { data:{ labels:meses, datasets:[
+      {type:'bar', label:`Lluvia ${anio} (mm/mes)`, data:ll.valores, backgroundColor:ll.valores.map((x,i) => x != null && ll.normal[i] != null && x > Math.max(3*ll.normal[i], 30) ? COL.alto : '#7fb4d6'), order:2},
+      {type:'line', label:'normal', data:ll.normal, borderColor:'#e8f3ea', borderDash:[5,4], pointRadius:2, order:1} ]},
+      options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{ticks:{color:'#9db8a4'}, grid:{display:false}}, y:{ticks:{color:'#9db8a4'}, grid:{color:'#264a33'}} }, plugins:{legend:{labels:{color:'#e8f3ea'}}} } });
+    $('tMaqAvisos').innerHTML = v.alertas.length
+      ? '<tr><th>Aviso</th><th>Nivel</th><th>Fecha</th><th>Valor</th><th>Fuente</th></tr>' + v.alertas.map(a => `<tr><td>${a.indicador === 'elNino' ? 'Temperatura del mar (Niño 1+2)' : 'Lluvia del mes'}</td><td><span class="pill ${a.nivel}">${a.nivel}</span></td><td>${a.fecha}</td><td>${a.indicador === 'elNino' ? fmt(a.valor,1) + ' °C' : fmt(a.valor,0) + ' mm'}</td><td>${a.fuente}</td></tr>`).join('')
+      : '<tr><td class="mut">Ese año ninguna señal superó los umbrales.</td></tr>';
+  }catch(err){ $('maqResumen').innerHTML = `<div class="alto peq">No pude llamar al servicio: ${err.message}</div>`; }
 }
 
 function pintarIm17(z){

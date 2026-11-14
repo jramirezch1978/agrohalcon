@@ -12,7 +12,9 @@ PANEL_JSON = RAIZ / "data" / "backup" / "panel.json"
 @pytest.mark.skipif(not (RAIZ / "panel" / "index.html").exists(), reason="sin carpeta panel/")
 def test_el_panel_se_sirve(client):
     r = client.get("/panel/")
-    assert r.status_code == 200 and "AgroShift" in r.text and "/recomendacion" in r.text
+    assert r.status_code == 200 and "AllpaShift" in r.text and "/recomendacion" in r.text
+    for ruta in ("/validacion", "/asistente/preguntar", "/asistente/estado"):  # las tarjetas nuevas llaman a estos endpoints
+        assert ruta in r.text, ruta
 
 
 @pytest.mark.skipif(not PANEL_JSON.exists(), reason="corre `python -m db.export_panel`")
