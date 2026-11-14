@@ -1,0 +1,63 @@
+# Umbrales de AgroShift. Todos se pueden ajustar sin tocar código.
+# "supuesto" = valor elegido por el equipo (no viene de una norma); se documenta en la entrega.
+
+# Días que se promedian para el "estado actual" (terminan en el último día con datos de NASA POWER,
+# que va ~3 días detrás de hoy).
+ventana_dias: 30            # supuesto (el pedido permite 15 a 30; 30 días suaviza la lluvia diaria)
+
+lluvia:
+  # |anomalía %| = |actual - normal| / normal * 100
+  medio: 20                 # supuesto
+  alto: 40                  # supuesto
+  # En la estación seca la normal es casi 0 mm/día y cualquier llovizna da +300 %.
+  # Si la lluvia actual Y la normal están por debajo de este valor, no hay señal: nivel bajo.
+  minimo_significativo_mm_dia: 1.0   # supuesto
+
+humedad_suelo:
+  # Solo cuenta el déficit (bajo lo normal = riesgo de sequía). El exceso de agua lo mide "lluvia".
+  medio: 20                 # supuesto
+  alto: 40                  # supuesto
+
+calor:
+  # Diferencia en °C del promedio de T2M_MAX frente a T2M_MAX_AVG (climatología 2001-2025)
+  medio: 1.5                # supuesto
+  alto: 3.0                 # supuesto
+
+el_nino:
+  # Anomalía de la temperatura del mar en Niño 1+2 (0°-10° S, 90°-80° O), en °C.
+  # Referencia: el ENFEN (Perú) usa en Niño 1+2 el ICEN: débil 0.4-1.0, moderado 1.0-1.7,
+  # fuerte 1.7-3.0. Los cortes de abajo son una simplificación del equipo.
+  medio: 0.5                # supuesto (cercano al umbral "débil" del ENFEN)
+  alto: 1.5                 # supuesto (cercano al umbral "fuerte" del ENFEN)
+
+# ---------- Fase 2: riesgo de la campaña (clima histórico de cada mes vs. lo que tolera el cultivo) ----------
+campana:
+  temperatura:
+    # Grados que la máxima diaria media del mes supera temp_max del cultivo (o la mínima queda bajo temp_min)
+    medio: 0.0              # supuesto: cualquier salida del rango ya es riesgo medio
+    alto: 3.0               # supuesto
+  # Agua que necesita el cultivo por mes según su categoría "agua" del catálogo (mm/mes).
+  # Orden de magnitud de la FAO (arroz ~1 000-1 500 mm por campaña). Supuesto del equipo.
+  necesidad_agua_mm_mes:
+    bajo: 60
+    medio: 110
+    alto: 200
+  # Lluvia del mes / necesidad. Por debajo: el cultivo depende del riego (la costa de Piura es casi toda
+  # agricultura bajo riego, por eso el déficit de lluvia solo llega a "medio"). Supuesto.
+  deficit_ratio_medio: 0.25
+  # Exceso: lluvia del mes > N veces la necesidad Y > X mm (inundación, enfermedades). Supuesto.
+  exceso_medio: {ratio: 1.5, mm: 100}
+  exceso_alto: {ratio: 2.0, mm: 200}
+  # Meses en que El Niño costero sube un nivel el riesgo de lluvia (costa norte de Perú y sur de Ecuador)
+  meses_nino: [1, 2, 3, 4]
+
+# ---------- Fase 2: puntaje de rotaciones (100 puntos menos descuentos) ----------
+rotaciones:
+  agua_alto_deficit_alto: -40
+  agua_alto_deficit_medio: -20
+  temperatura_por_mes: -10
+  temperatura_maximo: -30
+  mes_riesgo_alto: -10
+  siembra_fuera_de_meses: -15   # por cada cultivo de la rotación sembrado fuera de sus meses
+  riesgo_bajo_desde: 70         # puntaje >= 70 → bajo
+  riesgo_medio_desde: 45        # 45-69 → medio; < 45 → alto
