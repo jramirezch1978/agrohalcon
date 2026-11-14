@@ -89,3 +89,23 @@ Laptop y dispositivos · cargadores · **software instalado antes del sábado** 
 
 ## Certificado
 Todos los que envíen su proyecto antes del cierre reciben un **certificado digital de participación**.
+
+## Recursos recomendados por el mentor en la reunión de Meet (2026-11-14, 12:54-12:56): Scopus y MDPI
+
+- **Qué es:** https://www.elsevier.com/products/scopus. Es la base de datos de resúmenes y citas científicas de Elsevier (artículos revisados por pares).
+- **Para qué nos sirve:**
+  - Respaldar con papers el criterio de **Validez** y la sección **References** de la entrega: impacto de El Niño en la agricultura de Piura, rotación de cultivos, coeficientes Kc y uso de SMAP, IMERG y MODIS en agricultura.
+- **Acceso:** es de pago. Se entra **gratis con la cuenta de una universidad suscrita**, por ejemplo con el correo institucional de UDEP (Alejandro) o de la universidad de Sheila. Desde fuera solo se ve la vista previa de autores.
+- **Alternativas libres:**
+  - **Google Scholar**.
+  - **OpenAlex** (API gratuita: `https://api.openalex.org/works?search=...`).
+  - **Semantic Scholar**.
+  - **NASA NTRS** (ya probado en [06_apis_nasa](06_apis_nasa.md)).
+  - **SciELO Perú** y el **repositorio del SENAMHI y del INIA**.
+- **Búsquedas sugeridas:** `"El Niño" AND Piura AND agriculture`, `"crop rotation" AND "remote sensing"`, `SMAP AND "soil moisture" AND irrigation`, `"table grape" AND Piura`.
+
+### MDPI (también lo pasó el mentor)
+
+- **Qué es:** https://www.mdpi.com/about/journals. Es una editorial **de acceso abierto**: los papers se leen y descargan **gratis**, sin cuenta universitaria.
+- **Revistas útiles para AllpaShift:** *Remote Sensing*, *Agronomy*, *Agriculture*, *Water*, *Climate*, *Sustainability*, *Land* y *Horticulturae* (uva y frutales).
+- **Uso:** es la fuente más práctica para las **References** de la entrega, porque el jurado puede abrir los enlaces sin pagar.
