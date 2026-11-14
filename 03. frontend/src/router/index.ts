@@ -40,3 +40,19 @@ router.beforeEach((to) => {
   // Sin parcela elegida: elegirla en el mapa
   if (to.meta.requiereParcela && !store.parcela) return { name: 'mapa' }
 })
+
+// Tras un despliegue, el navegador puede tener la versión anterior y pedir una pantalla (chunk) que ya no existe.
+// En ese caso se recarga UNA vez para traer la versión nueva (si no, botones como "Omitir" parecen no hacer nada).
+router.onError((error, to) => {
+  const msg = String((error as Error)?.message ?? error)
+  const esChunk = /Failed to fetch dynamically imported module|Importing a module script failed|error loading dynamically imported module/i.test(msg)
+  if (!esChunk) return
+  try {
+    if (sessionStorage.getItem('allpashift:chunk-recargado') === to.fullPath) return
+    sessionStorage.setItem('allpashift:chunk-recargado', to.fullPath)
+  } catch {
+    /* sin sessionStorage: igual se recarga */
+  }
+  window.location.hash = '#' + to.fullPath
+  window.location.reload()
+})
