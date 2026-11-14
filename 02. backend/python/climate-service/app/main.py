@@ -13,6 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from . import __version__, asistente
+from .allpashift_api import router as router_allpashift  # Java → Python: descargas NASA y cálculo (doc 29)
 from .crops import DatosInvalidos
 from .indicators import calcular_indicadores
 from .que_hacer import construir_que_hacer
@@ -32,6 +33,9 @@ app = FastAPI(
     description="Indicadores de riesgo (lluvia, humedad del suelo, calor, El Niño) y puntaje de "
     "rotaciones con datos de la NASA. Reglas verificables: no usa IA para calcular.",
 )
+
+
+app.include_router(router_allpashift)
 
 
 @app.get("/salud", summary="Estado del servicio")

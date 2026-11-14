@@ -32,7 +32,6 @@ services:
     restart: unless-stopped
     environment:
       EARTHDATA_TOKEN: ${EARTHDATA_TOKEN:-}
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@allpashift-postgres:5432/${POSTGRES_DB}
       TZ: America/Lima
     networks: [allpashift_net]
 
