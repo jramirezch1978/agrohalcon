@@ -50,3 +50,30 @@
 3. **Datos reales:** la etiqueta "Dato: Ejemplo" debe cambiar a la fuente real (SMAP, IMERG, POWER) cuando climate-service entregue los indicadores.
 4. **Mapa:** el prototipo usa un mapa mundial. Para la demo de Piura conviene sumar la **capa de los 18 valles** y la superficie agrícola (doc 24, sección 4).
 5. **Cultivos:** las tarjetas usan frijol, maíz, algodón y arroz. El catálogo ya tiene 37 (doc 17), con uva, mango y limón para la opción "Ya tengo un cultivo permanente".
+
+## 5. Implementado en AllpaShift (2026-11-14, desplegado en http://2.29.101.199)
+
+Interfaz reconstruida con el mismo diseño del prototipo: menú lateral verde, acento lima, tarjetas blancas, tarjeta de acción oscura, ES/EN y modo oscuro. Pantallas:
+- **Mapa:** buscador mundial (OpenStreetMap Nominatim), "Usar mi ubicación", leyenda de riesgo, los **18 valles** marcados y la tarjeta "Mi parcela" con "Analizar esta parcela".
+- **¿Qué hago?:**
+  - Elección entre sembrar o cultivo permanente, con 7 permanentes.
+  - Alerta, acción recomendada (ESPERAR / SEMBRAR / PROTEGER / REGAR / COSECHAR) con su motivo y el dato que la respalda.
+  - Mes de siembra cambiable, compartir por WhatsApp y mejor rotación.
+  - Preguntas al asistente y **"Lo que ven los satélites"** (humedad del suelo, lluvia de 30 días, calor y mar).
+- **¿Qué siembro?:**
+  - Selector de mes (Nov, Dic, Ene) y 3 rotaciones con puntaje animado, riesgo, uso de agua y "¿Por qué este puntaje?".
+  - **Perspectiva de la campaña** (barra de meses en verde, ámbar o rojo, mes más riesgoso y detalle al tocar) y comparación de puntajes (ECharts).
+- **¿Funciona?:** máquina del tiempo 2016 frente a 2017 con NASA POWER de la parcela, más la tabla IMERG por valle.
+- **Ayuda** y botón flotante **"Pregúntale a AllpaShift"**. El asistente responde solo con los resultados ya calculados.
+
+**Datos reales:**
+- NASA POWER: normal climatológica y últimos 30 días.
+- MUR SST: anomalía del mar, vía el proxy `/nasa/erddap/` de Nginx, porque ERDDAP no permite CORS.
+- Si NASA no responde, se usan datos de ejemplo y la etiqueta lo dice ("Dato: Ejemplo").
+
+⚠️ **Hallazgo del 14-nov (Medio Piura, NASA POWER):**
+- **240 mm de lluvia en 30 días**, cuando lo normal son unos 5 mm.
+- Humedad del suelo +91 %.
+- Mar **+8,5 °C** (MUR SST, en un punto a ~100 km de la costa).
+
+Coincide con el ONI +2,46 que reportó David y apunta a un **El Niño fuerte en curso**. **Contrastarlo con el comunicado del ENFEN** antes de mostrarlo en la demo.
