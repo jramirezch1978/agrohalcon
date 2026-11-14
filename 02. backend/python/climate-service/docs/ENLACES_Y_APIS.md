@@ -27,6 +27,17 @@ Verificador automático de los enlaces de la entrega: `python -m etl.verificar_e
 | ECOSTRESS / SRTM / HLS (opcionales) | `ECO_L3T_JET` v003 · `SRTMGL1` v003 · `HLSL30` v2.0 (LP DAAC) | Earthdata | ❌ |
 | FIRMS (focos de calor, opcional) | https://firms.modaps.eosdis.nasa.gov/api/map_key | solo correo | ❌ |
 
+### Probado con el token de Earthdata (14-nov-2026, tarde)
+| Fuente | Cómo se lee | Estado |
+|---|---|---|
+| SMAP SPL3SMP_E v006 (NSIDC) | `earthaccess` abre el HDF5 por HTTP y `h5py` lee el arreglo; píxel con EASE-Grid 2.0 (EPSG:6933, verificado 8/8) | ✅ autorizado |
+| MUR SST v4.1 (PO.DAAC) | OPeNDAP (Hyrax): `https://opendap.earthdata.nasa.gov/collections/C1996881146-POCLOUD/granules/<aaaammdd>090000-JPL-L4_GHRSST-SSTfnd-MUR-GLOB-v02.0-fv04.1.dap.nc4?dap4.ce=/analysed_sst[0][i][j]` (corchetes codificados, `;` entre variables) con `Authorization: Bearer` | ✅ ~2,5 s por punto |
+| VIIRS NDVI VNP13A1 v002 · SRTMGL1 v003 · MOD13Q1 v061 (LP DAAC) | `earthaccess.search_data(... point=(lon, lat))` + lectura parcial / descarga de la tesela | ✅ autorizado |
+| GPM IMERG · GLDAS (GES DISC) | igual que arriba | ⛔ `403 EULA Acceptance Failure`: aceptar https://urs.earthdata.nasa.gov/approve_app?client_id=e2WVk8Pw6weeLUKZYOxvTQ |
+| AppEEARS | login con usuario y clave (no acepta el token) | ❌ no necesario |
+| NOAA CPC Niño 1+2/3/3.4/4 | https://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices (texto, desde 1982) | ✅ sin llave |
+| ISRIC SoilGrids v2 | `https://rest.isric.org/soilgrids/v2.0/properties/query?lon=&lat=&property=phh2o&property=soc&property=clay&property=sand&depth=0-5cm&depth=5-15cm&depth=15-30cm&value=mean` (lento, ~13 s) | ✅ vacío donde no hay suelo mapeado |
+
 ### Ejemplos que funcionan (PowerShell, `curl.exe`)
 ```powershell
 # Lluvia y humedad MENSUAL 2016-2017 en un punto (marzo 2017 = El Niño costero)

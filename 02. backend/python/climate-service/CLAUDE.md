@@ -46,7 +46,8 @@ Python **3.11** (venv en `.venv`). El 3.14 del sistema no se usa.
 - ✅ Probado con datos reales: NASA POWER, NOAA Niño 1+2/ONI, MUR SST (OPeNDAP de PO.DAAC), SRTM, SoilGrids (parcial), CMR, validación 2017, base de datos, panel.
 - ⏳ SMAP y VIIRS NDVI: se leen del HDF5 remoto; mira `fuente_dato.estado` para saber si ya están ingeridos.
 - ⛔ IMERG y GLDAS: bloqueados hasta que David acepte el acuerdo de GES DISC (`403 EULA Acceptance Failure`). ECOSTRESS: planeado.
-- ❌ Sin probar: Dockerfile (no hay Docker), SQL de PostgreSQL en un servidor real (solo validado con sqlglot), asistente contra Groq real (no hay `GROQ_API_KEY`; las guardas sí tienen pruebas).
+- ✅ SQL de PostgreSQL verificado contra un PostgreSQL 16.2 real embebido (`python -m db.probar_postgres`, `pytest -m postgres`); falta repetirlo en el servidor de Jhonny.
+- ❌ Sin probar: Dockerfile (no hay Docker), asistente contra Groq real (no hay `GROQ_API_KEY`; las guardas sí tienen pruebas), IMERG (bloqueado por el acuerdo de GES DISC).
 - La señal de El Niño del servicio es el **índice Niño 1+2 de NOAA CPC** (no NASA); MUR SST da el valor y una anomalía propia. El NDVI es de **VIIRS** (el PDF dice MODIS).
 - POWER `T2M_MAX` en Piura da ~37-39 °C en marzo (parece sesgado al calor): compárense solo anomalías. Ver `docs/DECISIONES_ABIERTAS.md`.
 

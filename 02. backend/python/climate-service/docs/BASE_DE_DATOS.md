@@ -6,7 +6,8 @@ El servicio Python **no se conecta a la base de datos** (contrato). La base exis
 ## Un esquema, dos motores
 
 [`db/schema.py`](../db/schema.py) (SQLAlchemy Core) genera SQLite (`data/agroshift.sqlite`, para trabajar sin Docker) y SQL de PostgreSQL (tipos `JSONB`, `BIGSERIAL`, vistas `CREATE OR REPLACE VIEW`).
-No había PostgreSQL ni Docker en la PC de David: el SQL se valida con **sqlglot** (gramática de PostgreSQL) y se prueba en SQLite con claves foráneas activas; **falta probarlo en un PostgreSQL real** (lo hace Jhonny).
+No había PostgreSQL ni Docker en la PC de David, así que el SQL se comprobó de tres formas: con **sqlglot** (gramática de PostgreSQL), en SQLite con claves foráneas activas y, sobre todo, contra un **PostgreSQL 16.2 real embebido** (`pgserver`): `python -m db.probar_postgres`
+ejecuta `01_schema.sql`, carga **todas** las semillas (158 mil observaciones, JSONB, booleanos, fechas), compara los conteos de cada tabla con SQLite y consulta las vistas. Resultado del 14-nov: **todo coincide**. Jhonny solo debe repetirlo en su servidor.
 
 ```powershell
 python -m db.build              # SQLite desde la caché de descargas (python -m etl.jobs ...)

@@ -9,8 +9,9 @@ testpaths = ["tests"]
 pythonpath = ["."]
 markers = [
     "live: llama a APIs reales de la NASA (necesita internet). Ejecutar con: pytest -m live",
+    "postgres: prueba contra un PostgreSQL real embebido (lenta). Ejecutar con: pytest -m postgres",
 ]
-addopts = "-m 'not live'"
+addopts = "-m 'not live and not postgres'"
 filterwarnings = ["ignore:Using .httpx. with:Warning"]
 
 [tool.ruff]

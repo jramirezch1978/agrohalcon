@@ -11,7 +11,7 @@ REGIONES = [
 
 # (id, codigo, nombre, institucion, producto, version, doi, resolucion, cobertura, url, acceso, estado, nota)
 FUENTES = [
-    (1, "POWER", "NASA POWER (AG)", "NASA LaRC", "POWER monthly/daily", "v2.10", None, "0,5° (~55 km)", "1981-hoy (rezago 2-3 días)",
+    (1, "POWER", "NASA POWER (AG)", "NASA LaRC", "POWER monthly/daily", "2.10", None, "0,5° (~55 km)", "1981-hoy (rezago 2-3 días)",
      "https://power.larc.nasa.gov/docs/services/api/", "API pública, sin llave", "en_uso",
      "Normal histórico 1991-2020 calculado aquí. T2M_MAX parece sesgado al calor en Piura: comparar anomalías."),
     (2, "SMAP", "SMAP L3 humedad del suelo (mejorada)", "NASA / NSIDC DAAC", "SPL3SMP_E", "006", "10.5067/M20OXIZHY3RJ", "9 km", "2015-hoy, cada 2-3 días",

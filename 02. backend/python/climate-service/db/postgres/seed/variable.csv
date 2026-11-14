@@ -1,0 +1,16 @@
+id,codigo,nombre,unidad,fuente_id,descripcion
+1,T2M,Temperatura media a 2 m,°C,1,Promedio diario de la temperatura del aire a 2 metros
+2,T2M_MAX,Temperatura máxima a 2 m,°C,1,Máxima diaria; en la celda de Piura da 37-39 °C en marzo (sesgo cálido probable)
+3,T2M_MIN,Temperatura mínima a 2 m,°C,1,Mínima diaria
+4,PRECTOTCORR,Precipitación corregida,mm/día,1,"Lluvia diaria promedio (reanálisis corregido, no es IMERG)"
+5,GWETTOP,Humedad superficial del suelo,fracción 0-1,1,Humedad relativa de la capa superior; no equivale a m3/m3 de SMAP
+6,GWETROOT,Humedad de la zona de raíz,fracción 0-1,1,Humedad relativa de la zona de raíz
+7,ALLSKY_SFC_SW_DWN,Radiación solar,MJ/m²/día,1,"Irradiancia de onda corta, cielo real"
+8,RH2M,Humedad relativa a 2 m,%,1,Humedad relativa del aire
+9,WS2M,Viento a 2 m,m/s,1,Velocidad del viento a 2 metros
+10,EVPTRNS,Evapotranspiración (flujo de energía),MJ/m²/día,1,Demanda de agua del cultivo (aprox.)
+11,SMAP_SM,Humedad del suelo SMAP (mañana),m3/m3,2,"soil_moisture AM, calidad recomendada"
+12,IMERG_PRECIP,Precipitación IMERG,mm/día,3,Lluvia diaria de satélite
+13,VNP13A1_NDVI,NDVI VIIRS (16 días),índice,6,"NDVI de la compuesta de 16 días, píxel de 500 m"
+14,MUR_SST,Temperatura del mar MUR,°C,7,analysed_sst convertida de kelvin
+15,MUR_SST_ANOM,Anomalía de MUR SST vs 2003-2022,°C,7,Calculada aquí: SST del día menos la climatología del mismo día del año

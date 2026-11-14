@@ -160,8 +160,8 @@ def cargar_satelites(con, zid: dict[str, int]) -> dict[str, int]:
         for k in ("reciente", "ene_may_2017"):
             filas += [{"zona_id": zid[d["zona"]], "fecha": _f(d["fecha"]), "escala": "diaria", "variable_id": vid["SMAP_SM"], "valor": d["valor"], "calidad": "recomendada"} for d in smap[k]["datos"]]
     clima = cache.leer("smap_clima")
-    if clima:
-        filas += [{"zona_id": zid[d["zona"]], "fecha": _f(d["fecha"]), "escala": "diaria", "variable_id": vid["SMAP_SM"], "valor": d["valor"], "calidad": "recomendada"} for d in clima["datos"]]
+    if clima:  # calidad="clima": solo estas filas forman el 'normal' de SMAP (ver _smap_ventana)
+        filas += [{"zona_id": zid[d["zona"]], "fecha": _f(d["fecha"]), "escala": "diaria", "variable_id": vid["SMAP_SM"], "valor": d["valor"], "calidad": "clima"} for d in clima["datos"]]
     n["SMAP"] = _insertar_obs(con, filas)
 
     filas = []
@@ -258,8 +258,10 @@ def _smap_ventana(con, zona_id: int, hasta: date, dias: int = 14) -> tuple[float
     """(valor actual, normal del mes) de SMAP, o None si no hay datos suficientes (≥2 en la ventana, ≥8 en la climatología)."""
     act = con.execute(text("SELECT AVG(o.valor), COUNT(*) FROM observacion o JOIN variable v ON v.id = o.variable_id WHERE v.codigo = 'SMAP_SM' AND o.zona_id = :z AND o.fecha BETWEEN :d AND :h"),
                       {"z": zona_id, "d": (hasta - timedelta(days=dias - 1)).isoformat(), "h": hasta.isoformat()}).fetchone()  # fmt: skip
-    nor = con.execute(text("SELECT AVG(o.valor), COUNT(*) FROM observacion o JOIN variable v ON v.id = o.variable_id WHERE v.codigo = 'SMAP_SM' AND o.zona_id = :z AND o.fecha BETWEEN '2016-01-01' AND '2025-12-31' AND CAST(SUBSTR(CAST(o.fecha AS VARCHAR(10)), 6, 2) AS INTEGER) = :m"),
-                      {"z": zona_id, "m": hasta.month}).fetchone()  # fmt: skip
+    # El normal sale SOLO de la climatología muestreada (calidad='clima') y SIN el año evaluado: si no, un evento extremo
+    # (2017) se compararía consigo mismo y la anomalía saldría ~0.
+    nor = con.execute(text("SELECT AVG(o.valor), COUNT(*) FROM observacion o JOIN variable v ON v.id = o.variable_id WHERE v.codigo = 'SMAP_SM' AND o.calidad = 'clima' AND o.zona_id = :z AND o.fecha BETWEEN '2016-01-01' AND '2025-12-31' AND CAST(SUBSTR(CAST(o.fecha AS VARCHAR(10)), 6, 2) AS INTEGER) = :m AND CAST(SUBSTR(CAST(o.fecha AS VARCHAR(10)), 1, 4) AS INTEGER) <> :a"),
+                      {"z": zona_id, "m": hasta.month, "a": hasta.year}).fetchone()  # fmt: skip
     if act and act[1] and act[1] >= 2 and nor and nor[1] and nor[1] >= 8:
         return float(act[0]), float(nor[0])
     return None

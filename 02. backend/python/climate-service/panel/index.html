@@ -63,7 +63,8 @@
   <section class="card"><h2>Lo que dicen los datos</h2><ul class="hall" id="hallazgos"></ul></section>
 
   <section class="grid2">
-    <div class="card"><h2>Mapa de riesgo hoy · 16 valles del norte (clic en un valle)</h2><div id="mapa"></div></div>
+    <div class="card"><h2>Mapa de riesgo hoy · 16 valles del norte (clic en un valle)</h2><div id="mapa"></div>
+      <div class="mut peq" style="margin-top:6px">Círculos = nivel máximo de riesgo del valle. Capas de la NASA (GIBS): lluvia IMERG y temperatura del mar MUR del día del dato (el mar frente a Piura se ve muy caliente).</div></div>
     <div class="card" id="detalle"><h2>Valle</h2><div class="mut">Elige un valle en el mapa o aquí:
       <select id="selZona"></select></div></div>
   </section>
@@ -130,6 +131,11 @@ function pintarHallazgos(){
   if (sig.length){ const p = sig.map(q => q.tendencias.T2M.pendiente_decada); li.push(`Tendencia de temperatura (Mann-Kendall + pendiente de Sen, 1981-2025): sube de forma significativa (p &lt; 0,05) en <b>${sig.length} de ${D.zonas.length} valles</b>, entre +${fmt(Math.min(...p))} y +${fmt(Math.max(...p))} °C por década.`); }
   const sinTend = D.zonas.filter(q => q.tendencias.PRECTOTCORR && q.tendencias.PRECTOTCORR.p >= 0.05).length;
   li.push(`La lluvia anual no muestra tendencia significativa en ${sinTend} de ${D.zonas.length} valles: lo que cambia es la variabilidad entre años (El Niño), no el promedio.`);
+  // NDVI VIIRS: ¿cayó la vegetación en mar-may 2017 frente a dic-ene? (el PDF dice que sí; los datos dicen que no)
+  const med = (a, d, h) => { const v = a.filter(p => p.fecha >= d && p.fecha <= h).map(p => p.ndvi); return v.length ? v.reduce((s,x)=>s+x,0)/v.length : null; };
+  const cmp = D.zonas.map(q => [med(q.ndvi,'2016-12-01','2017-01-31'), med(q.ndvi,'2017-03-01','2017-05-31')]).filter(p => p[0] && p[1]);
+  if (cmp.length){ const sube = cmp.filter(p => p[1] > p[0]).length;
+    li.push(`<b>⚠ NDVI VIIRS 2017:</b> en mar-may subió frente a dic-ene en <b>${sube} de ${cmp.length} valles</b> con dato en ambos periodos: la lluvia de El Niño reverdeció zonas áridas. La "caída de la vegetación" del PDF no se ve con este método (punto central del valle, antes/después): hay que refinarlo o corregir el texto.`); }
   const ch = D.zonas.find(z => z.nombre.startsWith('Alto Piura'));
   if (ch) li.push(`SRTM corrige a POWER: Chulucanas está a <b>${fmt(ch.elevacion_m,0)} m</b>, no a los 1051 m de su celda POWER.`);
   $('hallazgos').innerHTML = li.map(x => `<li>${x}</li>`).join('');
@@ -137,7 +143,14 @@ function pintarHallazgos(){
 
 function pintarMapa(){
   mapa = L.map('mapa', {zoomControl:true}).setView([-6.3, -79.6], 6);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'© OpenStreetMap', maxZoom:12}).addTo(mapa);
+  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'© OpenStreetMap', maxZoom:12}).addTo(mapa);
+  // Capas de imágenes de la NASA (GIBS, públicas, sin llave) del día del dato
+  const f = D.resumen.fecha_datos || new Date().toISOString().slice(0,10);
+  const gibs = (capa, nivel, ext, op) => L.tileLayer(`https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/${capa}/default/${f}/GoogleMapsCompatible_Level${nivel}/{z}/{y}/{x}.${ext}`, {maxNativeZoom:nivel, maxZoom:12, opacity:op, attribution:'NASA GIBS'});
+  const lluvia = gibs('IMERG_Precipitation_Rate', 6, 'png', .75).addTo(mapa);
+  const sst = gibs('GHRSST_L4_MUR_Sea_Surface_Temperature', 7, 'png', .8);
+  const color = gibs('MODIS_Terra_CorrectedReflectance_TrueColor', 9, 'jpg', 1);
+  L.control.layers({'Mapa base': osm, 'NASA MODIS color real': color}, {[`NASA IMERG lluvia (${f})`]: lluvia, [`NASA MUR temperatura del mar (${f})`]: sst}, {collapsed:false}).addTo(mapa);
   D.zonas.forEach(z => {
     const nivel = z.hoy?.nivelMaximo ?? 'bajo';
     const m = L.circleMarker([z.lat, z.lon], {radius:11, color:'#0E1E14', weight:2, fillColor:COL[nivel], fillOpacity:.95}).addTo(mapa);

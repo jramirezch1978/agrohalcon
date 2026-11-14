@@ -64,7 +64,7 @@ Reglas del equipo: *“Después de aprobar el contrato nadie cambia un campo sin
 13. **Tendencias (Mann-Kendall + pendiente de Sen, 1981-2025, POWER):** la temperatura sube de forma significativa (p < 0,05) en 9 de 16 valles, entre +0,15 y +0,33 °C por década. La lluvia anual no muestra tendencia
     significativa en 10 de 16 valles: lo que cambia es la **variabilidad entre años**, no el promedio.
 14. **SRTM arregla la elevación de POWER:** Chulucanas está a **95 m** (la celda de POWER decía 1051 m). Elevación y pendiente de los 16 valles están en la tabla `zona`.
-15. **SMAP cubre cada punto cada 2-3 días y a veces no hay retrieval:** en los últimos 45 días solo ~17 % de las combinaciones valle-día tuvieron valor válido (el resto, sin pasada o calidad no recomendada). Por eso el indicador usa
+15. **SMAP cubre cada punto cada 2-3 días y a veces no hay retrieval:** en los últimos 45 días solo **121 de 688 combinaciones valle-día (17,6 %)** tuvieron valor válido (el resto, sin pasada o calidad no recomendada). Por eso el indicador usa
     una ventana de 14 días (≥ 2 valores) y un normal propio de SMAP 2016-2025; si falta, cae a `GWETTOP` de POWER y lo declara en `meta`.
 16. **VIIRS en lugar de MODIS:** `MOD13Q1` es HDF4 (hay que bajar el archivo completo) y el servicio de ORNL estuvo caído. Se usa **VIIRS `VNP13A1` v002** (500 m, 16 días, mismo tipo de compuesta, HDF5 legible por píxel). **Declararlo en References** (el PDF dice MODIS).
 17. **AppEEARS no acepta el token de Earthdata como Bearer** (403): pide su propio login con usuario y clave. No hizo falta: SMAP, SRTM, VIIRS y MUR se leen directo con el token.
@@ -73,6 +73,13 @@ Reglas del equipo: *“Después de aprobar el contrato nadie cambia un campo sin
 19. **SoilGrids (ISRIC, no NASA)** devuelve suelo solo donde está mapeado: 5 de 16 valles tienen pH, carbono, arcilla y arena; el resto queda `NULL` (urbano o sin dato). No se inventa.
 20. **La web en línea del equipo (http://2.29.101.199) se llama "AllpaShift"**; el repo dice "agrohalcon" y el equipo eligió "AgroShift". Hay **tres nombres**: decidir uno antes del Submit (portada, README, logo, APK, textos en inglés).
     Además su sección "Datos de la NASA que usamos" lista SMAP, GPM/IMERG, ECOSTRESS, MODIS/VIIRS y SRTM: hoy el código solo usa POWER, SMAP, MUR, VIIRS y SRTM; **IMERG** está bloqueado y **ECOSTRESS** no está integrado. Lo no usado debe decir *planned*.
+
+21. ⚠️ **La "caída del NDVI" de 2017 NO aparece con este método; el NDVI SUBIÓ.** VIIRS VNP13A1 (566 valores válidos, solo píxeles con confiabilidad buena o marginal) en el punto central de cada valle: de dic-2016/ene-2017 a mar-may-2017
+    el NDVI **sube en los 10 valles** que tienen datos en ambos periodos (Bajo Piura 0,43 → 0,52 · Chira 0,61 → 0,71 · Sechura 0,37 → 0,70 · Jequetepeque 0,20 → 0,44; en Medio Piura casi no cambia: +3 %). Es el conocido "reverdecimiento" del desierto de Piura por la lluvia de El Niño.
+    El PDF *Project Details* afirma que se valida "con la caída de la vegetación medida por MODIS NDVI" y la diapositiva de Impacto lo repite: **hay que corregir el texto o el método** antes del Submit. Opciones (decide David + Alejandro):
+    (a) comparar el NDVI con el **mismo periodo de años normales** (anomalía de NDVI, no antes/después), (b) medir solo **píxeles de cultivo** (máscara de ESA WorldCover o MIDAGRI) y no el punto central del valle, (c) mirar **abril-junio** (después de las inundaciones), cuando se pierden cultivos,
+    (d) usar como verdad de campo las **hectáreas perdidas de INDECI/SENASA** (ya están en *References*) en vez de NDVI. Lo que sí está respaldado por datos: la lluvia y la señal del mar anticiparon el evento semanas antes (alerta MEDIA el 15-ene-2017 y ALTA el 31-ene en Bajo Piura).
+    Nubes: el filtro de confiabilidad deja pocos píxeles en la temporada de lluvias (solo 12 de 16 valles tienen ≥ 3 valores en mar-may; Alto Piura, Olmos, Huancabamba y Cajamarca quedan sin dato en ese periodo).
 
 ## D. References / documentos de entrega (de `python -m etl.verificar_enlaces`)
 
