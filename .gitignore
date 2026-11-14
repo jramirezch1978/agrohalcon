@@ -1,0 +1,41 @@
+# Java / Spring Boot
+target/
+*.class
+.gradle/
+build/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node / Vue / Capacitor
+node_modules/
+dist/
+android/app/build/
+
+# Secretos y configuración local
+.env
+.env.*
+*.key
+application-local.properties
+
+# IDEs y sistema
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+build-logs/
+
+.sf/
+03. frontend/dist/
+
+
+# Despliegue
+deploy/vps/.env
+deploy/entorno-activo.txt
+deploy-logs/
+
