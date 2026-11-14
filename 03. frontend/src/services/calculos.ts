@@ -18,7 +18,7 @@ const http = axios.create({ baseURL: CALCULOS_URL, timeout: 20000 })
 type IndicadorPython = Omit<Indicador, 'valor' | 'nivel'> & { valor: number | null; nivel: Indicador['nivel'] | null }
 
 /** Quita los indicadores sin dato real: la app no muestra un número que no existe. */
-function soloConDato(indicadores: Record<string, IndicadorPython>): Recomendacion['indicadores'] {
+export function soloConDato(indicadores: Record<string, IndicadorPython>): Recomendacion['indicadores'] {
   const salida: Recomendacion['indicadores'] = {}
   for (const [clave, ind] of Object.entries(indicadores)) {
     if (ind.valor !== null && ind.nivel !== null) salida[clave as ClaveIndicador] = ind as Indicador

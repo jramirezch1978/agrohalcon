@@ -1,0 +1,6 @@
+# Solo para los scripts de descarga (scripts/). El servicio no los necesita.
+-r requirements.txt
+earthaccess==0.14.0
+xarray==2024.11.0
+h5netcdf==1.4.1
+netCDF4==1.7.2

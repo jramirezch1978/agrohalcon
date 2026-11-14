@@ -33,7 +33,7 @@ if not exist "!DEPLOY_LOG_DIR!" mkdir "!DEPLOY_LOG_DIR!"
 for /f "delims=" %%t in ('powershell -NoProfile -Command "Get-Date -Format ddMMyyyy-HHmmss"') do set "DEPLOY_LOG_TS=%%t"
 
 set "JAVA_SERVICES=api-gateway agro-service"
-set "PYTHON_SERVICES=climate-service"
+set "PYTHON_SERVICES=climate-service calculos"
 set "BACKEND_SERVICES=%JAVA_SERVICES% %PYTHON_SERVICES%"
 set "FRONTEND_SERVICE=frontend"
 set "ALL_APP_SERVICES=%BACKEND_SERVICES% %FRONTEND_SERVICE%"

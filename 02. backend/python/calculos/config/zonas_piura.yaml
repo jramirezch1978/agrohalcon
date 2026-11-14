@@ -1,0 +1,9 @@
+# Zonas fijas del mapa de Piura (POST /mapa). Coordenadas aproximadas del centro de cada zona.
+piura:
+  - {id: bajo_piura,  nombre: Bajo Piura,      lat: -5.35, lon: -80.70}
+  - {id: alto_piura,  nombre: Alto Piura,      lat: -5.18, lon: -79.97}   # Morropón
+  - {id: valle_chira, nombre: Valle del Chira, lat: -4.90, lon: -80.85}
+  - {id: sullana,     nombre: Sullana,         lat: -4.90, lon: -80.69}
+  - {id: chulucanas,  nombre: Chulucanas,      lat: -5.09, lon: -80.16}
+  - {id: tambogrande, nombre: Tambogrande,     lat: -4.93, lon: -80.34}
+  - {id: sechura,     nombre: Sechura,         lat: -5.56, lon: -80.82}

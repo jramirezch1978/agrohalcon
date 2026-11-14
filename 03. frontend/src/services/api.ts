@@ -11,7 +11,7 @@ import type {
   RespuestaAsistente,
   Validacion,
 } from '@/types/api'
-import { aniosValidacion, calcularMapa, calcularRecomendacion, calcularValidacion, CALCULOS_URL } from './calculos'
+import { aniosValidacion, calcularMapa, calcularRecomendacion, calcularValidacion, CALCULOS_URL, soloConDato } from './calculos'
 import { mockAniosValidacion, mockCultivos, mockMapa, mockRecomendacion, mockValidacion } from './mocks'
 import { responderConPlantillas } from './asistentePlantillas'
 import { climatologiaPower } from './nasaPower'
@@ -66,6 +66,20 @@ function deEjemplo<T>(recurso: 'mapa' | 'validacion' | 'recomendacion', datos: T
   return datos
 }
 
+/**
+ * Modo Java: si la API respondió con el último dato guardado porque el servicio de cálculos no respondió
+ * (header X-Desde-Cache), se marca como copia guardada y se avisa con su fecha. Nunca en silencio.
+ */
+function marcarOrigenJava(recurso: 'recomendacion' | 'validacion', headers: Record<string, unknown>) {
+  const origen = useOrigenStore()
+  if (String(headers['x-desde-cache']) === 'true') {
+    origen.registrar(recurso, 'cache')
+    origen.avisar(i18n.global.t('origen.usandoCache', { fecha: String(headers['x-fecha-dato'] ?? '?') }))
+  } else {
+    origen.registrar(recurso, 'real')
+  }
+}
+
 export const api = {
   /** Lanza ApiError si el servicio no responde: el store decide entre la copia guardada y el ejemplo. */
   async getRecomendacion(lat: number, lon: number, idioma: Idioma = 'es', opciones: OpcionesRecomendacion = {}): Promise<Recomendacion> {
@@ -88,9 +102,10 @@ export const api = {
       mesSiembra: tipoCultivo === 'permanente' ? undefined : mesSiembra,
       cultivo: tipoCultivo === 'permanente' ? cultivo : undefined,
     }
-    const { data } = await http.get<Recomendacion>('/api/recomendacion', { params })
-    useOrigenStore().registrar('recomendacion', 'real')
-    return data
+    const r = await http.get<Recomendacion>('/api/recomendacion', { params })
+    marcarOrigenJava('recomendacion', r.headers)
+    // Igual que en modo Python: un indicador sin dato real (valor null) no se muestra
+    return { ...r.data, indicadores: soloConDato(r.data.indicadores as never) }
   },
 
   /** Recomendación de EJEMPLO (todas las fuentes dicen "Ejemplo"). */
@@ -109,7 +124,7 @@ export const api = {
       }
     }
     if (MODO === 'ejemplo') return deEjemplo('mapa', await demora(mockMapa(region), 400), false)
-    const { data } = await http.get<MapaRiesgo>('/api/mapa', { params: { region } })
+    const { data } = await http.get<MapaRiesgo>('/api/mapa', { params: { region, lang: idioma } })
     useOrigenStore().registrar('mapa', 'real')
     return data
   },
@@ -145,9 +160,9 @@ export const api = {
       }
     }
     if (MODO === 'ejemplo') return deEjemplo('validacion', await demora(mockValidacion(anio, lat, lon, idioma)), false)
-    const { data } = await http.get<Validacion>('/api/validacion', { params: { anio, lat, lon, lang: idioma } })
-    useOrigenStore().registrar('validacion', 'real')
-    return data
+    const r = await http.get<Validacion>('/api/validacion', { params: { anio, lat, lon, lang: idioma } })
+    marcarOrigenJava('validacion', r.headers)
+    return r.data
   },
 
   /** Años con datos reales (el selector de "¿Funciona?" solo ofrece estos). */

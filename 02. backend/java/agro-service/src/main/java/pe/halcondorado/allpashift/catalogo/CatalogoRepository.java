@@ -70,6 +70,14 @@ public class CatalogoRepository {
                 (rs, i) -> new Accion(rs.getString(1), rs.getString(2), rs.getString(3)), cultivoId);
     }
 
+    /** Acción por fase con el indicador NASA que la activa (calor, lluvia, humedad_suelo, ndvi...). */
+    public record AccionIndicador(String fase, String descripcion, String indicador) {}
+
+    public List<AccionIndicador> accionesConIndicador(Integer cultivoId) {
+        return jdbc.query("SELECT fase, descripcion, indicador FROM agro.acciones_etapa WHERE cultivo_id = ? OR cultivo_id IS NULL ORDER BY cultivo_id NULLS LAST, id",
+                (rs, i) -> new AccionIndicador(rs.getString(1), rs.getString(2), rs.getString(3)), cultivoId);
+    }
+
     public Map<String, String> fases() {
         Map<String, String> m = new java.util.HashMap<>();
         jdbc.query("SELECT codigo, nombre FROM agro.fases", rs -> { m.put(rs.getString(1), rs.getString(2)); });

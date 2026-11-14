@@ -10,7 +10,7 @@ REM   01. documentacion\           documentacion del proyecto
 REM   02. backend\java\            microservicios Java 17 + Spring Boot (Maven multi-modulo)
 REM                                  api-gateway (8080), agro-service (8081)
 REM   02. backend\python\          microservicios Python + FastAPI (una carpeta por servicio)
-REM                                  climate-service (8000)
+REM                                  climate-service (8000), calculos (8001)
 REM   03. frontend\                Vue 3 + Vite
 REM   04. base de datos\           scripts y modelo de datos
 REM   05. mobile\                  Capacitor 6 -> release\android (APK) y release\ios
