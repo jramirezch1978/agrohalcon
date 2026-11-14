@@ -1,4 +1,4 @@
-import { CloudRain, Droplets, Thermometer, Waves } from 'lucide-vue-next'
+import { CloudRain, Droplets, Thermometer, Waves, Leaf } from 'lucide-vue-next'
 import type { ClaveIndicador, NivelRiesgo } from '@/types/api'
 
 /** Estilos por nivel de riesgo (contraste AA en claro y oscuro). */
@@ -40,6 +40,7 @@ export const ICONO_INDICADOR: Record<ClaveIndicador, typeof CloudRain> = {
   humedadSuelo: Droplets,
   calor: Thermometer,
   elNino: Waves,
+  vegetacion: Leaf,
 }
 
-export const CLAVES_INDICADOR: ClaveIndicador[] = ['lluvia', 'humedadSuelo', 'calor', 'elNino']
+export const CLAVES_INDICADOR: ClaveIndicador[] = ['lluvia', 'humedadSuelo', 'calor', 'elNino', 'vegetacion']

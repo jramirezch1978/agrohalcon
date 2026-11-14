@@ -1,0 +1,152 @@
+{
+ "metadatos": {
+  "producto": {
+   "short_name": "SPL3SMP_E",
+   "version": "006",
+   "nombre": "SMAP Enhanced L3 Radiometer Global Daily 9 km EASE-Grid Soil Moisture V006",
+   "variable": "soil_moisture (AM) y soil_moisture_pm (PM)",
+   "unidades": "m3/m3",
+   "doi": "10.5067/M20OXIZHY3RJ",
+   "url": "https://nsidc.org/data/spl3smp_e/versions/6"
+  },
+  "generado": "2026-11-14",
+  "metodo": "Promedio de pasadas AM/PM válidas en el píxel de 9 km de cada punto. Normal = misma ventana de días, 2016 al año pasado."
+ },
+ "puntos": [
+  {
+   "id": "piura",
+   "nombre": "Piura (ciudad)",
+   "lat": -5.19,
+   "lon": -80.63
+  },
+  {
+   "id": "bajo_piura",
+   "nombre": "Bajo Piura",
+   "lat": -5.35,
+   "lon": -80.7
+  },
+  {
+   "id": "medio_piura",
+   "nombre": "Medio Piura",
+   "lat": -5.2,
+   "lon": -80.45
+  },
+  {
+   "id": "alto_piura",
+   "nombre": "Alto Piura",
+   "lat": -5.18,
+   "lon": -79.97
+  },
+  {
+   "id": "chulucanas",
+   "nombre": "Chulucanas",
+   "lat": -5.09,
+   "lon": -80.16
+  },
+  {
+   "id": "sullana",
+   "nombre": "Sullana",
+   "lat": -4.9,
+   "lon": -80.69
+  },
+  {
+   "id": "tambogrande",
+   "nombre": "Tambogrande",
+   "lat": -4.93,
+   "lon": -80.34
+  },
+  {
+   "id": "valle_chira",
+   "nombre": "Valle del Chira",
+   "lat": -4.9,
+   "lon": -80.85
+  },
+  {
+   "id": "sechura",
+   "nombre": "Sechura",
+   "lat": -5.56,
+   "lon": -80.82
+  },
+  {
+   "id": "san_lorenzo",
+   "nombre": "San Lorenzo",
+   "lat": -4.72,
+   "lon": -80.25
+  },
+  {
+   "id": "huancabamba",
+   "nombre": "Huancabamba",
+   "lat": -5.24,
+   "lon": -79.45
+  },
+  {
+   "id": "ayabaca",
+   "nombre": "Ayabaca",
+   "lat": -4.64,
+   "lon": -79.71
+  }
+ ],
+ "actual": {
+  "inicio": "2026-10-15",
+  "fin": "2026-11-13",
+  "m3m3": {
+   "piura": 0.1234,
+   "bajo_piura": 0.1156,
+   "medio_piura": 0.1267,
+   "alto_piura": 0.2411,
+   "chulucanas": 0.2089,
+   "sullana": 0.1529,
+   "tambogrande": 0.1921,
+   "valle_chira": 0.1466,
+   "sechura": 0.1097,
+   "san_lorenzo": 0.2798,
+   "huancabamba": 0.2943,
+   "ayabaca": 0.3736
+  },
+  "diasConDato": {
+   "piura": 14,
+   "bajo_piura": 14,
+   "medio_piura": 14,
+   "alto_piura": 14,
+   "chulucanas": 14,
+   "sullana": 14,
+   "tambogrande": 14,
+   "valle_chira": 14,
+   "sechura": 14,
+   "san_lorenzo": 14,
+   "huancabamba": 10,
+   "ayabaca": 11
+  }
+ },
+ "normal": {
+  "periodo": "2016-2025",
+  "m3m3": {
+   "piura": 0.0924,
+   "bajo_piura": 0.095,
+   "medio_piura": 0.0787,
+   "alto_piura": 0.1525,
+   "chulucanas": 0.1174,
+   "sullana": 0.1169,
+   "tambogrande": 0.1176,
+   "valle_chira": 0.1124,
+   "sechura": 0.0923,
+   "san_lorenzo": 0.1653,
+   "huancabamba": 0.2668,
+   "ayabaca": 0.2176
+  },
+  "diasConDato": {
+   "piura": 77,
+   "bajo_piura": 77,
+   "medio_piura": 77,
+   "alto_piura": 75,
+   "chulucanas": 77,
+   "sullana": 77,
+   "tambogrande": 77,
+   "valle_chira": 77,
+   "sechura": 77,
+   "san_lorenzo": 77,
+   "huancabamba": 68,
+   "ayabaca": 61
+  }
+ }
+}

@@ -56,8 +56,8 @@ function sobreArroz(rec: Recomendacion, es: boolean): RespuestaAsistente {
 }
 
 const INDICADOR = {
-  es: { lluvia: 'la lluvia', humedadSuelo: 'la humedad del suelo', calor: 'el calor', elNino: 'El Niño', campana: 'la campaña' },
-  en: { lluvia: 'rainfall', humedadSuelo: 'soil moisture', calor: 'heat', elNino: 'El Niño', campana: 'the season' },
+  es: { lluvia: 'la lluvia', humedadSuelo: 'la humedad del suelo', calor: 'el calor', elNino: 'El Niño', vegetacion: 'la vegetación', campana: 'la campaña' },
+  en: { lluvia: 'rainfall', humedadSuelo: 'soil moisture', calor: 'heat', elNino: 'El Niño', vegetacion: 'vegetation', campana: 'the season' },
 } as const
 
 function sobreRotacion(rec: Recomendacion, id: number, es: boolean): RespuestaAsistente {
