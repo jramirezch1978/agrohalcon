@@ -219,6 +219,8 @@ export default {
     titulo: '¿Funciona? Lo probamos con El Niño de 2017',
     subtitulo: 'Volvimos a 2017 con los datos reales de la NASA: ¿AllpaShift habría avisado antes de las lluvias?',
     anio: 'Año',
+    aniosAnteriores: 'Años anteriores',
+    aniosSiguientes: 'Años siguientes',
     lluvia: 'Lluvia mensual',
     esteAnio: 'Ese año',
     normal: 'Normal',

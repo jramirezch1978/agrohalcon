@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { BellRing, CloudRain, History, Timer } from 'lucide-vue-next'
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { BellRing, ChevronLeft, ChevronRight, CloudRain, History, Timer } from 'lucide-vue-next'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import RainChart from '@/components/charts/RainChart.vue'
 import ErrorState from '@/components/ui/ErrorState.vue'
@@ -41,17 +41,50 @@ async function cargar() {
   }
 }
 const selector = ref<HTMLElement>()
+const hayIzquierda = ref(false)
+const hayDerecha = ref(false)
+/** Muestra las flechas solo si quedan años ocultos hacia ese lado */
+function actualizarFlechas() {
+  const el = selector.value
+  if (!el) return
+  hayIzquierda.value = el.scrollLeft > 4
+  hayDerecha.value = el.scrollLeft + el.clientWidth < el.scrollWidth - 4
+}
+/** Flechas ‹ ›: desplaza casi un ancho visible */
+function desplazar(dir: -1 | 1) {
+  const el = selector.value
+  if (el) el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: 'smooth' })
+}
+/** Rueda del mouse vertical → desplazamiento horizontal (en PC no hay barra visible) */
+function ruedaHorizontal(e: WheelEvent) {
+  const el = selector.value
+  if (!el || Math.abs(e.deltaX) > Math.abs(e.deltaY) || el.scrollWidth <= el.clientWidth) return
+  e.preventDefault()
+  el.scrollBy({ left: e.deltaY })
+}
+/** Teclado: ← → cambian de año */
+function teclaAnio(e: KeyboardEvent) {
+  const i = anios.value.indexOf(anio.value)
+  if (e.key === 'ArrowRight' && i < anios.value.length - 1) anio.value = anios.value[i + 1]
+  else if (e.key === 'ArrowLeft' && i > 0) anio.value = anios.value[i - 1]
+  else return
+  e.preventDefault()
+}
 /** El año elegido (p. ej. 2017) siempre visible en el selector, aunque la lista empiece en 2001 */
 async function mostrarAnioElegido() {
   await nextTick()
-  selector.value?.querySelector('[aria-checked="true"]')?.scrollIntoView({ inline: 'center', block: 'nearest' })
+  selector.value?.querySelector('[aria-checked="true"]')?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' })
+  setTimeout(actualizarFlechas, 400)
 }
 onMounted(async () => {
   await cargarAnios()
   mostrarAnioElegido()
+  window.addEventListener('resize', actualizarFlechas)
   await cargar()
 })
+onBeforeUnmount(() => window.removeEventListener('resize', actualizarFlechas))
 watch([anio, () => store.idioma], cargar)
+watch(anio, mostrarAnioElegido)
 
 const fmtFecha = (iso: string) =>
   new Intl.DateTimeFormat(store.idioma, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(iso + 'T12:00:00'))
@@ -104,7 +137,36 @@ const signo = (v: number) => `${v > 0 ? '+' : ''}${v.toFixed(1)}`
     <PageHeader :titulo="$t('validacion.titulo')" :subtitulo="$t('validacion.subtitulo')" etiqueta="Piura · El Niño costero" />
 
     <!-- Selector de año: solo años con datos reales -->
-    <div ref="selector" class="no-scrollbar stagger -mx-4 mb-6 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0" role="radiogroup" :aria-label="$t('validacion.anio')" style="--i: 1">
+    <div class="relative -mx-4 mb-6 sm:mx-0">
+    <button
+      type="button"
+      :disabled="!hayIzquierda"
+      class="absolute top-1/2 left-1 z-10 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-white text-tinta shadow-float transition enabled:hover:scale-105 disabled:cursor-default disabled:opacity-35 dark:bg-noche-2 dark:text-white"
+      :aria-label="$t('validacion.aniosAnteriores')"
+      @click="desplazar(-1)"
+    >
+      <ChevronLeft class="size-5" />
+    </button>
+    <button
+      type="button"
+      :disabled="!hayDerecha"
+      class="absolute top-1/2 right-1 z-10 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-white text-tinta shadow-float transition enabled:hover:scale-105 disabled:cursor-default disabled:opacity-35 dark:bg-noche-2 dark:text-white"
+      :aria-label="$t('validacion.aniosSiguientes')"
+      @click="desplazar(1)"
+    >
+      <ChevronRight class="size-5" />
+    </button>
+    <div
+      ref="selector"
+      class="no-scrollbar stagger flex scroll-px-14 gap-2 overflow-x-auto px-14 py-1"
+      role="radiogroup"
+      :aria-label="$t('validacion.anio')"
+      tabindex="0"
+      style="--i: 1"
+      @scroll.passive="actualizarFlechas"
+      @wheel="ruedaHorizontal"
+      @keydown="teclaAnio"
+    >
       <button
         v-for="a in anios"
         :key="a"
@@ -118,6 +180,7 @@ const signo = (v: number) => `${v > 0 ? '+' : ''}${v.toFixed(1)}`
         {{ a }}
         <span v-if="a === 2017" class="absolute -top-1 -right-1 size-3 rounded-full bg-red-500 ring-2 ring-arena dark:ring-noche" />
       </button>
+    </div>
     </div>
 
     <ErrorState v-if="estado === 'error'" @reintentar="cargar" />

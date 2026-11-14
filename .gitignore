@@ -18,6 +18,10 @@ android/app/build/
 # Secretos y configuración local
 .env
 .env.*
+# Sin secretos: configuración de builds del frontend (se versionan)
+!.env.example
+!.env.production
+!.env.mobile
 *.key
 application-local.properties
 
