@@ -49,7 +49,7 @@ erDiagram
 | `agro.fases` | `codigo` | S siembra · C crecimiento · F floración · K cosecha · D descanso o poda | Seed |
 | `agro.calendario` | `id` | Fase de cada mes por cultivo y piso. `zona_id` NULL = calendario general; si tiene valor, es el calendario propio del valle | Seed |
 | `agro.acciones_etapa` | `id` | Acciones por fase (generales con `cultivo_id` NULL, o propias de un cultivo), con la alerta NASA y el indicador | Seed y Alejandro |
-| `agro.rotaciones` ⭐ contrato | `id` | `cultivo1_id`, `cultivo2_id`, `cultivo3_id` opcional, piso, beneficios y sacrificios | Seed y Alejandro |
+| `agro.rotaciones` ⭐ contrato | `id` | `cultivo1_id`, `cultivo2_id`, `cultivo3_id` opcional, piso, beneficios y sacrificios. `es_monocultivo` (calculado) marca la rotación actual tipo "Arroz → Arroz" que se compara en la app (doc 28) | Seed y Alejandro |
 | `agro.parcelas` | `id` | Parcela del agricultor: punto, valle, área, cultivo y rotación actual, fecha de siembra | App |
 | `agro.consultas` ⭐ contrato | `id` | `lat`, `lon`, `fecha`, `rotacion_recomendada_id`, más la zona, la parcela, los `indicadores` y el `resultado` (JSONB) | Java (historial) |
 | `agro.riesgo_mensual` | (zona, cultivo, año, mes) | Barra **"Perspectiva de la campaña"**: nivel verde/ámbar/rojo, puntaje y motivo | Java con climate-service |
@@ -75,7 +75,7 @@ erDiagram
 | cultivos_zona | 104 |
 | calendario | 492 (41 calendarios × 12 meses) |
 | acciones_etapa | 13 (5 generales + 8 de uva, mango, limón, arroz y banano) |
-| rotaciones | 8 candidatas |
+| rotaciones | 9 (incluye "Arroz - Arroz", el monocultivo actual) |
 | datasets | 10 · eventos ENSO: 4 |
 
 ## 6. Reglas de diseño

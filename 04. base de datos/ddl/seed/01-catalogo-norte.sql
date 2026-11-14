@@ -217,6 +217,7 @@ ON CONFLICT (cultivo_id, fase, descripcion) DO NOTHING;
 INSERT INTO agro.rotaciones (nombre, cultivo1_id, cultivo2_id, piso, beneficios, sacrificios)
 SELECT v.nombre, c1.id, c2.id, v.piso, v.beneficios, v.sacrificios
 FROM (VALUES
+ ('Arroz - Arroz (monocultivo actual)', 'Arroz', 'Arroz', 'costa', 'Lo que hace la mayoria hoy: referencia para comparar', 'Mucha agua; desgasta el suelo; alto riesgo en sequia'),
  ('Arroz - Maiz amarillo duro (practica comun)', 'Arroz', 'Maiz amarillo duro', 'costa', 'Referencia: secuencia mas comun en los valles', 'Alto consumo de agua; sin leguminosa que recupere el suelo'),
  ('Arroz - Frijol caupi',   'Arroz', 'Frijol caupi', 'costa', 'El caupi fija nitrogeno y usa poca agua', 'Menor ingreso que dos campanas de arroz'),
  ('Arroz - Zarandaja',      'Arroz', 'Zarandaja', 'costa', 'Leguminosa resistente a sequia; cubre el suelo', 'Mercado local mas pequeno'),

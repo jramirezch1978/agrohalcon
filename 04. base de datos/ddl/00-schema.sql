@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS agro.rotaciones (
     piso         VARCHAR(10) CHECK (piso IN ('costa', 'sierra', 'selva')),
     beneficios   VARCHAR(300),
     sacrificios  VARCHAR(300),
-    CHECK (cultivo1_id <> cultivo2_id)
+    es_monocultivo BOOLEAN GENERATED ALWAYS AS (cultivo1_id = cultivo2_id) STORED  -- p. ej. Arroz -> Arroz (rotacion actual a comparar)
 );
 
 -- ---------------------------------------------------------------------------
