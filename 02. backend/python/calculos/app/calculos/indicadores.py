@@ -28,7 +28,8 @@ from app.calculos.reglas import (  # noqa: E402,F401
     anomalia_pct, nivel_calor, nivel_el_nino, nivel_humedad, nivel_lluvia, nivel_por_corte,
 )
 from app.calculos.el_nino import indicador_el_nino  # noqa: E402
-from app.fuentes.selector import lluvia_actual_imerg, ultimo_dato_imerg  # noqa: E402
+from app.fuentes.piura import punto_cercano  # noqa: E402
+from app.fuentes.selector import humedad_actual_smap, lluvia_actual_imerg, ultimo_dato_imerg, vegetacion_ndvi  # noqa: E402
 
 
 # ---------- Ayudas de series ----------
@@ -132,10 +133,22 @@ async def calcular_indicadores(lat: float, lon: float, lang: str, cliente: Clien
     if ll_dir == "exceso" and ll_anom > 200:      # "+5700 %" se lee mal: mejor "58 veces lo normal"
         ll_txt = "lluvia_veces"
 
-    # Humedad del suelo: GWETTOP de NASA POWER (modelo, capa superficial)
-    hs_act = float(v["GWETTOP"].mean())
-    hs_nor = normal_ponderada(clim["GWETTOP"], fechas)
+    # Humedad del suelo: SMAP (satélite, 9 km) en Piura; si no hay dato, GWETTOP de NASA POWER con aviso
+    smap = humedad_actual_smap(lat, lon, hoy)
+    if smap:
+        hs_act, hs_nor = smap["valor"], smap["normal"]
+        hs_extra = {"fuente": smap["fuente"], "parametro": smap["parametro"], "periodo": smap["periodo"],
+                    "punto": smap["punto"], "ultimoDato": smap["ultimoDato"]}
+    else:
+        hs_act = float(v["GWETTOP"].mean())
+        hs_nor = normal_ponderada(clim["GWETTOP"], fechas)
+        hs_extra = {"fuente": FUENTE_POWER, "parametro": "GWETTOP"}
+        if punto_cercano(lat, lon):
+            hs_extra["aviso"] = texto(lang, "aviso_smap_sin")
     hs_niv, hs_anom, hs_dir = nivel_humedad(hs_act, hs_nor, u["humedad_suelo"])
+
+    # Vegetación: NDVI de MODIS (250 m). Solo informa el estado del cultivo (no cambia el riesgo climático)
+    ndvi = vegetacion_ndvi(lat, lon)
 
     # Calor: promedio de máximas diarias vs promedio de máximas diarias de los MISMOS días en 2001-2025
     ca_act = float(v["T2M_MAX"].mean())
@@ -154,7 +167,7 @@ async def calcular_indicadores(lat: float, lon: float, lang: str, cliente: Clien
         "humedadSuelo": {
             "valor": _r(hs_act, 3), "normal": _r(hs_nor, 3), "unidad": unidades["humedadSuelo"],
             "anomalia": _r(hs_anom, 1), "unidadAnomalia": "%", "direccion": hs_dir,
-            "nivel": hs_niv, "fuente": FUENTE_POWER, "parametro": "GWETTOP",
+            "nivel": hs_niv, **hs_extra,
             "detalle": texto(lang, f"humedad_{hs_dir}", abs=abs(hs_anom), dias=dias),
         },
         "calor": {
@@ -166,11 +179,31 @@ async def calcular_indicadores(lat: float, lon: float, lang: str, cliente: Clien
         # MUR SST precalculado (data/precalculado/mur_sst_nino12.json); sin archivo → "sin dato"
         "elNino": indicador_el_nino(lat, lon, lang, u, hoy),
     }
+    if ndvi:
+        anom = (ndvi["valor"] / ndvi["normal"] - 1) * 100 if ndvi["normal"] else 0.0
+        nivel_v = "alto" if anom <= -30 else "medio" if anom <= -15 else "bajo"
+        indicadores["vegetacion"] = {
+            "valor": _r(ndvi["valor"], 3), "normal": _r(ndvi["normal"], 3), "unidad": "NDVI",
+            "anomalia": _r(anom, 1), "unidadAnomalia": "%", "direccion": "deficit" if anom < 0 else "exceso",
+            "nivel": nivel_v, "fuente": ndvi["fuente"], "parametro": ndvi["parametro"], "punto": ndvi["punto"],
+            "ultimoDato": ndvi["fecha"],
+            "detalle": texto(lang, "vegetacion_deficit" if anom < 0 else "vegetacion_exceso", abs=abs(anom), valor=ndvi["valor"]),
+        }
+
+    # Datos NASA usados (Java los graba en nasa.datos_nasa: regla del doc 29, Python no toca la BD)
+    datos_nasa = []
+    for clave, ind in indicadores.items():
+        if ind.get("valor") is None or ind.get("fuente") in (None, "sin dato"):
+            continue
+        fecha = ind.get("ultimoDato") or (ind.get("periodo") or periodo)["fin"]
+        datos_nasa.append({"lat": lat, "lon": lon, "fecha": str(fecha)[:10], "fuente": ind["fuente"],
+                           "variable": f"{ind.get('parametro', clave)}:{clave}"[:200], "valor": ind["valor"]})
 
     return {
         "lat": lat, "lon": lon, "fecha": hoy.isoformat(), "lang": lang,
         "periodo": periodo,
         "indicadores": indicadores,
+        "datosNasa": datos_nasa,
         "metodo": {
             "actual": f"Promedio de los últimos {dias} días con datos (NASA POWER diaria, comunidad AG)",
             "normal": "Lluvia y humedad: climatología NASA POWER 2001-2025 del mismo mes, ponderada por días. "

@@ -3,9 +3,9 @@
 export type NivelRiesgo = 'bajo' | 'medio' | 'alto'
 
 /** Fuentes reales que usa AllpaShift. 'Ejemplo' = dato simulado (modo demo sin servicio de cálculos). */
-export type FuenteNasa = 'NASA POWER' | 'GPM IMERG' | 'MUR SST' | 'Ejemplo'
+export type FuenteNasa = 'NASA POWER' | 'GPM IMERG' | 'MUR SST' | 'SMAP' | 'MODIS NDVI' | 'Ejemplo'
 
-export type ClaveIndicador = 'lluvia' | 'humedadSuelo' | 'calor' | 'elNino'
+export type ClaveIndicador = 'lluvia' | 'humedadSuelo' | 'calor' | 'elNino' | 'vegetacion'
 
 /** Fuente de un dato: una misión o una combinación (ej. "NASA POWER + MUR SST") */
 export type FuenteDato = FuenteNasa | (string & {})

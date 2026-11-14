@@ -16,6 +16,8 @@ from app.config import ajustes
 
 ARCHIVO_MUR = "mur_sst_nino12.json"
 ARCHIVO_IMERG = "imerg_piura.json"
+ARCHIVO_SMAP = "smap_piura.json"
+ARCHIVO_NDVI = "ndvi_piura.json"
 
 _cache: dict[Path, tuple[float, Any]] = {}
 
@@ -39,6 +41,16 @@ class SerieMur:
 def imerg_piura() -> dict | None:
     """JSON de GPM IMERG para los puntos de Piura (ver scripts/descargar_imerg.py), o None."""
     return leer_json(ARCHIVO_IMERG)
+
+
+def smap_piura() -> dict | None:
+    """JSON de SMAP SPL3SMP_E para los puntos de Piura (ver scripts/descargar_smap.py), o None."""
+    return leer_json(ARCHIVO_SMAP)
+
+
+def ndvi_piura() -> dict | None:
+    """JSON de NDVI MODIS MOD13Q1 para los puntos de Piura (ver scripts/descargar_ndvi.py), o None."""
+    return leer_json(ARCHIVO_NDVI)
 
 
 def serie_mur() -> SerieMur | None:

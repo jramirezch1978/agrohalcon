@@ -81,8 +81,11 @@ public class RecomendacionService {
         try {
             Map<String, Object> nuevo = calcular.get();
             try {
+                // datosNasa: valores NASA que usó Python (SMAP, IMERG, MUR SST, NDVI, POWER) → nasa.datos_nasa
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> datosNasa = nuevo.get("datosNasa") instanceof List<?> l ? (List<Map<String, Object>>) l : null;
                 consultas.guardar(tipo, clave, lat, lon, zonaId, null, json.escribir(nuevo.get("indicadores")),
-                        json.escribir(nuevo), null, null);
+                        json.escribir(nuevo), null, datosNasa);
             } catch (Exception e) {
                 log.warn("No se pudo grabar {} {}: {}", tipo, clave, e.getMessage());   // la app igual recibe su respuesta
             }
