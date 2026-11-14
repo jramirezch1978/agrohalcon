@@ -28,7 +28,8 @@ Leyenda: **S** siembra / trasplante · **C** crecimiento · **F** floración · 
 | Arroz (costa norte, campaña principal) | S | S/C | C | C | K | K | D | D | D | D | D | S |
 | Mango (Piura, Lambayeque) | K | K | K/D | D | D | C | F | F | F/C | C | K | K |
 | Limón (Piura, Tumbes) | K | K | K | K | K | C | C | F | F | C | C | K |
-| Uva de mesa (Piura) | D | D/poda | C | C | F | C | C | C | C | K | K | K |
+| Uva de mesa (Piura) ✏️ corregido 14-nov | K | D | D | D | D/poda | D/poda | C (brotación) | F | C (envero) | K | K | K |
+| Mandarina (costa norte) | C | C | K | K | K | K | K | K | F | F | C | C |
 | Banano orgánico (Tumbes, Piura) | K | K | K | K | K | K | K | K | K | K | K | K |
 | Palta (costa norte) | C | C | K | K | K | K | C | F | F | C | C | C |
 | Maíz amarillo duro (costa) | S | C | C | K | K | S | C | C | K | K | S | C |
@@ -40,6 +41,26 @@ Leyenda: **S** siembra / trasplante · **C** crecimiento · **F** floración · 
 | Café (selva alta) | C | C | F/C | K | K | K | K | K | C | F | C | C |
 | Cacao (selva alta, Alto Piura) | C | C | K | K | K | K | C | C | C | F | F | C |
 | Menestras / caupí (costa) | C | K | K | S | S | C | C | K | K | D | D | S |
+
+## 3b. Frutales clave del norte (pedido de Jhonny, 2026-11-14)
+
+Piura ya no es solo mango y limón: se volvió una región **vitivinícola y de uva de mesa** de primer nivel. Estos frutales tienen prioridad en el catálogo y en la demo:
+
+| Frutal | Peso en el norte | Dónde | Cosecha | Riesgo NASA a vigilar |
+|---|---|---|---|---|
+| 🍋 **Limón (limonero)** | Piura concentra el **~63 % de la producción nacional** y el **76,7 % del valor exportado** de limón Tahití | Chulucanas, Tambogrande, San Lorenzo, Sullana, Chira | Todo el año; pico dic-may | El Niño: lluvias y plagas. En agosto de 2026 solo había ~30 % de floración, bajo lo normal (SENAMHI) |
+| 🍇 **Uva de mesa** | Piura es el **primer exportador** (Paita: 73 % de los envíos de la campaña 2025/26) | Medio y Bajo Piura, Chira, San Lorenzo; también Olmos y Chavimochic | **Oct-ene** (la ventana más temprana del país) | Calor: ciclos cortos y bayas de 25-30 % menos peso (2023). Lluvia en cosecha |
+| 🥭 **Mango** | Piura y Lambayeque: casi toda la exportación peruana | San Lorenzo, Tambogrande, Chulucanas, Motupe-Olmos | Nov-mar | Calor y lluvias pueden recortar hasta 30 000 t |
+| 🍊 **Mandarina** | Secundaria en el norte (Piura tiene el 13,2 % del área de cítricos, Lambayeque el 8,1 %, La Libertad el 6,1 %, casi todo limón). El grueso está en Lima e Ica | Valles costeros | Feb-set (MIDAGRI) | Floración en set-oct sensible al calor |
+| 🥑 **Palta** y 🫐 **Arándano** | Fuertes en Olmos y Chavimochic, creciendo en Piura | La Libertad, Lambayeque, Piura | Palta mar-jun · arándano jul-nov | Demanda de agua (ECOSTRESS, SMAP) |
+
+**Fuentes MIDAGRI y oficiales:**
+- **SIEA** (siea.midagri.gob.pe): superficie, producción y avance de campaña por región y provincia.
+- **Calendario de cosecha de Agromercado** (dic. 2025, 17 productos).
+- **Boletines agroclimáticos SENAMHI** con calendario por valle (p. ej., San Lorenzo).
+- **GeoMIDAGRI**: polígonos de superficie agrícola, para el mapa de valles.
+
+⚠️ Las fechas del calendario de uva (poda, brotación, floración) son **preliminares**: no hay un calendario fenológico oficial publicado para Piura. Alejandro debe validarlas con la DRAP, Provid o el INIA.
 
 ## 4. Acciones recomendadas por fase (base para la app)
 
