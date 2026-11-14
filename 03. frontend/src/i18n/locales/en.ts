@@ -221,6 +221,8 @@ const en: typeof es = {
     titulo: 'Does it work? We tested it on El Niño 2017',
     subtitulo: 'We went back to 2017 with real NASA data: would AllpaShift have warned before the rains?',
     anio: 'Year',
+    aniosAnteriores: 'Previous years',
+    aniosSiguientes: 'Next years',
     lluvia: 'Monthly rainfall',
     esteAnio: 'That year',
     normal: 'Normal',
