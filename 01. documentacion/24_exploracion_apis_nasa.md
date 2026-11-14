@@ -74,6 +74,34 @@ POWER entrega la meteorología en celdas de **0,5° (~55 km)**, así que varios 
 | HLSL30 (Landsat armonizado) | 2.0 | 2013-04-11 | vigente | LP DAAC |
 | VNP13A1 (VIIRS NDVI) | 002 | 2012-01-17 | vigente | LP DAAC |
 
+## 2b. Pruebas con el token de Earthdata (2026-11-14, tarde)
+
+Aplicaciones autorizadas: NASA GESDISC DATA ARCHIVE, LP DAAC Data Pool, NSIDC_DATAPOOL_OPS. **Falta LP DAAC Cumulus PROD.**
+
+| Dataset | Resultado | Dato real |
+|---|---|---|
+| **GPM IMERG mensual** (OPeNDAP GES DISC, 0,1°) | ✅ 200 · ~20 s para 16 consultas | **Sí distingue valles** (tabla de abajo) |
+| **SMAP SPL3SMP_E** (NSIDC) | ✅ descarga autorizada | Archivo global de ~660 MB por día ➜ no se descarga entero: recortar con AppEEARS u OPeNDAP |
+| **HLS Landsat 30 m** (LP DAAC) | ✅ 200 | Tesela `T17MNQ` del 22 oct 2026 sobre Piura |
+| **SRTM 30 m** (LP DAAC) | ✅ 200 | Tesela `S06W081` (8,2 MB): relieve y pendiente de los valles |
+| **ECOSTRESS ET** (`ECO_L3T_JET`) | 🟡 sin pasadas sobre Piura en oct-nov 2026 | Su órbita es irregular: ampliar el periodo o dejarlo opcional |
+| **GLDAS** (Data Rods) | ❌ devuelve una página HTML, no datos | Usar GLDAS por OPeNDAP |
+
+**Lluvia de marzo por valle con IMERG (mm/mes), año normal frente a Niño Costero:**
+
+| Valle | Marzo 2016 | Marzo 2017 | Veces más |
+|---|---|---|---|
+| Chulucanas | 152 | 577 | ×3,8 |
+| Morropón | 132 | 506 | ×3,8 |
+| Castilla (Medio Piura) | 77 | 580 | ×7,5 |
+| Catacaos (Bajo Piura) | 68 | 540 | ×7,9 |
+| Sechura | 61 | 552 | ×9,0 |
+| Tambogrande (San Lorenzo) | 138 | 590 | ×4,3 |
+| Sullana (Chira) | 99 | 542 | ×5,5 |
+| Huancabamba (sierra) | 160 | 320 | ×2,0 |
+
+➜ IMERG separa valles que en POWER salían idénticos, y muestra que el Niño Costero golpeó más al **Bajo Piura y Sechura** (hasta 9 veces la lluvia normal). Es el dato estrella para la "máquina del tiempo".
+
 ## 3. Accesos que faltan (los hace Jhonny)
 
 | Acceso | Para qué | Cómo |
