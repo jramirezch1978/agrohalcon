@@ -26,6 +26,16 @@ Reglas del equipo: *“Después de aprobar el contrato nadie cambia un campo sin
 | B5 | “Esta quincena” usa solo el clima de hoy. Doc 23 propone evaluar **el ciclo completo** (siembra→cosecha, barra de meses verde/ámbar/rojo) | Aprobar un endpoint nuevo (p. ej. `POST /campana`) y el formato para Sheila |
 | B6 | Pesos 65 % / 35 % entre primer y segundo cultivo; −5 por monocultivo; ≥ +200 % de lluvia = inundación | Calibrar con la validación 2017 y con el técnico (Claudia Grados, mentoría sábado 14:00) |
 
+## B+. Cambios nuevos en el servicio (todos opcionales o internos; el contrato por defecto no cambia)
+
+| # | Cambio | Decide |
+|---|---|---|
+| B7 | **Incertidumbre** (`"incertidumbre": true` en `/rotaciones` y `/recomendacion`): añade `puntajeMin`, `puntajeMax` y `confianza` (alta/media/baja) a cada rotación. Se mueve cada indicador 1 σ por separado (lluvia ±25 %, humedad ±0,04 m3/m3, calor ±1,5 °C, mar ±0,3 °C) y los cambios se suman en cuadratura. Sin pedirla, la respuesta es idéntica al PDF | Jhonny + Sheila |
+| B8 | **Señal de El Niño extraordinaria** (anomalía ≥ +3 °C en Niño 1+2): descuenta 35 puntos a **todos** los cultivos y `queHacer` pide seguir a ENFEN y consultar a un técnico. Supuesto basado en 1983, 1998 y 2023-26. Antes, con +5,25 °C, el arroz salía con riesgo "bajo" (86/100) | Alejandro + mentoría agro-clima |
+| B9 | **Texto de la lluvia en zonas áridas**: si lo normal es < 3 mm/día se dicen las cifras reales ("2,9 mm/día frente a 0,1") y no un porcentaje engañoso | David |
+| A8 | **Asistente de IA con guardas** (propuesto): `POST /asistente/contexto` arma el prompt para Groq (reglas + solo datos calculados + la pregunta, que no puede cerrar las etiquetas); `POST /asistente/validar` rechaza respuestas con números, cultivos o satélites que no están en los datos y devuelve el **Plan B** (explicación con plantillas); `POST /asistente/plan-b`. Java sigue llamando a Groq con `GROQ_API_KEY` | Jhonny |
+| A9 | **Base de datos con esquema único** (`db/`): SQLite para trabajar y SQL de PostgreSQL generado (`db/postgres/`) con la vista `v_datos_nasa` = tabla `datosNasa` del contrato | Jhonny |
+
 ## C. Hallazgos con datos reales (14-nov-2026)
 
 1. **El ONI no vio el Niño costero de 2017** (trimestres ene-may 2017: −0,08 a +0,35 = “neutral”), aunque fue un evento muy fuerte en Piura.
@@ -43,10 +53,26 @@ Reglas del equipo: *“Después de aprobar el contrato nadie cambia un campo sin
 7. **`GPM_3IMERGDF` termina el 2025-09-30 en el catálogo CMR.** Para datos recientes hay que usar **`GPM_3IMERGDL`** (V07C, diario rápido, 25 MB/día).
    El PDF *Uso de IA y datos NASA* solo cita `GPM_3IMERGDF`: agregar el `DL` en *References*.
 8. **SMAP pesa ~630 MB por día** (global). No descargar días enteros: usar **AppEEARS** (valor del punto) o subconjuntos OPeNDAP/Harmony.
-9. **La anomalía de +9 °C de MUR SST** que vio Jhonny (dataset `anom1day`, punto costero) es sospechosa. `etl/mur_sst.py` calcula la anomalía contra su propia
-   climatología 2003-2022 en un punto **mar adentro** (-5,5; -81,5). Pendiente de comprobar y de contrastar con el ICEN de ENFEN.
-10. **Los ERDDAP de NOAA (`upwell` / `coastwatch.pfeg.noaa.gov`) no respondieron desde la PC de David** (timeout) el 14-nov. Sin ese dato, `sstAnomaliaC` queda en 0 y se avisa en el JSON.
-    Plan: PO.DAAC con el token de Earthdata, o pedirle a Jhonny que ejecute `python -m etl.build_backup` desde su red (a él sí le respondió).
+9. **La anomalía de +9 °C de MUR SST que vio Jhonny NO era un error del dataset.** Con el token de Earthdata se leyó MUR v4.1 por OPeNDAP de PO.DAAC (`etl/mur_opendap.py`) y se calculó la anomalía
+   contra una climatología propia 2003-2022 (36 fechas de referencia al año): mar adentro frente a Piura (-5,5; -81,5) dio **27,5 °C el 11-nov-2026, +9,1 °C** sobre lo normal de ese día.
+   El índice mensual de NOAA para toda la región Niño 1+2 es **+5,25 °C** (octubre): la región promedia mar adentro y costa, y octubre es anterior. Las dos cifras son coherentes con un evento extraordinario.
+10. **Los ERDDAP de NOAA (`upwell` / `coastwatch.pfeg.noaa.gov`) no respondieron desde la PC de David** (timeout). **Resuelto:** MUR SST se lee por OPeNDAP de PO.DAAC con el token (valor de un punto en ~2,5 s), y la
+    señal de El Niño del servicio usa el **índice Niño 1+2 mensual de NOAA CPC** (público, 1982-hoy). Es de NOAA, no de la NASA: declararlo en *References* y en *Use of AI / NASA Data*. MUR SST queda como dato NASA complementario (valor y anomalía propia).
+11. **El Niño 2026 es el mayor de todo el registro 1982-2026:** pico de **+5,25 °C** en Niño 1+2 (octubre 2026, y subiendo), frente a +4,03 (1983), +3,73 (1998), +3,30 (2023), +2,48 (2016) y +1,83 (2017).
+    Los episodios (≥ +1,0 °C durante ≥ 3 meses) se **calculan** de los datos; no están escritos a mano. Niño 3.4: +3,25 °C; ONI (ASO 2026): +2,46. **Confirmar con ENFEN/IGP antes de presentarlo.**
+12. **El Niño costero en años:** Dic-Abr con Niño 1+2 ≥ +1,0 °C → **1983, 1998, 2016 y 2017**. En Bajo Piura la lluvia de marzo en esos años fue **~5,5 veces** la de años normales (6,6 vs 1,2 mm/día; `composite_nino`).
+13. **Tendencias (Mann-Kendall + pendiente de Sen, 1981-2025, POWER):** la temperatura sube de forma significativa (p < 0,05) en 9 de 16 valles, entre +0,15 y +0,33 °C por década. La lluvia anual no muestra tendencia
+    significativa en 10 de 16 valles: lo que cambia es la **variabilidad entre años**, no el promedio.
+14. **SRTM arregla la elevación de POWER:** Chulucanas está a **95 m** (la celda de POWER decía 1051 m). Elevación y pendiente de los 16 valles están en la tabla `zona`.
+15. **SMAP cubre cada punto cada 2-3 días y a veces no hay retrieval:** en los últimos 45 días solo ~17 % de las combinaciones valle-día tuvieron valor válido (el resto, sin pasada o calidad no recomendada). Por eso el indicador usa
+    una ventana de 14 días (≥ 2 valores) y un normal propio de SMAP 2016-2025; si falta, cae a `GWETTOP` de POWER y lo declara en `meta`.
+16. **VIIRS en lugar de MODIS:** `MOD13Q1` es HDF4 (hay que bajar el archivo completo) y el servicio de ORNL estuvo caído. Se usa **VIIRS `VNP13A1` v002** (500 m, 16 días, mismo tipo de compuesta, HDF5 legible por píxel). **Declararlo en References** (el PDF dice MODIS).
+17. **AppEEARS no acepta el token de Earthdata como Bearer** (403): pide su propio login con usuario y clave. No hizo falta: SMAP, SRTM, VIIRS y MUR se leen directo con el token.
+18. **GES DISC (IMERG y GLDAS) está BLOQUEADO hasta que el usuario acepte el acuerdo:** responde `403 EULA Acceptance Failure`. Acción de David (1 clic, con la sesión de Earthdata iniciada):
+    https://urs.earthdata.nasa.gov/approve_app?client_id=e2WVk8Pw6weeLUKZYOxvTQ → después `python -m etl.jobs imerg` y `python -m db.build`. SMAP (NSIDC), LP DAAC (SRTM, MOD13Q1, VNP13A1, ECOSTRESS) y PO.DAAC (MUR) **ya están autorizados**.
+19. **SoilGrids (ISRIC, no NASA)** devuelve suelo solo donde está mapeado: 5 de 16 valles tienen pH, carbono, arcilla y arena; el resto queda `NULL` (urbano o sin dato). No se inventa.
+20. **La web en línea del equipo (http://2.29.101.199) se llama "AllpaShift"**; el repo dice "agrohalcon" y el equipo eligió "AgroShift". Hay **tres nombres**: decidir uno antes del Submit (portada, README, logo, APK, textos en inglés).
+    Además su sección "Datos de la NASA que usamos" lista SMAP, GPM/IMERG, ECOSTRESS, MODIS/VIIRS y SRTM: hoy el código solo usa POWER, SMAP, MUR, VIIRS y SRTM; **IMERG** está bloqueado y **ECOSTRESS** no está integrado. Lo no usado debe decir *planned*.
 
 ## D. References / documentos de entrega (de `python -m etl.verificar_enlaces`)
 

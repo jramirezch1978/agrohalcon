@@ -1,56 +1,50 @@
 # Base de datos (PostgreSQL) · lo que toca a la parte de Python
 
-El dueño de la base de datos y del DDL es **Jhonny** (`04. base de datos/ddl/`). El servidor es el VPS de Hetzner con Docker
-(doc `22_servidores_despliegue.md`). **El servicio Python no se conecta a la base de datos** (contrato): solo entrega
-datos de respaldo y recibe lo que Java le manda. Esto es lo que David le pasa a Jhonny.
+El dueño de la base de datos del VPS y del DDL oficial es **Jhonny** (`04. base de datos/ddl/`). David entrega, listo para usar: el **esquema** (`db/postgres/01_schema.sql`), las **semillas** (`db/postgres/seed/`) y los **datos de respaldo**.
+El servicio Python **no se conecta a la base de datos** (contrato). La base existe para: el Plan B de la demo, los análisis, la validación 2017 y el panel.
 
-## Tablas del contrato (PDF *Contrato del backend*, p. 4)
+## Un esquema, dos motores
 
-| Tabla | Campos principales | Quién la llena |
+[`db/schema.py`](../db/schema.py) (SQLAlchemy Core) genera SQLite (`data/agroshift.sqlite`, para trabajar sin Docker) y SQL de PostgreSQL (tipos `JSONB`, `BIGSERIAL`, vistas `CREATE OR REPLACE VIEW`).
+No había PostgreSQL ni Docker en la PC de David: el SQL se valida con **sqlglot** (gramática de PostgreSQL) y se prueba en SQLite con claves foráneas activas; **falta probarlo en un PostgreSQL real** (lo hace Jhonny).
+
+```powershell
+python -m db.build              # SQLite desde la caché de descargas (python -m etl.jobs ...)
+python -m db.export_postgres    # db/postgres/01_schema.sql + 02_seed.sql + seed/*.csv
+```
+Cargar en PostgreSQL (Jhonny): `psql -d agroshift -f db/postgres/01_schema.sql`, luego, **desde `db/postgres/`**: `gunzip -k seed/observacion.csv.gz` y `psql -d agroshift -f 02_seed.sql`.
+
+## Modelo (estrella)
+
+| Tabla | Tipo | Contenido |
 |---|---|---|
-| `cultivos` | id, nombre, tempMinC, tempMaxC, aguaNecesaria (baja/media/alta), mesesSiembra, mesesCosecha, accionesPorEtapa | Alejandro (JSON) |
-| `rotaciones` | id, nombre, cultivo1Id, cultivo2Id | Alejandro / Jhonny |
-| `zonas` | id, nombre, lat, lon, region | **David** → `data/backup/zonas_seed.sql` |
-| `datosNasa` | id, lat, lon, fecha, fuente, variable, valor | **David** → `data/backup/datos_nasa_respaldo.csv` |
-| `consultas` | id, lat, lon, fecha, rotacionRecomendadaId | Java (historial de consultas) |
+| `region`, `zona` | dimensión | 7 regiones del norte + mar; 16 valles agrícolas + 2 puntos de mar. `zona` trae elevación y pendiente (SRTM) y suelo (SoilGrids) |
+| `fuente_dato`, `variable` | dimensión | 16 fuentes con **versión, DOI y estado** (`en_uso / probado / bloqueado / planeado`) y 15 variables con su unidad |
+| `cultivo`, `rotacion` | dimensión | el catálogo de Alejandro (`es_prueba` = 1 mientras sea el de prueba) y todas las parejas con ids estables |
+| `observacion` | hecho | zona · fecha · escala (`diaria / mensual / compuesta16d`) · variable · valor · calidad (única por combinación) |
+| `normal_mensual` | hecho | media y desviación 1991-2020 por zona, variable y mes |
+| `indice_climatico`, `episodio_calido` | hecho | ONI y Niño 1+2/3/3.4/4 (valor y anomalía) desde 1982; episodios calculados (≥ +1,0 °C, ≥ 3 meses) |
+| `sst_clima` | hecho | climatología de MUR SST por día del año (2003-2022) |
+| `tendencia`, `composite_nino` | hecho | Mann-Kendall + Sen por zona y variable · lluvia en años Niño vs normales |
+| `validacion_quincena` | hecho | qué habría dicho AgroShift cada quincena de ene-abr 2017, por zona (entrada, indicadores, nivel máximo) |
+| `recomendacion_cache` | hecho | el estado de hoy por zona (Plan B si falla internet) |
+| `consulta` | contrato | historial de consultas de la API |
 
-## Archivos que genera David (`python -m etl.build_backup`, `python -m etl.export_zonas_sql`)
+Vistas: **`v_datos_nasa`** (= tabla `datosNasa` del contrato: `id, lat, lon, fecha, fuente, variable, valor`), `v_anomalia_mensual` (valor, normal y puntaje z), `v_ultimo_dato`, `v_validacion_resumen`.
 
-| Archivo (`data/backup/`) | Para qué | Quién lo usa |
-|---|---|---|
-| `zonas_seed.sql` | 16 valles del norte (coordenadas **aproximadas**: Alejandro valida) | Jhonny: carga en `zonas` |
-| `datos_nasa_respaldo.csv` | NASA POWER mensual 2016-2017 y del año en curso por zona (columnas `lat,lon,fecha,fuente,variable,valor`) | Jhonny: carga en `datosNasa` (Plan B sin internet) |
-| `validacion_2017.json` | Qué habría dicho AgroShift cada quincena de ene-abr 2017, por zona | Jhonny: `/api/validacion?anio=2017`; Alejandro: diapositiva de Impacto |
-| `actual.json` | La entrada y el resultado de hoy por zona | Plan B de `/api/mapa` y `/api/recomendacion` |
-| `normales_power_1991_2020.json` | Normal histórico por mes y zona | Java, si prefiere no volver a pedirlo a POWER |
-| `versiones_datasets.json` | Versión exacta y DOI de cada dataset | Edwin / References |
-
-## Cargar `datosNasa` (ejemplo para Jhonny)
-
-Nombres en snake_case (Spring/JPA los suele mapear así); ajustar si el DDL real usa otros.
-
+## Consultas útiles
 ```sql
-CREATE TABLE IF NOT EXISTS datos_nasa (
-  id        BIGSERIAL PRIMARY KEY,
-  lat       DOUBLE PRECISION NOT NULL,
-  lon       DOUBLE PRECISION NOT NULL,
-  fecha     DATE NOT NULL,            -- primer día del mes (valores mensuales) o el día (valores diarios)
-  fuente    TEXT NOT NULL,            -- 'NASA POWER', 'SMAP', 'GPM IMERG', 'MODIS NDVI', 'MUR SST'
-  variable  TEXT NOT NULL,            -- p. ej. 'PRECTOTCORR:lluviaMm'
-  valor     DOUBLE PRECISION NOT NULL
-);
-CREATE INDEX IF NOT EXISTS idx_datos_nasa_punto_fecha ON datos_nasa (lat, lon, fecha);
+-- ¿Cuántas veces más llovió en marzo de 2017 que lo normal, por valle?
+SELECT z.nombre, a.valor AS mm_dia, a.normal, ROUND(a.z, 1) AS z
+FROM v_anomalia_mensual a JOIN zona z ON z.id = a.zona_id JOIN variable v ON v.id = a.variable_id
+WHERE v.codigo = 'PRECTOTCORR' AND a.fecha = '2017-03-01' ORDER BY a.z DESC;
 
--- desde psql, estando en la carpeta data/backup:
-\copy datos_nasa (lat, lon, fecha, fuente, variable, valor) FROM 'datos_nasa_respaldo.csv' WITH (FORMAT csv, HEADER true)
+-- ¿Qué fuentes están realmente en uso?
+SELECT codigo, producto, version, estado FROM fuente_dato ORDER BY estado, codigo;
+
+-- Primera quincena de 2017 con alerta alta, por valle
+SELECT zona, MIN(hasta) AS primera_alerta_alta FROM v_validacion_resumen WHERE nivel_maximo = 'alto' GROUP BY zona;
 ```
 
-La columna `variable` lleva `NOMBRE_NASA:campoDelContrato` (p. ej. `GWETTOP:humedadSuelo`, `PRECTOTCORR:lluviaMm`, `T2M_MAX:tempMaxC`)
-para poder reconstruir el cuerpo de `POST /indicadores` desde la base.
-
-## Qué guardar cuando estén SMAP, IMERG, MODIS y MUR SST
-Mismo formato, una fila por punto, fecha y variable, con `fuente` real (`SMAP`, `GPM IMERG`, `MODIS NDVI`, `MUR SST`) y la **versión** en el nombre
-de la variable o en una columna nueva (`version`). Así la app puede decir *“humedad del suelo 40 % por debajo de lo normal (SMAP v006)”* con respaldo.
-
-## Opciones de alojamiento (por si cambia el plan)
-Hetzner VPS + PostgreSQL en Docker (decidido) · alternativa gratis: Neon (PostgreSQL serverless) · PostGIS es opcional (solo si se hacen consultas por polígono).
+## Regla de honestidad
+`fuente_dato.estado` solo dice `en_uso` si hay datos reales de esa fuente en `observacion` (lo decide `db/build.py` mirando la caché). Lo que no esté en uso debe presentarse como *planned* en la entrega.

@@ -21,7 +21,7 @@ Este directorio es el **servicio de cálculo en Python** (FastAPI). Dueño: Davi
 ## Comandos
 ```powershell
 .venv\Scripts\Activate.ps1
-pytest                      # sin internet (65 pruebas)
+pytest                      # sin internet (~120 pruebas)
 pytest -m live              # con internet: NASA POWER, CMR, ONI
 ruff check --fix .
 uvicorn app.main:app --reload --port 8000
@@ -35,10 +35,19 @@ Python **3.11** (venv en `.venv`). El 3.14 del sistema no se usa.
 - `etl/` descargas y armado de entradas (`inputs.py`), respaldo y validación 2017 (`build_backup.py`).
 - `samples/` ejemplos del contrato. El catálogo de ahí es **de prueba**; el real es de Alejandro (`data/crops/`).
 
+## Datos y bases de datos (`etl/` y `db/`)
+- `python -m etl.jobs <power|nino|mur|mur-clima|smap|smap-clima|srtm|ndvi|suelos|imerg>` → caché `data/raw/cache`; `python -m db.build` → `data/agroshift.sqlite`;
+  `python -m db.export_postgres` (SQL de PostgreSQL) y `python -m db.export_panel` (panel en `/panel/`).
+- El token `EARTHDATA_TOKEN` está en `.env`: **nunca** leerlo, imprimirlo ni copiarlo. El código lo carga con `python-dotenv`.
+- `fuente_dato.estado` solo es `en_uso` si hay datos reales de esa fuente. Lo demás se presenta como *planned* en la entrega.
+- Agentes (`.claude/agents/`): ingeniero-datos-nasa, guardian-del-contrato, revisor-agronomico, auditor-de-entrega. Comandos: /probar, /base-de-datos, /estado-nino, /revisar-contrato.
+
 ## Estado honesto (14-nov-2026)
-- ✅ Probado: NASA POWER, CMR (versiones), ONI, indicadores, rotaciones, qué hacer, validación 2017 con POWER.
-- ⚠️ MUR SST: los ERDDAP de NOAA no respondieron desde esta PC. Sin eso `sstAnomaliaC` queda en 0 y se avisa en el JSON.
-- ❌ Sin probar: SMAP/IMERG (falta `EARTHDATA_TOKEN`), AppEEARS (falta usuario y clave).
+- ✅ Probado con datos reales: NASA POWER, NOAA Niño 1+2/ONI, MUR SST (OPeNDAP de PO.DAAC), SRTM, SoilGrids (parcial), CMR, validación 2017, base de datos, panel.
+- ⏳ SMAP y VIIRS NDVI: se leen del HDF5 remoto; mira `fuente_dato.estado` para saber si ya están ingeridos.
+- ⛔ IMERG y GLDAS: bloqueados hasta que David acepte el acuerdo de GES DISC (`403 EULA Acceptance Failure`). ECOSTRESS: planeado.
+- ❌ Sin probar: Dockerfile (no hay Docker), SQL de PostgreSQL en un servidor real (solo validado con sqlglot), asistente contra Groq real (no hay `GROQ_API_KEY`; las guardas sí tienen pruebas).
+- La señal de El Niño del servicio es el **índice Niño 1+2 de NOAA CPC** (no NASA); MUR SST da el valor y una anomalía propia. El NDVI es de **VIIRS** (el PDF dice MODIS).
 - POWER `T2M_MAX` en Piura da ~37-39 °C en marzo (parece sesgado al calor): compárense solo anomalías. Ver `docs/DECISIONES_ABIERTAS.md`.
 
 ## Git
