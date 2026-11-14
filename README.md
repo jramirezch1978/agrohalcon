@@ -4,6 +4,20 @@
 
 NASA Space Apps Challenge 2026 · Sede Piura · Reto **Field Shift: Adapting Farms with NASA Data**.
 
+## ¿Qué hace AllpaShift?
+
+**AllpaShift le dice al agricultor qué sembrar, cuándo y qué hacer esta quincena, según el riesgo climático que muestran los satélites de la NASA para su valle.** (*Allpa* = tierra en quechua · *Shift* = el cambio del reto Field Shift).
+
+1. **Ubica la parcela** en el mapa y su valle (18 valles del norte del Perú: Bajo Piura, Chira, San Lorenzo, Alto Piura, Sechura, sierra...).
+2. **Lee los satélites:** lluvia (GPM IMERG), humedad del suelo (SMAP), clima (NASA POWER), vegetación (MODIS NDVI), temperatura del mar (MUR SST) y relieve (SRTM).
+3. **Calcula el riesgo** de sequía, lluvia extrema, calor y El Niño costero, frente a lo normal (1991-2020).
+4. **"¿Qué hago esta quincena?":** la fase de cada cultivo y las acciones a tomar, con la alerta NASA que las justifica.
+5. **Compara rotaciones** (la actual frente a 2 alternativas) con beneficios, sacrificios e incertidumbre. Los cultivos permanentes (mango, limón, uva, banano, café, cacao) reciben acciones, no rotaciones.
+6. **Perspectiva de la campaña:** una barra de meses de la siembra a la cosecha en 🟢 verde, 🟡 ámbar o 🔴 rojo.
+7. **Máquina del tiempo:** qué habría recomendado antes del Niño Costero 2017, cuando en marzo llovió entre 5 y 9 veces lo normal en los valles de Piura.
+
+Catálogo: **37 cultivos** (cereales, menestras, frutales, hortalizas, tubérculos, industriales). Detalle en [27_que_hace_allpashift](01.%20documentacion/27_que_hace_allpashift.md) y modelo de datos en [26_modelo_base_de_datos](01.%20documentacion/26_modelo_base_de_datos.md).
+
 ## Ramas
 
 | Rama | Para qué | Quién |

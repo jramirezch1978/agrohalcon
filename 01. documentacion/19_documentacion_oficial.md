@@ -109,3 +109,11 @@ Todos los que envíen su proyecto antes del cierre reciben un **certificado digi
 - **Qué es:** https://www.mdpi.com/about/journals. Es una editorial **de acceso abierto**: los papers se leen y descargan **gratis**, sin cuenta universitaria.
 - **Revistas útiles para AllpaShift:** *Remote Sensing*, *Agronomy*, *Agriculture*, *Water*, *Climate*, *Sustainability*, *Land* y *Horticulturae* (uva y frutales).
 - **Uso:** es la fuente más práctica para las **References** de la entrega, porque el jurado puede abrir los enlaces sin pagar.
+
+### Más enlaces del mentor (Meet, 12:59 y 13:10)
+
+- **Kaggle Datasets:** https://www.kaggle.com/datasets. Conjuntos de datos abiertos, útiles para buscar rendimientos de cultivos o datos climáticos ya limpios. Se usa como complemento: la entrega exige **datos de la NASA** como fuente principal.
+- **Paper sobre mango (ResearchGate):** *Influencia de la temperatura y el tiempo de almacenamiento en la conservación del fruto de mango (Mangifera indica L.), variedad Van Dyke*.
+  - https://www.researchgate.net/publication/256487172_Influencia_de_la_temperatura_y_el_tiempo_de_almacenamiento_en_la_conservacion_del_fruto_de_Mango_Mangifera_indica_L_variedad_Van_Dyke
+  - Sirve para las acciones de **cosecha y poscosecha** del mango: acopio y temperatura de almacenamiento.
+  - ResearchGate pide cuenta para descargar, así que solo se guarda el enlace.

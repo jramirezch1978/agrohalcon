@@ -62,6 +62,39 @@ Piura ya no es solo mango y limón: se volvió una región **vitivinícola y de 
 
 ⚠️ Las fechas del calendario de uva (poda, brotación, floración) son **preliminares**: no hay un calendario fenológico oficial publicado para Piura. Alejandro debe validarlas con la DRAP, Provid o el INIA.
 
+## 3c. Inventario de cultivos de Piura (DRAP / MIDAGRI, campaña 2025-2026)
+
+**Campaña 2025-2026** (1 ago 2025 - 31 jul 2026): **272 074 ha instaladas** (meta: 259 690). De ellas, 130 533 ha son transitorios, 66 415 ha semipermanentes y 75 125 ha permanentes. Fuente: Oficina de Estadística de la DRAP Piura.
+
+| Grupo | Cultivo | Superficie 2025-26 | Dónde (Piura) |
+|---|---|---|---|
+| Cereales | **Arroz** | **54 424 ha** | Chira 22 554 · Medio y Bajo Piura 18 518 · San Lorenzo 9 004 · Alto Piura 3 716 · Huarmaca 360 · Huancabamba 168 · Ayabaca 59 |
+| | Maíz amarillo duro | 25 430 ha | Costa |
+| | Maíz amiláceo | 12 473 ha | Sierra |
+| | Trigo | 4 769 ha | Sierra (Huancabamba, Ayabaca) |
+| | Cebada, quinua | s/d | Sierra (Huancabamba) |
+| Menestras | Frijol Castilla o caupí | 8 658 ha | Bajo Piura, Sechura |
+| | Frijol grano seco | 6 593 ha | |
+| | Arveja grano seco | 3 859 ha | Sierra |
+| | Zarandaja | s/d | Bajo Piura (menestra típica) |
+| Industriales | Algodón (Pima) | 2 091 ha | Sobre todo Bajo Piura |
+| | Caña de azúcar | s/d | Chira (etanol) |
+| | Café, cacao | s/d | Café en la sierra; cacao en el Alto Piura |
+| Frutales (permanentes) | Mango (3.er cultivo de Piura), limón (~63 % del país), uva de mesa, banano orgánico, plátano (5.º cultivo) | s/d | San Lorenzo, Chira, Alto Piura, Medio Piura |
+| | Palta, arándano, maracuyá, papaya, mandarina, granadilla | s/d | Secundarios o en crecimiento |
+| Hortalizas | Ají páprika, cebolla, zanahoria, tomate | 1 479 ha programadas (ene. 2026) | Bajo Piura, Sechura |
+| | **Sandía** | piloto | Se evalúa en lugar del banano afectado por *Fusarium* (2026) |
+| Tubérculos | Camote, yuca (más de 2 600 ha de tubérculos) · papa, olluco en la sierra | | Bajo Piura, Sechura, sierra |
+
+- **Alcachofa:** no aparece en los reportes de la DRAP Piura. Su zona fuerte es La Libertad (Chavimochic), así que en el catálogo queda asignada ahí.
+- **Catálogo:** con esta lista se cargaron **37 cultivos** en la base de datos ([26_modelo_base_de_datos](26_modelo_base_de_datos.md)).
+- **Fuentes:**
+  - [Agropress: campaña 2025-2026 en Piura (DRAP)](https://agropress.pe/noticias/campana-agricola-2025-2026-en-piura-supera-las-272-mil-hectareas-instaladas/)
+  - [Agraria: hortalizas en Piura](https://agraria.pe/noticias/piura-hortalizas-registran-un-crecimiento-progresivo-en-la-c-41947)
+  - [Agraria: tubérculos en Piura](https://agraria.pe/noticias/piura-siembra-de-tuberculos-supera-las-2-600-hectareas-en-la-42038)
+  - [Agraria: sandía en lugar de banano](https://agraria.pe/noticias/piura-evalua-producir-sandia-en-lugar-de-banano-41521)
+  - [BCRP: caracterización de Piura](https://www.bcrp.gob.pe/docs/Sucursales/Piura/piura-caracterizacion.pdf)
+
 ## 4. Acciones recomendadas por fase (base para la app)
 
 | Fase | Acciones típicas | Alertas con datos NASA |

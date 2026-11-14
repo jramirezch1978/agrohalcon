@@ -75,3 +75,7 @@
 - Masek, J. et al. Harmonized Landsat Sentinel-2 (HLSL30) V2.0. NASA LP DAAC. https://doi.org/10.5067/HLS/HLSL30.002
 
 ⚠️ Antes de la entrega hay que leer al menos el **resumen** de cada paper citado y quitar los que no se usen de verdad. Los 5 DOI de datasets NASA también se verificaron (doi.org, 2026-11-14).
+
+### Poscosecha (paper que pasó el mentor)
+
+- Li, X.; Huang, H.; Zhang, L. et al. (2025). Effect of Postharvest Storage Temperature and Duration on Tomato Fruit Quality. *Foods*, 14(6), 1002. https://doi.org/10.3390/foods14061002 (acciones de cosecha y almacenamiento de hortalizas)

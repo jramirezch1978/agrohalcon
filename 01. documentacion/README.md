@@ -30,6 +30,8 @@ Cada documento está en **Markdown**, **Word (docx)** y **PDF**. Responsable de 
 | 23_propuestas_equipo_y_ramas | [md](23_propuestas_equipo_y_ramas.md) | [docx](docx/23_propuestas_equipo_y_ramas.docx) | [pdf](pdf/23_propuestas_equipo_y_ramas.pdf) |
 | 24_exploracion_apis_nasa | [md](24_exploracion_apis_nasa.md) | [docx](docx/24_exploracion_apis_nasa.docx) | [pdf](pdf/24_exploracion_apis_nasa.pdf) |
 | 25_referencias_mdpi | [md](25_referencias_mdpi.md) | [docx](docx/25_referencias_mdpi.docx) | [pdf](pdf/25_referencias_mdpi.pdf) |
+| 26_modelo_base_de_datos | [md](26_modelo_base_de_datos.md) | [docx](docx/26_modelo_base_de_datos.docx) | [pdf](pdf/26_modelo_base_de_datos.pdf) |
+| 27_que_hace_allpashift | [md](27_que_hace_allpashift.md) | [docx](docx/27_que_hace_allpashift.docx) | [pdf](pdf/27_que_hace_allpashift.pdf) |
 
 ## Datos de la NASA (resumen)
 
@@ -45,5 +47,7 @@ Cada documento está en **Markdown**, **Word (docx)** y **PDF**. Responsable de 
 - [Cronograma General NSAP2026](<oficial/Cronograma General NSAP2026.pdf>)
 - [Guia de Participantes NSAP 2026](<oficial/Guia de Participantes NSAP 2026.pdf>)
 - [Mentoria NSAP2026](<oficial/Mentoria NSAP2026.pdf>)
+
+- [papers/](papers/): PDF de los 23 papers de acceso abierto citados (CC BY).
 
 Imágenes de la identidad visual: [img/](img/).
