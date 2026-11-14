@@ -33,6 +33,7 @@ Cada documento está en **Markdown**, **Word (docx)** y **PDF**. Responsable de 
 | 26_modelo_base_de_datos | [md](26_modelo_base_de_datos.md) | [docx](docx/26_modelo_base_de_datos.docx) | [pdf](pdf/26_modelo_base_de_datos.pdf) |
 | 27_que_hace_allpashift | [md](27_que_hace_allpashift.md) | [docx](docx/27_que_hace_allpashift.docx) | [pdf](pdf/27_que_hace_allpashift.pdf) |
 | 28_prototipo_video_comportamiento | [md](28_prototipo_video_comportamiento.md) | [docx](docx/28_prototipo_video_comportamiento.docx) | [pdf](pdf/28_prototipo_video_comportamiento.pdf) |
+| 29_arquitectura_reglas | [md](29_arquitectura_reglas.md) | [docx](docx/29_arquitectura_reglas.docx) | [pdf](pdf/29_arquitectura_reglas.pdf) |
 
 ## Datos de la NASA (resumen)
 
