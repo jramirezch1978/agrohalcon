@@ -1,0 +1,70 @@
+{
+  "nota": "CATÁLOGO DE EJEMPLO. Se usa solo si Java no envía 'catalogo'. Lo reemplaza el catálogo de Alejandro. Valores agronómicos aproximados para la costa de Piura (supuestos del equipo, a validar).",
+  "cultivos": [
+    {
+      "id": "arroz", "nombre": {"es": "Arroz", "en": "Rice"}, "tipo": "temporal", "tradicional": true,
+      "duracion_meses": 5, "temp_min": 18, "temp_max": 35, "agua": "alto", "usoAgua": "alto",
+      "meses_siembra": [12, 1, 2]
+    },
+    {
+      "id": "maiz", "nombre": {"es": "Maíz", "en": "Maize"}, "tipo": "temporal",
+      "duracion_meses": 4, "temp_min": 12, "temp_max": 35, "agua": "medio", "usoAgua": "medio",
+      "meses_siembra": [1, 2, 7, 8, 9]
+    },
+    {
+      "id": "frijol", "nombre": {"es": "Frijol", "en": "Bean"}, "tipo": "temporal",
+      "duracion_meses": 3, "temp_min": 15, "temp_max": 35, "agua": "bajo", "usoAgua": "bajo",
+      "meses_siembra": [4, 5, 6, 7, 8]
+    },
+    {
+      "id": "algodon", "nombre": {"es": "Algodón", "en": "Cotton"}, "tipo": "temporal",
+      "duracion_meses": 6, "temp_min": 15, "temp_max": 38, "agua": "medio", "usoAgua": "medio",
+      "meses_siembra": [1, 2, 3]
+    },
+    {
+      "id": "mango", "nombre": {"es": "Mango", "en": "Mango"}, "tipo": "permanente",
+      "temp_min": 10, "temp_max": 40, "agua": "medio", "usoAgua": "medio",
+      "etapas": [
+        {"id": "cosecha", "nombre": {"es": "cosecha", "en": "harvest"}, "meses": [1, 2, 3]},
+        {"id": "poda", "nombre": {"es": "poda", "en": "pruning"}, "meses": [4]},
+        {"id": "reposo", "nombre": {"es": "reposo", "en": "rest"}, "meses": [5, 6, 7]},
+        {"id": "floracion", "nombre": {"es": "floración", "en": "flowering"}, "meses": [8, 9]},
+        {"id": "fructificacion", "nombre": {"es": "fructificación", "en": "fruit set"}, "meses": [10, 11, 12]}
+      ],
+      "acciones": [
+        {"etapa": "floracion", "si": "calor", "nivel": "alto", "accion": {"es": "Riega temprano y evita el estrés por calor", "en": "Irrigate early and avoid heat stress"}},
+        {"etapa": "floracion", "si": "lluvia_exceso", "nivel": "medio", "accion": {"es": "Aplica fungicida preventivo contra antracnosis en las flores", "en": "Apply preventive fungicide against anthracnose on flowers"}},
+        {"etapa": "fructificacion", "si": "deficit", "nivel": "medio", "accion": {"es": "Mantén riegos regulares para el llenado del fruto", "en": "Keep regular irrigation for fruit filling"}},
+        {"etapa": "cosecha", "si": "lluvia_exceso", "nivel": "medio", "accion": {"es": "Adelanta la cosecha y limpia los drenes: la lluvia daña el fruto", "en": "Harvest earlier and clear drains: rain damages the fruit"}},
+        {"etapa": "*", "si": "lluvia_exceso", "nivel": "alto", "accion": {"es": "Limpia drenajes y evita el encharcamiento de las raíces", "en": "Clear drains and avoid waterlogged roots"}}
+      ]
+    },
+    {
+      "id": "limon", "nombre": {"es": "Limón", "en": "Lime"}, "tipo": "permanente",
+      "temp_min": 13, "temp_max": 38, "agua": "medio", "usoAgua": "medio",
+      "etapas": [
+        {"id": "floracion", "nombre": {"es": "floración", "en": "flowering"}, "meses": [11, 12, 1]},
+        {"id": "fructificacion", "nombre": {"es": "fructificación", "en": "fruit set"}, "meses": [2, 3, 4]},
+        {"id": "cosecha", "nombre": {"es": "cosecha", "en": "harvest"}, "meses": [5, 6, 7, 8]},
+        {"id": "reposo", "nombre": {"es": "reposo", "en": "rest"}, "meses": [9, 10]}
+      ],
+      "acciones": [
+        {"etapa": "floracion", "si": "deficit", "nivel": "medio", "accion": {"es": "Riega en floración: el estrés de agua hace caer las flores", "en": "Irrigate during flowering: water stress drops flowers"}},
+        {"etapa": "cosecha", "si": "calor", "nivel": "alto", "accion": {"es": "Cosecha en las horas frescas de la mañana", "en": "Harvest in the cool morning hours"}},
+        {"etapa": "*", "si": "lluvia_exceso", "nivel": "medio", "accion": {"es": "Limpia drenes y vigila la gomosis en el tronco", "en": "Clear drains and watch for gummosis on the trunk"}}
+      ]
+    },
+    {
+      "id": "banano", "nombre": {"es": "Banano", "en": "Banana"}, "tipo": "permanente",
+      "temp_min": 15, "temp_max": 35, "agua": "alto", "usoAgua": "alto",
+      "etapas": [
+        {"id": "produccion", "nombre": {"es": "producción", "en": "production"}, "meses": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
+      ],
+      "acciones": [
+        {"etapa": "*", "si": "lluvia_exceso", "nivel": "medio", "accion": {"es": "Refuerza el control de sigatoka y limpia los drenes", "en": "Step up sigatoka control and clear drains"}},
+        {"etapa": "*", "si": "calor", "nivel": "alto", "accion": {"es": "Aumenta la frecuencia de riego", "en": "Irrigate more often"}},
+        {"etapa": "*", "si": "deficit", "nivel": "medio", "accion": {"es": "No dejes al banano sin riego: consume mucha agua", "en": "Don't leave bananas without irrigation: they use a lot of water"}}
+      ]
+    }
+  ]
+}
