@@ -1,0 +1,4 @@
+# Servicio de cálculo (lo que se despliega). Solo lo mínimo: sin pandas, sin descargas.
+fastapi>=0.115,<1
+uvicorn[standard]>=0.30,<1
+pydantic>=2.7,<3
