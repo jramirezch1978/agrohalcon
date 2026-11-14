@@ -5,8 +5,10 @@
 //  3) se usa la capa propietaria de Esri en el mapa.
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const RAIZ = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')
+// fileURLToPath: funciona con espacios en la ruta (p. ej. '03. frontend') y en Windows
+const RAIZ = fileURLToPath(new URL('..', import.meta.url))
 const SRC = join(RAIZ, 'src')
 
 function archivos(dir) {
