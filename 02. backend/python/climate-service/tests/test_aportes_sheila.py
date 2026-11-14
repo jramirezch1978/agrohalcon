@@ -59,6 +59,12 @@ def test_localizar_prefiere_la_variable_de_entorno_y_devuelve_none_si_faltan_arc
     assert aportes.localizar() != carpeta  # cae a las rutas del repositorio (la copia de respaldo existe)
 
 
+def test_busca_tambien_en_la_ubicacion_nueva_de_sheila_antes_que_en_la_copia(monkeypatch):
+    monkeypatch.delenv("CALCULOS_PRECALCULADO", raising=False)
+    c = [str(x).replace("\\", "/") for x in aportes.candidatos()]
+    assert c[0].endswith("02. backend/python/calculos/data/precalculado") and c[-1].endswith("data/backup/sheila")
+
+
 def test_un_punto_se_asigna_al_valle_si_esta_a_menos_de_5_km_y_un_valle_recibe_solo_uno():
     valles = [(1, -5.35, -80.70)]
     pts = [punto("exacto", -5.35, -80.70), punto("cerca", -5.36, -80.70), punto("lejos", -5.60, -80.70)]

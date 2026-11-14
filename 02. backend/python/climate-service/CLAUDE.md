@@ -39,7 +39,7 @@ Python **3.11** (venv en `.venv`). El 3.14 del sistema no se usa.
 - `python -m etl.jobs <power|nino|mur|mur-clima|smap|smap-clima|srtm|ndvi|suelos|imerg>` → caché `data/raw/cache`; `python -m db.build` → `data/agroshift.sqlite`;
   `python -m db.export_postgres` (SQL de PostgreSQL) y `python -m db.export_panel` (panel en `/panel/`).
 - El token `EARTHDATA_TOKEN` está en `.env`: **nunca** leerlo, imprimirlo ni copiarlo. El código lo carga con `python-dotenv`.
-- Aportes de Sheila (`calculos/data/precalculado/`, copia en `data/backup/sheila/`): IMERG y MUR Niño 1+2 → `db/aportes.py` (tablas `observacion`, `normal_mensual`, `indice_climatico`, `contraste_fuentes`). Revisión completa en `docs/REVISION_CALCULOS_SHEILA.md`.
+- Aportes de Sheila (`calculos/data/precalculado/` o `02. backend/python/calculos/data/precalculado/`, copia en `data/backup/sheila/`): IMERG y MUR Niño 1+2 → `db/aportes.py` (tablas `observacion`, `normal_mensual`, `indice_climatico`, `contraste_fuentes`). Revisión completa en `docs/REVISION_CALCULOS_SHEILA.md`.
 - La base de Java es la de Jhonny (`04. base de datos/ddl/00-schema.sql`): `python -m db.export_allpashift` genera `seed/02-datos-nasa.sql` y `python -m db.probar_allpashift` lo prueba en PostgreSQL 16.2 real.
 - Respaldo de El Niño (`app/datos_respaldo/`): se regenera con `python -m etl.respaldo_nino12`; vence a los 21 días (última semana: 2026-11-09).
 - `fuente_dato.estado` solo es `en_uso` si hay datos reales de esa fuente. Lo demás se presenta como *planned* en la entrega.

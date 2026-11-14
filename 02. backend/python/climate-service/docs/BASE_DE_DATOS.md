@@ -69,7 +69,7 @@ el NDVI se rotula `VIIRS NDVI`, nunca `MODIS`. `database-deploy.bat` todavía ej
 
 ### Aportes de Sheila (`db/aportes.py`)
 
-Lee `calculos/data/precalculado/{imerg_piura,mur_sst_nino12}.json` (o la copia `data/backup/sheila/`, o la carpeta de `CALCULOS_PRECALCULADO`) y agrega:
+Lee `calculos/data/precalculado/{imerg_piura,mur_sst_nino12}.json` (o `02. backend/python/calculos/…`, o la copia `data/backup/sheila/`, o la carpeta de `CALCULOS_PRECALCULADO`) y agrega:
 GPM IMERG V07 de 12 puntos de Piura (mensual Final 2001-2025 y diario Late de 45 días, en mm/día, con su normal 2001-2020), la serie semanal MUR SST de la caja Niño 1+2 (`indice_climatico`: `MUR_NINO12`, `MUR_NINO12_ANOM`)
 y la tabla **`contraste_fuentes`** (correlación, sesgo y RMSE entre fuentes independientes). Los puntos a menos de 5 km de un valle se asignan a él; los otros 6 son zonas `referencia` (ids 201-206).
 

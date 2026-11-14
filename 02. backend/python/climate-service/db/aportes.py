@@ -9,8 +9,9 @@ Su carpeta `calculos/data/precalculado/` trae dos archivos reales de la NASA que
 Aquí se cargan al MISMO esquema que el resto de los datos (zonas, observaciones, normales, índices) y se contrastan con
 las otras fuentes (POWER y NOAA CPC): si dos fuentes independientes dicen lo mismo, el dato es más confiable.
 
-Dónde busca los archivos (en este orden): variable CALCULOS_PRECALCULADO · <repo>/calculos/data/precalculado (cuando el Pull
-Request de Sheila ya esté en develop) · data/backup/sheila/ (copia con el commit f1143f6 de su rama).
+Dónde busca los archivos (en este orden): variable CALCULOS_PRECALCULADO · <repo>/02. backend/python/calculos/data/precalculado
+(feature/integracion-sheila) · <repo>/calculos/data/precalculado (feature/calculos-sheila) · data/backup/sheila/ (copia con el
+commit f1143f6 de su rama; su contenido es idéntico al de integracion-sheila).
 """
 
 from __future__ import annotations
@@ -39,7 +40,8 @@ REGION_PIURA = 1
 
 def candidatos() -> list[Path]:
     env = os.getenv("CALCULOS_PRECALCULADO")
-    return ([Path(env)] if env else []) + [REPO / "calculos" / "data" / "precalculado", BACKUP / "sheila"]
+    nueva = REPO / "02. backend" / "python" / "calculos" / "data" / "precalculado"  # feature/integracion-sheila
+    return ([Path(env)] if env else []) + [nueva, REPO / "calculos" / "data" / "precalculado", BACKUP / "sheila"]
 
 
 def localizar() -> Path | None:

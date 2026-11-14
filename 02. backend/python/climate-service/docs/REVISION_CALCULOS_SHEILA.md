@@ -3,6 +3,17 @@
 Se revisó la rama `feature/calculos-sheila` (commit `f1143f6`, carpeta `calculos/`) contra lo que el backend de verdad usa:
 Java (`agro-service`) → `climate-service` (puerto 8000) → PostgreSQL de Jhonny. Todo lo de abajo se **ejecutó**, no se supuso.
 
+> **Actualización (14-nov, 15:48): Sheila subió `feature/integracion-sheila`** (3 commits sobre `develop`, 0 de retraso, 0 conflictos con las demás ramas).
+> Mueve su servicio a `02. backend/python/calculos/` (:8001), agrega `CalculosClient.java` y adapta `agro-service` para llamarlo, suma un asistente con Groq
+> en Java (`AsistenteService`, `GroqClient`) y agrega el contenedor `calculos` a `docker-compose.app.yml`. **Con esa rama, el "no cuadra" de las secciones 1 y 2
+> deja de aplicar a Java ↔ `calculos/`**: Java ya envía su forma de pedido (`lang`, `catalogo`) y ella agregó `/indicadores-punto`. Lo que dicen las secciones 1 y 2
+> vale para `develop` y para `feature/calculos-sheila`, que es lo que se revisó con ejecución. **No se probó la rama nueva** (no hay Java 17 ni Maven en la PC de David):
+> solo se leyó su código y se verificó que sus datos (`imerg_piura.json`, `mur_sst_nino12.json`) tienen el mismo contenido que los usados aquí.
+> Consecuencias a decidir con Jhonny: (a) en esa rama Java **ya no llama a `climate-service`**, así que el respaldo de El Niño, las pruebas de `allpashift_api.py` y las
+> correcciones de `tipo_accion()` de este servicio no estarían en el flujo de la app; hay que elegir **un** servicio de cálculo (y entonces los umbrales del punto 22 dejan de ser una discusión teórica);
+> (b) `feature/calculos-sheila` y `feature/frontend-sheila` quedan superseded: abrir solo el PR de `feature/integracion-sheila` evita duplicar `calculos/` y `Frontend/`.
+> Lo que se hizo con los datos (secciones 4 y 6) y la base de datos no depende de esa decisión.
+
 ## 1. Veredicto
 
 | Pregunta | Respuesta |
