@@ -1,0 +1,6 @@
+{
+  "lat": -5.19,
+  "lon": -80.63,
+  "actual": {"lluviaMm": 2.1, "humedadSuelo": 0.12, "tempMaxC": 34.0, "tempMinC": 21.0, "sstAnomaliaC": 1.2},
+  "historico": {"lluviaMm": 8.5, "humedadSuelo": 0.20, "tempMaxC": 31.0, "tempMinC": 20.0}
+}

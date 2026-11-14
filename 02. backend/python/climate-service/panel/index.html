@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgroShift · Panel técnico</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{--bg:#0E1E14;--panel:#14291c;--panel2:#193324;--line:#264a33;--txt:#e8f3ea;--mut:#9db8a4;--verde:#78CD6E;--oro:#E8B740;
+        --bajo:#4caf50;--medio:#E8B740;--alto:#e5533d;--radio:14px}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  header{padding:18px 20px 6px;display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+  header h1{margin:0;font-size:22px;letter-spacing:.2px}
+  header h1 b{color:var(--verde)}
+  header .sub{color:var(--mut);font-size:13px}
+  .aviso{margin:6px 20px 0;padding:8px 12px;border:1px dashed var(--line);border-radius:10px;color:var(--mut);font-size:13px}
+  main{padding:14px 20px 40px;display:grid;gap:14px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radio);padding:14px 16px}
+  .card h2{margin:0 0 8px;font-size:13px;font-weight:600;color:var(--mut);text-transform:uppercase;letter-spacing:.6px}
+  .kpi .n{font-size:32px;font-weight:700;line-height:1.1}
+  .kpi .d{color:var(--mut);font-size:12.5px;margin-top:4px}
+  .alto{color:var(--alto)} .medio{color:var(--medio)} .bajo{color:var(--bajo)}
+  .grid2{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px}
+  @media(max-width:980px){.grid2{grid-template-columns:1fr}}
+  #mapa{height:430px;border-radius:10px;border:1px solid var(--line)}
+  .leaflet-container{background:#0b1710}
+  .ind{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .ind>div{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .ind .t{font-size:12px;color:var(--mut)} .ind .v{font-size:20px;font-weight:700}
+  .ind .f{font-size:11.5px;color:var(--mut)}
+  .pill{display:inline-block;padding:1px 9px;border-radius:99px;font-size:11.5px;font-weight:700;color:#0E1E14}
+  .pill.alto{background:var(--alto);color:#fff}.pill.medio{background:var(--medio)}.pill.bajo{background:var(--bajo)}
+  .pill.en_uso{background:var(--verde)}.pill.probado{background:#7fb4d6}.pill.bloqueado{background:var(--alto);color:#fff}.pill.planeado{background:#7b8a80;color:#fff}
+  canvas{max-width:100%}
+  .chart{position:relative;height:290px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{color:var(--mut);font-weight:600;font-size:12px}
+  a{color:var(--verde)}
+  .rot{display:grid;gap:10px}
+  .rot .fila{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .barra{position:relative;height:12px;background:#0b1710;border-radius:99px;margin:7px 0 5px;overflow:hidden}
+  .barra .rango{position:absolute;top:0;bottom:0;opacity:.35}
+  .barra .p{position:absolute;top:0;bottom:0;left:0;border-radius:99px}
+  .mut{color:var(--mut)} .peq{font-size:12.5px}
+  select{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+  .hall{display:grid;gap:8px;margin:0;padding-left:18px}
+  footer{color:var(--mut);font-size:12px;padding:0 20px 24px}
+</style>
+</head>
+<body>
+<header>
+  <h1><b>AgroShift</b> · Panel técnico</h1>
+  <span class="sub" id="sub">cargando…</span>
+</header>
+<div class="aviso">Herramienta interna de David para ver la base de datos y el servicio <code>climate-service</code> funcionando. No es la app de Sheila. Datos: NASA POWER, SMAP, MUR SST, VIIRS NDVI, SRTM · NOAA CPC · ISRIC SoilGrids. El comparador usa un catálogo de <b>PRUEBA</b> (no validado).</div>
+
+<main>
+  <section class="kpis" id="kpis"></section>
+
+  <section class="card"><h2>Lo que dicen los datos</h2><ul class="hall" id="hallazgos"></ul></section>
+
+  <section class="grid2">
+    <div class="card"><h2>Mapa de riesgo hoy · 16 valles del norte (clic en un valle)</h2><div id="mapa"></div>
+      <div class="mut peq" style="margin-top:6px">Círculos = nivel máximo de riesgo del valle. Capas de la NASA (GIBS): lluvia IMERG y temperatura del mar MUR del día del dato (el mar frente a Piura se ve muy caliente).</div></div>
+    <div class="card" id="detalle"><h2>Valle</h2><div class="mut">Elige un valle en el mapa o aquí:
+      <select id="selZona"></select></div></div>
+  </section>
+
+  <section class="grid2">
+    <div class="card"><h2>El Niño costero 1982-2026 · anomalía de la temperatura del mar (°C)</h2><div class="chart"><canvas id="cNino"></canvas></div>
+      <div class="mut peq" style="margin-top:6px">Niño 1+2 = costa de Perú. Las franjas son episodios calculados: ≥ +1,0 °C durante ≥ 3 meses seguidos. Fuente: NOAA CPC (no es NASA).</div></div>
+    <div class="card"><h2 id="t2017">Máquina del tiempo · Niño costero 2017 en el valle elegido</h2><div class="chart"><canvas id="c2017"></canvas></div>
+      <div class="mut peq" style="margin-top:6px">Barras = lluvia de cada quincena (NASA POWER); línea = normal del mes (1991-2020). Color = nivel del indicador de lluvia.</div></div>
+  </section>
+
+  <section class="grid2">
+    <div class="card"><h2>Comparador de rotaciones hoy · en vivo desde <code>POST /recomendacion</code></h2><div id="comparador" class="rot mut">elige un valle…</div></div>
+    <div class="card"><h2>Explicación del asistente · Plan B sin IA (<code>POST /asistente/plan-b</code>)</h2><div id="explica" class="mut">elige un valle…</div>
+      <h2 style="margin-top:14px">Satélites en el valle</h2><div class="chart" style="height:210px"><canvas id="cSat"></canvas></div></div>
+  </section>
+
+  <section class="card"><h2>Bases de datos y fuentes (tabla <code>fuente_dato</code>)</h2><div style="overflow:auto"><table id="tFuentes"></table></div></section>
+</main>
+<footer id="pie"></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+const COL = {bajo:'#4caf50', medio:'#E8B740', alto:'#e5533d'};
+const NOM = {lluvia:'Lluvia', humedadSuelo:'Humedad del suelo', calor:'Calor (máx.)', elNino:'Señal de El Niño'};
+const fmt = (x, d=2) => x==null ? '—' : Number(x).toLocaleString('es-PE', {maximumFractionDigits:d, minimumFractionDigits:0});
+const $ = id => document.getElementById(id);
+let D, CAT, charts = {}, mapa, marcadores = {};
+
+async function cargar(){
+  const [a, b] = await Promise.all([fetch('datos/panel.json'), fetch('datos/catalogo_prueba.json')]);
+  D = await a.json(); CAT = (await b.json()).cultivos;
+  pintarKpis(); pintarHallazgos(); pintarMapa(); pintarNino(); pintarFuentes();
+  const sel = $('selZona'); sel.innerHTML = D.zonas.map(z => `<option value="${z.id}">${z.nombre}</option>`).join('');
+  sel.onchange = () => elegir(+sel.value);
+  $('sub').textContent = `datos al ${D.resumen.fecha_datos} · base generada el ${D.generado} · ${fmt(D.resumen.filas.observacion,0)} observaciones`;
+  $('pie').textContent = `Servicio ${location.origin} · contrato del backend sin cambios (campos extra opcionales). Catálogo de cultivos de prueba.`;
+  elegir(D.zonas.find(z => z.nombre==='Bajo Piura')?.id ?? D.zonas[0].id);
+}
+
+function pintarKpis(){
+  const r = D.resumen, n12 = r.nino12_anom;
+  const maxEp = D.episodios.filter(e => e.pico_fecha < '2026-01-01').sort((a,b)=>b.pico_anomalia_c-a.pico_anomalia_c)[0];
+  $('kpis').innerHTML = `
+    <div class="card kpi"><h2>Niño 1+2 (costa de Perú)</h2><div class="n alto">+${fmt(n12.valor)} °C</div><div class="d">anomalía mensual · ${n12.fecha.slice(0,7)} · NOAA CPC</div></div>
+    <div class="card kpi"><h2>Niño 3.4 · ONI</h2><div class="n alto">+${fmt(r.nino34_anom)} · +${fmt(r.oni?.valor)}</div><div class="d">anomalía mensual · ONI trimestral ${r.oni?.fecha.slice(0,7)}</div></div>
+    <div class="card kpi"><h2>Valles en alerta alta</h2><div class="n ${r.zonas_alto? 'alto':'bajo'}">${r.zonas_alto} de ${r.zonas_total}</div><div class="d">dato más reciente: ${r.fecha_datos}</div></div>
+    <div class="card kpi"><h2>Récord anterior (1982-2025)</h2><div class="n medio">+${fmt(maxEp?.pico_anomalia_c)} °C</div><div class="d">pico en ${maxEp?.pico_fecha.slice(0,7)} (Niño 1+2)</div></div>`;
+}
+
+function pintarHallazgos(){
+  const r = D.resumen, eps = D.episodios, e26 = eps.find(e => e.inicio.startsWith('2026'));
+  const e17 = eps.find(e => e.inicio.startsWith('2017'));
+  const mur = D.mur.anomalia.at(-1), sst = D.mur.sst.at(-1);
+  const li = [];
+  if (e26) li.push(`El episodio de <b>2026</b> (desde ${e26.inicio.slice(0,7)}) ya llega a <b>+${fmt(e26.pico_anomalia_c)} °C</b> en Niño 1+2, por encima de 1983 (+4,03), 1998 (+3,73) y 2023 (+3,30). Verificar con ENFEN/IGP antes de presentarlo.`);
+  if (mur) li.push(`MUR SST (NASA) mar adentro frente a Piura: <b>${fmt(sst.valor,1)} °C</b> el ${sst.fecha}, <b>+${fmt(mur.valor,1)} °C</b> sobre su climatología 2003-2022 del mismo día (cálculo propio). Confirma que el +9 °C que vio Jhonny no era un error del dataset.`);
+  if (e17) li.push(`2017 fue un evento corto (pico +${fmt(e17.pico_anomalia_c)} °C): el <b>ONI lo marcó neutral</b>; la señal local y la lluvia de POWER sí lo vieron. Por eso AgroShift usa la señal del mar de la costa.`);
+  const z = D.zonas.find(z => z.nombre==='Bajo Piura');
+  const m = z?.composite_lluvia.find(c => c.mes===3);
+  if (m) li.push(`En Bajo Piura, la lluvia de marzo en años de Niño costero (${m.nino} mm/día) fue <b>${fmt(m.razon,1)} veces</b> la de años normales (${m.normal} mm/día).`);
+  const sig = D.zonas.filter(q => q.tendencias.T2M && q.tendencias.T2M.p < 0.05 && q.tendencias.T2M.pendiente_decada > 0);
+  if (sig.length){ const p = sig.map(q => q.tendencias.T2M.pendiente_decada); li.push(`Tendencia de temperatura (Mann-Kendall + pendiente de Sen, 1981-2025): sube de forma significativa (p &lt; 0,05) en <b>${sig.length} de ${D.zonas.length} valles</b>, entre +${fmt(Math.min(...p))} y +${fmt(Math.max(...p))} °C por década.`); }
+  const sinTend = D.zonas.filter(q => q.tendencias.PRECTOTCORR && q.tendencias.PRECTOTCORR.p >= 0.05).length;
+  li.push(`La lluvia anual no muestra tendencia significativa en ${sinTend} de ${D.zonas.length} valles: lo que cambia es la variabilidad entre años (El Niño), no el promedio.`);
+  // NDVI VIIRS: ¿cayó la vegetación en mar-may 2017 frente a dic-ene? (el PDF dice que sí; los datos dicen que no)
+  const med = (a, d, h) => { const v = a.filter(p => p.fecha >= d && p.fecha <= h).map(p => p.ndvi); return v.length ? v.reduce((s,x)=>s+x,0)/v.length : null; };
+  const cmp = D.zonas.map(q => [med(q.ndvi,'2016-12-01','2017-01-31'), med(q.ndvi,'2017-03-01','2017-05-31')]).filter(p => p[0] && p[1]);
+  if (cmp.length){ const sube = cmp.filter(p => p[1] > p[0]).length;
+    li.push(`<b>⚠ NDVI VIIRS 2017:</b> en mar-may subió frente a dic-ene en <b>${sube} de ${cmp.length} valles</b> con dato en ambos periodos: la lluvia de El Niño reverdeció zonas áridas. La "caída de la vegetación" del PDF no se ve con este método (punto central del valle, antes/después): hay que refinarlo o corregir el texto.`); }
+  const ch = D.zonas.find(z => z.nombre.startsWith('Alto Piura'));
+  if (ch) li.push(`SRTM corrige a POWER: Chulucanas está a <b>${fmt(ch.elevacion_m,0)} m</b>, no a los 1051 m de su celda POWER.`);
+  $('hallazgos').innerHTML = li.map(x => `<li>${x}</li>`).join('');
+}
+
+function pintarMapa(){
+  mapa = L.map('mapa', {zoomControl:true}).setView([-6.3, -79.6], 6);
+  const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution:'© OpenStreetMap', maxZoom:12}).addTo(mapa);
+  // Capas de imágenes de la NASA (GIBS, públicas, sin llave) del día del dato
+  const f = D.resumen.fecha_datos || new Date().toISOString().slice(0,10);
+  const gibs = (capa, nivel, ext, op) => L.tileLayer(`https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/${capa}/default/${f}/GoogleMapsCompatible_Level${nivel}/{z}/{y}/{x}.${ext}`, {maxNativeZoom:nivel, maxZoom:12, opacity:op, attribution:'NASA GIBS'});
+  const lluvia = gibs('IMERG_Precipitation_Rate', 6, 'png', .75).addTo(mapa);
+  const sst = gibs('GHRSST_L4_MUR_Sea_Surface_Temperature', 7, 'png', .8);
+  const color = gibs('MODIS_Terra_CorrectedReflectance_TrueColor', 9, 'jpg', 1);
+  L.control.layers({'Mapa base': osm, 'NASA MODIS color real': color}, {[`NASA IMERG lluvia (${f})`]: lluvia, [`NASA MUR temperatura del mar (${f})`]: sst}, {collapsed:false}).addTo(mapa);
+  D.zonas.forEach(z => {
+    const nivel = z.hoy?.nivelMaximo ?? 'bajo';
+    const m = L.circleMarker([z.lat, z.lon], {radius:11, color:'#0E1E14', weight:2, fillColor:COL[nivel], fillOpacity:.95}).addTo(mapa);
+    m.bindTooltip(`${z.nombre} · ${nivel}`); m.on('click', () => elegir(z.id));
+    marcadores[z.id] = m;
+  });
+}
+
+function elegir(id){
+  const z = D.zonas.find(z => z.id===id); $('selZona').value = id;
+  Object.entries(marcadores).forEach(([k,m]) => m.setStyle({weight: +k===id ? 4 : 2, color: +k===id ? '#fff' : '#0E1E14'}));
+  mapa.panTo([z.lat, z.lon]);
+  const h = z.hoy, ind = h?.indicadores;
+  const filas = ind ? Object.entries(ind).map(([k,i]) => `
+    <div><div class="t">${NOM[k]}</div><div class="v">${fmt(i.valor, k==='humedadSuelo'?3:1)} <span class="mut peq">${i.unidad}</span></div>
+    <div class="f">normal ${fmt(i.normal, k==='humedadSuelo'?3:1)} · <span class="pill ${i.nivel}">${i.nivel}</span></div><div class="f">${i.fuente}</div></div>`).join('') : '<div class="mut">sin datos</div>';
+  const s = z.suelo, soil = s.ph==null ? 'sin suelo mapeado (urbano o sin dato en SoilGrids)' : `pH ${fmt(s.ph,1)} · carbono ${fmt(s.carbono_g_kg,1)} g/kg · arcilla ${fmt(s.arcilla_pct,0)} % · arena ${fmt(s.arena_pct,0)} %`;
+  $('detalle').innerHTML = `<h2>${z.nombre} · ${z.region}</h2>
+    <div class="mut peq" style="margin-bottom:8px">Dato al ${h?.fecha ?? '—'} · elevación ${fmt(z.elevacion_m,0)} m (SRTM) · pendiente ${fmt(z.pendiente_pct,1)} % · ${soil}</div>
+    <div class="ind">${filas}</div>
+    ${h?.trazabilidad?.advertencias?.length ? `<div class="mut peq" style="margin-top:8px">⚠ ${h.trazabilidad.advertencias.join(' · ')}</div>`:''}
+    <div class="mut peq" style="margin-top:8px">Selector: <select id="selZona2"></select></div>`;
+  const s2 = $('selZona2'); s2.innerHTML = D.zonas.map(q => `<option value="${q.id}" ${q.id===id?'selected':''}>${q.nombre}</option>`).join(''); s2.onchange = () => elegir(+s2.value);
+  pintar2017(z); pintarSat(z); comparar(z);
+}
+
+function destruir(k){ if(charts[k]){ charts[k].destroy(); delete charts[k]; } }
+
+function pintarNino(){
+  const labels = D.nino.map(r => r.fecha.slice(0,7)), idx = Object.fromEntries(labels.map((l,i)=>[l,i]));
+  const franjas = { id:'franjas', beforeDatasetsDraw(c){ const {ctx, chartArea:a, scales:{x}} = c; ctx.save(); ctx.fillStyle='rgba(229,83,61,.15)';
+    D.episodios.forEach(e => { const i0 = idx[e.inicio.slice(0,7)], i1 = idx[e.fin.slice(0,7)]; if(i0==null||i1==null) return;
+      const x0 = x.getPixelForValue(i0), x1 = x.getPixelForValue(i1); ctx.fillRect(x0, a.top, Math.max(2, x1-x0), a.bottom-a.top); }); ctx.restore(); } };
+  charts.nino = new Chart($('cNino'), { type:'line', plugins:[franjas],
+    data:{ labels, datasets:[
+      {label:'Niño 1+2 (costa de Perú)', data:D.nino.map(r=>r.n12), borderColor:'#E8B740', borderWidth:1.6, pointRadius:0, tension:.2},
+      {label:'Niño 3.4', data:D.nino.map(r=>r.n34), borderColor:'#78CD6E', borderWidth:1, pointRadius:0, tension:.2} ]},
+    options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index', intersect:false},
+      scales:{ x:{ ticks:{ color:'#9db8a4', maxRotation:0, callback:(v,i)=> labels[i].endsWith('-01') && (+labels[i].slice(0,4))%4===0 ? labels[i].slice(0,4) : '' }, grid:{display:false} },
+               y:{ ticks:{color:'#9db8a4'}, grid:{color:'#264a33'}, title:{display:true, text:'°C sobre lo normal', color:'#9db8a4'} } },
+      plugins:{ legend:{labels:{color:'#e8f3ea'}} } } });
+}
+
+function pintar2017(z){
+  destruir('c2017'); $('t2017').textContent = `Máquina del tiempo · Niño costero 2017 · ${z.nombre}`;
+  const q = z.validacion2017; if(!q.length){ return; }
+  charts.c2017 = new Chart($('c2017'), { data:{ labels:q.map(r=>r.hasta.slice(5)),
+    datasets:[
+      {type:'bar', label:'Lluvia (mm/día)', data:q.map(r=>r.indicadores.lluvia.valor), backgroundColor:q.map(r=>COL[r.indicadores.lluvia.nivel]), order:2},
+      {type:'line', label:'Normal del mes', data:q.map(r=>r.indicadores.lluvia.normal), borderColor:'#e8f3ea', borderDash:[5,4], pointRadius:2, order:1},
+      {type:'line', label:'Niño 1+2 (°C, eje der.)', data:q.map(r=>r.indicadores.elNino.valor), borderColor:'#E8B740', yAxisID:'y2', pointRadius:3, order:0} ]},
+    options:{ responsive:true, maintainAspectRatio:false, scales:{
+      x:{ticks:{color:'#9db8a4'}, grid:{display:false}}, y:{ticks:{color:'#9db8a4'}, grid:{color:'#264a33'}, title:{display:true,text:'mm/día',color:'#9db8a4'}},
+      y2:{position:'right', ticks:{color:'#E8B740'}, grid:{display:false}} }, plugins:{legend:{labels:{color:'#e8f3ea'}}} } });
+}
+
+function pintarSat(z){
+  destruir('cSat'); const el = $('cSat').parentElement;
+  if(!z.smap.length && !z.ndvi.length){ el.innerHTML = '<div class="mut peq">Sin SMAP ni NDVI en la base para este valle todavía (corre <code>python -m etl.jobs smap ndvi</code> y <code>python -m db.build</code>).</div><canvas id="cSat"></canvas>'; return; }
+  if(!$('cSat')) el.innerHTML = '<canvas id="cSat"></canvas>';
+  const ds = [];
+  if(z.smap.length) ds.push({label:'SMAP humedad del suelo (m³/m³)', data:z.smap.map(p=>({x:p.fecha, y:p.valor})), borderColor:'#7fb4d6', pointRadius:2, showLine:false, parsing:false, yAxisID:'y'});
+  if(z.ndvi.length) ds.push({label:'NDVI VIIRS', data:z.ndvi.map(p=>({x:p.fecha, y:p.ndvi})), borderColor:'#78CD6E', backgroundColor:'#78CD6E', pointRadius:3, parsing:false, yAxisID:'y2', tension:.25});
+  charts.cSat = new Chart($('cSat'), { type:'line', data:{datasets:ds}, options:{ responsive:true, maintainAspectRatio:false,
+    scales:{ x:{type:'category', labels:[...new Set([...z.smap.map(p=>p.fecha), ...z.ndvi.map(p=>p.fecha)])].sort(), ticks:{color:'#9db8a4', maxTicksLimit:8}, grid:{display:false}},
+             y:{ticks:{color:'#7fb4d6'}, grid:{color:'#264a33'}}, y2:{position:'right', ticks:{color:'#78CD6E'}, grid:{display:false}} },
+    plugins:{legend:{labels:{color:'#e8f3ea'}}} } });
+}
+
+async function comparar(z){
+  const cont = $('comparador'), exp = $('explica'); if(!z.hoy){ cont.textContent='sin datos de hoy'; return; }
+  cont.textContent = 'consultando al servicio…'; exp.textContent = '…';
+  try{
+    const cuerpo = { ...z.hoy.entrada, cultivos: CAT, fecha: z.hoy.fecha, incertidumbre: true, rotacionActualId: 1 };
+    const r = await fetch('/recomendacion', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(cuerpo)});
+    if(!r.ok) throw new Error('HTTP '+r.status+' '+(await r.text()).slice(0,160));
+    const reco = await r.json();
+    cont.innerHTML = `<div class="peq"><b>${reco.queHacer.accion}</b><br><span class="mut">Motivo: ${reco.queHacer.motivo} (${reco.queHacer.fuente})</span></div>` +
+      reco.rotaciones.map(o => `<div class="fila"><div style="display:flex;justify-content:space-between;gap:8px"><b>${o.nombre}</b><span><span class="pill ${o.riesgo}">${o.riesgo}</span> <b>${o.puntaje}</b>/100</span></div>
+        <div class="barra"><div class="rango" style="left:${o.puntajeMin}%;width:${o.puntajeMax-o.puntajeMin}%;background:${COL[o.riesgo]}"></div><div class="p" style="width:${o.puntaje}%;background:${COL[o.riesgo]}"></div></div>
+        <div class="mut peq">Rango por incertidumbre de los datos: ${o.puntajeMin}–${o.puntajeMax} · confianza ${o.confianza}</div><div class="peq">${o.explicacion}</div></div>`).join('') +
+      `<div class="mut peq">Catálogo de PRUEBA (arroz, maíz, algodón, frijol): no validado. El real lo entrega Alejandro.</div>`;
+    const e = await (await fetch('/asistente/plan-b', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({recomendacion:reco})})).json();
+    exp.innerHTML = `<div class="peq" style="color:var(--txt)">${e.respuesta}</div><div class="mut peq" style="margin-top:6px">Origen: ${e.origen} · fuentes: ${e.fuentes.join(', ')}</div>`;
+  }catch(err){ cont.innerHTML = `<div class="alto peq">No pude llamar al servicio: ${err.message}<br>Abre esta página desde <code>http://localhost:8000/panel/</code> con <code>uvicorn app.main:app</code> encendido.</div>`; exp.textContent=''; }
+}
+
+function pintarFuentes(){
+  $('tFuentes').innerHTML = '<tr><th>Fuente</th><th>Institución</th><th>Producto · versión</th><th>Resolución</th><th>Acceso</th><th>Estado</th><th>Nota</th></tr>' +
+    D.fuentes.map(f => `<tr><td><a href="${f.url}" target="_blank" rel="noopener">${f.nombre}</a></td><td>${f.institucion}</td><td>${f.producto ?? ''} ${f.version ? 'v'+f.version : ''}${f.doi ? ` · <a href="https://doi.org/${f.doi}" target="_blank" rel="noopener">DOI</a>`:''}</td><td>${f.resolucion ?? ''}</td><td>${f.acceso ?? ''}</td><td><span class="pill ${f.estado}">${f.estado.replace('_',' ')}</span></td><td class="mut peq">${f.nota ?? ''}</td></tr>`).join('');
+}
+
+cargar().catch(e => { $('sub').textContent = 'Error: '+e.message; console.error(e); });
+</script>
+</body>
+</html>

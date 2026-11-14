@@ -1,0 +1,42 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      server:
+        webflux:
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowed-origins: "*"
+                allowed-methods: "*"
+                allowed-headers: "*"
+          routes:
+            # API de la app (frontend en modo "java"): agro-service atiende /api/recomendacion, /api/mapa, /api/validacion...
+            - id: allpashift-api
+              uri: ${AGRO_SERVICE_URL:http://localhost:8081}
+              predicates:
+                - Path=/api/recomendacion,/api/mapa,/api/validacion,/api/validacion/**,/api/cultivos,/api/asistente,/api/salud
+            # Java: agro-service (cultivos, rotaciones, calendario)
+            - id: agro-service
+              uri: ${AGRO_SERVICE_URL:http://localhost:8081}
+              predicates:
+                - Path=/api/agro/**
+              filters:
+                - StripPrefix=2
+            # Python: climate-service (indicadores con datos de NASA)
+            - id: climate-service
+              uri: ${CLIMATE_SERVICE_URL:http://localhost:8000}
+              predicates:
+                - Path=/api/climate/**
+              filters:
+                - StripPrefix=2
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
