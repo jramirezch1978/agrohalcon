@@ -105,7 +105,7 @@ CREATE TABLE zona (
 	suelo_arcilla_pct FLOAT, 
 	suelo_arena_pct FLOAT, 
 	PRIMARY KEY (id), 
-	CONSTRAINT ck_zona_tipo CHECK (tipo IN ('agricola','mar')), 
+	CONSTRAINT ck_zona_tipo CHECK (tipo IN ('agricola','mar','referencia')), 
 	CONSTRAINT ck_zona_coord CHECK (lat BETWEEN -90 AND 90 AND lon BETWEEN -180 AND 180), 
 	UNIQUE (nombre), 
 	FOREIGN KEY(region_id) REFERENCES region (id)
@@ -133,6 +133,24 @@ CREATE TABLE consulta (
 	rotacion_recomendada_id INTEGER, 
 	PRIMARY KEY (id), 
 	FOREIGN KEY(rotacion_recomendada_id) REFERENCES rotacion (id)
+);
+
+CREATE TABLE contraste_fuentes (
+	id SERIAL NOT NULL, 
+	par VARCHAR(40) NOT NULL, 
+	zona_id INTEGER, 
+	variable VARCHAR(40) NOT NULL, 
+	escala VARCHAR(14) NOT NULL, 
+	n INTEGER NOT NULL, 
+	periodo_ini DATE NOT NULL, 
+	periodo_fin DATE NOT NULL, 
+	correlacion FLOAT, 
+	sesgo_medio FLOAT, 
+	rmse FLOAT, 
+	nota TEXT, 
+	PRIMARY KEY (id), 
+	CONSTRAINT uq_contraste UNIQUE (par, zona_id, variable), 
+	FOREIGN KEY(zona_id) REFERENCES zona (id)
 );
 
 CREATE TABLE normal_mensual (

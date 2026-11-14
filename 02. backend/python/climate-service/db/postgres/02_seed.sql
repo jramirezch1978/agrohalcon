@@ -11,6 +11,7 @@
 \copy sst_clima (zona_id, doy, media_c, n) FROM 'seed/sst_clima.csv' WITH (FORMAT csv, HEADER true)
 \copy tendencia (zona_id, variable_id, anio_ini, anio_fin, metodo, tau, p_valor, pendiente_sen_por_decada, sentido) FROM 'seed/tendencia.csv' WITH (FORMAT csv, HEADER true)
 \copy composite_nino (zona_id, variable_id, mes, media_nino, media_normal, razon, n_nino, n_normal) FROM 'seed/composite_nino.csv' WITH (FORMAT csv, HEADER true)
+\copy contraste_fuentes (id, par, zona_id, variable, escala, n, periodo_ini, periodo_fin, correlacion, sesgo_medio, rmse, nota) FROM 'seed/contraste_fuentes.csv' WITH (FORMAT csv, HEADER true)
 \copy observacion (zona_id, fecha, escala, variable_id, valor, calidad) FROM 'seed/observacion.csv' WITH (FORMAT csv, HEADER true)
 \copy validacion_quincena (id, zona_id, evento, desde, hasta, entrada, indicadores, rotaciones, que_hacer, nivel_maximo, advertencias) FROM 'seed/validacion_quincena.csv' WITH (FORMAT csv, HEADER true)
 \copy recomendacion_cache (id, zona_id, fecha, payload, creado) FROM 'seed/recomendacion_cache.csv' WITH (FORMAT csv, HEADER true)
@@ -19,3 +20,4 @@ SELECT setval(pg_get_serial_sequence('observacion', 'id'), COALESCE((SELECT MAX(
 SELECT setval(pg_get_serial_sequence('episodio_calido', 'id'), COALESCE((SELECT MAX(id) FROM episodio_calido), 1));
 SELECT setval(pg_get_serial_sequence('validacion_quincena', 'id'), COALESCE((SELECT MAX(id) FROM validacion_quincena), 1));
 SELECT setval(pg_get_serial_sequence('recomendacion_cache', 'id'), COALESCE((SELECT MAX(id) FROM recomendacion_cache), 1));
+SELECT setval(pg_get_serial_sequence('contraste_fuentes', 'id'), COALESCE((SELECT MAX(id) FROM contraste_fuentes), 1));

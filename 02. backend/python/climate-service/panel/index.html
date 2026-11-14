@@ -82,6 +82,12 @@
       <h2 style="margin-top:14px">Satélites en el valle</h2><div class="chart" style="height:210px"><canvas id="cSat"></canvas></div></div>
   </section>
 
+  <section class="grid2">
+    <div class="card"><h2 id="tIm17">Lluvia 2017 · IMERG (satélite) frente a POWER (reanálisis)</h2><div class="chart"><canvas id="cIm17"></canvas></div><div class="mut peq" id="nIm17"></div></div>
+    <div class="card"><h2>Contraste entre fuentes independientes (tabla <code>contraste_fuentes</code>)</h2><div style="overflow:auto"><table id="tContrastes"></table></div>
+      <div class="mut peq" style="margin-top:8px">Si dos fuentes distintas cuentan lo mismo, el dato es más confiable. Los datos de IMERG y de la caja Niño 1+2 de MUR los bajó Sheila (rama <code>feature/calculos-sheila</code>).</div></div>
+  </section>
+
   <section class="card"><h2>Bases de datos y fuentes (tabla <code>fuente_dato</code>)</h2><div style="overflow:auto"><table id="tFuentes"></table></div></section>
 </main>
 <footer id="pie"></footer>
@@ -98,7 +104,7 @@ let D, CAT, charts = {}, mapa, marcadores = {};
 async function cargar(){
   const [a, b] = await Promise.all([fetch('datos/panel.json'), fetch('datos/catalogo_prueba.json')]);
   D = await a.json(); CAT = (await b.json()).cultivos;
-  pintarKpis(); pintarHallazgos(); pintarMapa(); pintarNino(); pintarFuentes();
+  pintarKpis(); pintarHallazgos(); pintarMapa(); pintarNino(); pintarFuentes(); pintarContrastes();
   const sel = $('selZona'); sel.innerHTML = D.zonas.map(z => `<option value="${z.id}">${z.nombre}</option>`).join('');
   sel.onchange = () => elegir(+sel.value);
   $('sub').textContent = `datos al ${D.resumen.fecha_datos} · base generada el ${D.generado} · ${fmt(D.resumen.filas.observacion,0)} observaciones`;
@@ -136,6 +142,10 @@ function pintarHallazgos(){
   const cmp = D.zonas.map(q => [med(q.ndvi,'2016-12-01','2017-01-31'), med(q.ndvi,'2017-03-01','2017-05-31')]).filter(p => p[0] && p[1]);
   if (cmp.length){ const sube = cmp.filter(p => p[1] > p[0]).length;
     li.push(`<b>⚠ NDVI VIIRS 2017:</b> en mar-may subió frente a dic-ene en <b>${sube} de ${cmp.length} valles</b> con dato en ambos periodos: la lluvia de El Niño reverdeció zonas áridas. La "caída de la vegetación" del PDF no se ve con este método (punto central del valle, antes/después): hay que refinarlo o corregir el texto.`); }
+  const cm = D.contrastes.find(c => c.par==='MURnino12_vs_CPCnino12' && c.variable.startsWith('anomal'));
+  const ci = D.contrastes.filter(c => c.par==='IMERG_vs_POWER');
+  if (cm) li.push(`<b>Dos fuentes, el mismo Niño:</b> la caja Niño 1+2 de MUR (NASA) y el índice de NOAA CPC coinciden con r = <b>${fmt(cm.correlacion,3)}</b> en ${cm.n} meses (${cm.periodo_ini.slice(0,7)} a ${cm.periodo_fin.slice(0,7)}); MUR da ${fmt(cm.sesgo_medio,1)} °C más de anomalía por usar otra base climática. La señal del mar no depende de una sola fuente.`);
+  if (ci.length){ const r = ci.map(c => c.correlacion); li.push(`<b>Lluvia IMERG frente a POWER:</b> correlación mensual de ${fmt(Math.min(...r),2)} a ${fmt(Math.max(...r),2)} en ${ci.length} valles (2001-2025). IMERG llueve más que POWER (de +${fmt(Math.min(...ci.map(c=>c.sesgo_medio)),1)} a +${fmt(Math.max(...ci.map(c=>c.sesgo_medio)),1)} mm/día): <b>compara siempre anomalías de la misma fuente</b>, no valores entre fuentes.`); }
   const ch = D.zonas.find(z => z.nombre.startsWith('Alto Piura'));
   if (ch) li.push(`SRTM corrige a POWER: Chulucanas está a <b>${fmt(ch.elevacion_m,0)} m</b>, no a los 1051 m de su celda POWER.`);
   $('hallazgos').innerHTML = li.map(x => `<li>${x}</li>`).join('');
@@ -174,7 +184,7 @@ function elegir(id){
     ${h?.trazabilidad?.advertencias?.length ? `<div class="mut peq" style="margin-top:8px">⚠ ${h.trazabilidad.advertencias.join(' · ')}</div>`:''}
     <div class="mut peq" style="margin-top:8px">Selector: <select id="selZona2"></select></div>`;
   const s2 = $('selZona2'); s2.innerHTML = D.zonas.map(q => `<option value="${q.id}" ${q.id===id?'selected':''}>${q.nombre}</option>`).join(''); s2.onchange = () => elegir(+s2.value);
-  pintar2017(z); pintarSat(z); comparar(z);
+  pintar2017(z); pintarIm17(z); pintarSat(z); comparar(z);
 }
 
 function destruir(k){ if(charts[k]){ charts[k].destroy(); delete charts[k]; } }
@@ -236,6 +246,24 @@ async function comparar(z){
     const e = await (await fetch('/asistente/plan-b', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({recomendacion:reco})})).json();
     exp.innerHTML = `<div class="peq" style="color:var(--txt)">${e.respuesta}</div><div class="mut peq" style="margin-top:6px">Origen: ${e.origen} · fuentes: ${e.fuentes.join(', ')}</div>`;
   }catch(err){ cont.innerHTML = `<div class="alto peq">No pude llamar al servicio: ${err.message}<br>Abre esta página desde <code>http://localhost:8000/panel/</code> con <code>uvicorn app.main:app</code> encendido.</div>`; exp.textContent=''; }
+}
+
+function pintarIm17(z){
+  destruir('cIm17'); const q = z.lluvia2017 || [];
+  $('tIm17').textContent = `Lluvia 2017 · IMERG (satélite) frente a POWER (reanálisis) · ${z.nombre}`;
+  $('nIm17').textContent = q.length ? 'mm/día de cada mes. Barras = valor del mes; líneas = normal de cada fuente (IMERG 2001-2020, POWER 1991-2020).' : 'Este valle no tiene punto IMERG de Sheila en la base (hay 6 de 16: Bajo, Medio y Alto Piura, Chira, Tambogrande y Huancabamba).';
+  if(!q.length) return;
+  charts.cIm17 = new Chart($('cIm17'), { data:{ labels:q.map(r=>r.mes.slice(2)), datasets:[
+    {type:'bar', label:'IMERG Final', data:q.map(r=>r.imerg), backgroundColor:'#7fb4d6', order:2},
+    {type:'bar', label:'POWER', data:q.map(r=>r.power), backgroundColor:'#9db8a4', order:2},
+    {type:'line', label:'normal IMERG', data:q.map(r=>r.imerg_normal), borderColor:'#7fb4d6', borderDash:[5,4], pointRadius:2, order:1},
+    {type:'line', label:'normal POWER', data:q.map(r=>r.power_normal), borderColor:'#e8f3ea', borderDash:[5,4], pointRadius:2, order:1} ]},
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{ticks:{color:'#9db8a4'}, grid:{display:false}}, y:{ticks:{color:'#9db8a4'}, grid:{color:'#264a33'}, title:{display:true,text:'mm/día',color:'#9db8a4'}} }, plugins:{legend:{labels:{color:'#e8f3ea'}}} } });
+}
+
+function pintarContrastes(){
+  $('tContrastes').innerHTML = '<tr><th>Par</th><th>Valle</th><th>Variable</th><th>n</th><th>r</th><th>Sesgo</th><th>RMSE</th></tr>' +
+    D.contrastes.map(c => `<tr><td>${c.par.replaceAll('_',' ')}</td><td>${c.zona ?? 'regional'}</td><td>${c.variable}</td><td>${c.n}</td><td><b>${fmt(c.correlacion,3)}</b></td><td>${fmt(c.sesgo_medio,2)}</td><td>${fmt(c.rmse,2)}</td></tr>`).join('');
 }
 
 function pintarFuentes(){

@@ -53,7 +53,8 @@ zona = Table(
     Column("suelo_carbono_g_kg", Float),
     Column("suelo_arcilla_pct", Float),
     Column("suelo_arena_pct", Float),
-    CheckConstraint("tipo IN ('agricola','mar')", name="ck_zona_tipo"),
+    # referencia = punto del piloto de Piura de Sheila (IMERG) que no coincide con ningún valle del catálogo
+    CheckConstraint("tipo IN ('agricola','mar','referencia')", name="ck_zona_tipo"),
     CheckConstraint("lat BETWEEN -90 AND 90 AND lon BETWEEN -180 AND 180", name="ck_zona_coord"),
 )  # fmt: skip
 
@@ -198,6 +199,23 @@ composite_nino = Table(
     PrimaryKeyConstraint("zona_id", "variable_id", "mes", name="pk_composite_nino"),
 )  # fmt: skip
 
+contraste_fuentes = Table(
+    "contraste_fuentes", metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("par", String(40), nullable=False),  # p. ej. IMERG_vs_POWER, MURnino12_vs_CPCnino12
+    Column("zona_id", Integer, ForeignKey("zona.id")),  # NULL = índice regional (no es de una zona)
+    Column("variable", String(40), nullable=False),
+    Column("escala", String(14), nullable=False),
+    Column("n", Integer, nullable=False),
+    Column("periodo_ini", Date, nullable=False),
+    Column("periodo_fin", Date, nullable=False),
+    Column("correlacion", Float),  # Pearson
+    Column("sesgo_medio", Float),  # media(A) - media(B), en la unidad de la variable
+    Column("rmse", Float),
+    Column("nota", Text),
+    UniqueConstraint("par", "zona_id", "variable", name="uq_contraste"),
+)  # fmt: skip
+
 validacion_quincena = Table(
     "validacion_quincena", metadata,
     Column("id", Integer, primary_key=True, autoincrement=True),
@@ -271,4 +289,4 @@ VISTAS: dict[str, str] = {
     """,
 }
 
-TABLAS_SEMILLA = ("region", "fuente_dato", "variable", "zona", "cultivo", "rotacion", "normal_mensual", "indice_climatico", "episodio_calido", "tendencia", "composite_nino")
+TABLAS_SEMILLA = ("region", "fuente_dato", "variable", "zona", "cultivo", "rotacion", "normal_mensual", "indice_climatico", "episodio_calido", "tendencia", "composite_nino", "contraste_fuentes")
