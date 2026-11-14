@@ -1,0 +1,187 @@
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/bricolage-grotesque';
+@import 'leaflet/dist/leaflet.css';
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque Variable', 'Inter Variable', ui-sans-serif, sans-serif;
+
+  /* Verde agrícola */
+  --color-agro-50: #effaf2;
+  --color-agro-100: #d8f2df;
+  --color-agro-200: #b3e4c2;
+  --color-agro-300: #80cf9c;
+  --color-agro-400: #4cb373;
+  --color-agro-500: #2a9657;
+  --color-agro-600: #1d7a46;
+  --color-agro-700: #19613a;
+  --color-agro-800: #164d31;
+  --color-agro-900: #123f29;
+  --color-agro-950: #082316;
+
+  /* Brote: acento lima */
+  --color-brote-200: #e6fbb4;
+  --color-brote-300: #d4f78a;
+  --color-brote-400: #c2ee5c;
+  --color-brote-500: #a6d93a;
+
+  /* Azul NASA */
+  --color-nasa-50: #eef3ff;
+  --color-nasa-100: #dbe5ff;
+  --color-nasa-200: #bccfff;
+  --color-nasa-300: #8eaefc;
+  --color-nasa-400: #5b85f5;
+  --color-nasa-500: #3762e8;
+  --color-nasa-600: #2449c9;
+  --color-nasa-700: #1c3aa1;
+  --color-nasa-800: #0b3d91;
+  --color-nasa-900: #0a2560;
+
+  /* Superficies */
+  --color-arena: #f3f1ea;
+  --color-arena-2: #e9e6db;
+  --color-tinta: #10231b;
+  --color-bosque: #0f2a1f;
+  --color-noche: #08110d;
+  --color-noche-2: #0f1b16;
+  --color-noche-3: #17251f;
+
+  --shadow-card: 0 1px 1px rgb(16 35 27 / 0.04), 0 2px 6px rgb(16 35 27 / 0.04), 0 12px 28px -8px rgb(16 35 27 / 0.1);
+  --shadow-float: 0 10px 40px -10px rgb(8 17 13 / 0.35), 0 2px 8px rgb(8 17 13 / 0.08);
+  --shadow-glow: 0 0 0 1px rgb(194 238 92 / 0.25), 0 8px 30px -6px rgb(194 238 92 / 0.45);
+
+  --animate-fade-up: fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-orbit: orbit 18s linear infinite;
+  --animate-pulse-ring: pulse-ring 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  --animate-blink: blink 1.2s ease-in-out infinite;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shimmer {
+    from { background-position: -200% 0; }
+    to { background-position: 200% 0; }
+  }
+  @keyframes orbit {
+    to { transform: rotate(360deg); }
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(0.6); opacity: 0.7; }
+    100% { transform: scale(2.4); opacity: 0; }
+  }
+  @keyframes blink {
+    0%, 80%, 100% { opacity: 0.25; transform: translateY(0); }
+    40% { opacity: 1; transform: translateY(-3px); }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    text-size-adjust: 100%;
+    background: var(--color-arena);
+  }
+  html.dark { background: var(--color-noche); color-scheme: dark; }
+  body {
+    @apply bg-arena font-sans text-tinta antialiased dark:bg-noche dark:text-stone-100;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    font-optical-sizing: auto;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-nasa-500;
+  }
+  button { cursor: pointer; }
+}
+
+/* Superficie de tarjeta */
+@utility superficie {
+  @apply rounded-3xl bg-white shadow-card ring-1 ring-tinta/5 dark:bg-noche-2 dark:shadow-none dark:ring-white/8;
+}
+
+/* Fondo "bosque" con curvas de nivel (tarjetas destacadas) */
+@utility bosque {
+  background-color: var(--color-bosque);
+  background-image:
+    radial-gradient(120% 90% at 100% 0%, rgb(11 61 145 / 0.55) 0%, transparent 55%),
+    radial-gradient(80% 60% at 0% 100%, rgb(42 150 87 / 0.35) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.06' stroke-width='1.2'%3E%3Cpath d='M-20 320c60-40 120-20 170-60s90-110 160-120 90 10 110 0'/%3E%3Cpath d='M-20 350c70-40 130-10 185-55s95-115 170-122 80 14 85 4'/%3E%3Cpath d='M-20 290c55-38 110-30 158-66s86-104 150-116 100 6 132-4'/%3E%3Cpath d='M-20 260c50-35 100-40 146-74s82-98 140-110 110 2 154-8'/%3E%3Cpath d='M-20 380c80-35 140 0 200-45s100-120 180-125'/%3E%3Cpath d='M-20 230c45-32 92-48 134-80s78-92 130-104 120-2 176-12'/%3E%3Cpath d='M60 420c40-60 110-70 150-120s60-120 130-150 80-10 100-14'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: auto, auto, 520px;
+}
+
+/* Entrada escalonada: style="--i: n" */
+.stagger {
+  animation: var(--animate-fade-up);
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+
+.page-enter-active, .page-leave-active { transition: opacity 0.22s ease, transform 0.22s ease; }
+.page-enter-from { opacity: 0; transform: translateY(8px); }
+.page-leave-to { opacity: 0; }
+
+.sheet-enter-active, .sheet-leave-active { transition: opacity 0.25s ease; }
+.sheet-enter-active .sheet-panel, .sheet-leave-active .sheet-panel { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.sheet-enter-from, .sheet-leave-to { opacity: 0; }
+.sheet-enter-from .sheet-panel, .sheet-leave-to .sheet-panel { transform: translateY(100%); }
+@media (min-width: 768px) {
+  .sheet-enter-from .sheet-panel, .sheet-leave-to .sheet-panel { transform: translateY(24px) scale(0.98); }
+}
+
+.msg-enter-active { transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.msg-enter-from { opacity: 0; transform: translateY(10px) scale(0.98); }
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Leaflet integrado al diseño */
+.leaflet-container { font-family: var(--font-sans); background: var(--color-arena-2); }
+.dark .leaflet-container { background: #0c1612; }
+.leaflet-control-attribution { font-size: 10px; border-radius: 8px 0 0 0; }
+/* Mapa OSM en modo oscuro */
+.dark .capa-osm { filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9) saturate(0.5); }
+.dark .leaflet-control-attribution { background: rgb(8 17 13 / 0.7) !important; color: #a8b5ae; }
+.dark .leaflet-control-attribution a { color: #c2ee5c; }
+.leaflet-tooltip.zona-tooltip {
+  border: 0; border-radius: 10px; padding: 4px 10px; font-weight: 600; font-size: 12px;
+  background: var(--color-tinta); color: white; box-shadow: var(--shadow-float);
+}
+.leaflet-tooltip.zona-tooltip::before { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Móvil: zoom con gestos y créditos sobre la barra de pestañas */
+@media (max-width: 1023px) {
+  .leaflet-control-zoom { display: none; }
+  .leaflet-bottom { bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+}
+
+/* Popup de zonas */
+.zona-popup .leaflet-popup-content-wrapper { border-radius: 20px; padding: 4px; box-shadow: var(--shadow-float); }
+.zona-popup .leaflet-popup-content { margin: 14px 16px 16px; }
+.zona-popup a.leaflet-popup-close-button { top: 8px; right: 8px; width: 28px; height: 28px; font-size: 20px; border-radius: 999px; }
+.dark .zona-popup .leaflet-popup-content-wrapper, .dark .zona-popup .leaflet-popup-tip { background: var(--color-noche-2); color: white; }
+
+/* Las zonas del mapa no muestran el recuadro de foco del navegador al tocarlas */
+.leaflet-interactive:focus { outline: none; }
+
+/* Panel del asistente: sube desde abajo en móvil, entra por la derecha en escritorio */
+.chat-enter-active, .chat-leave-active { transition: opacity 0.25s ease; }
+.chat-enter-active .chat-panel, .chat-leave-active .chat-panel { transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1); }
+.chat-enter-from, .chat-leave-to { opacity: 0; }
+.chat-enter-from .chat-panel, .chat-leave-to .chat-panel { transform: translateY(100%); }
+@media (min-width: 1024px) {
+  .chat-enter-from .chat-panel, .chat-leave-to .chat-panel { transform: translateX(110%); }
+}
