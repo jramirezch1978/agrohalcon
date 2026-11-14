@@ -15,3 +15,15 @@ NASA Space Apps Challenge 2026 · Sede Piura · Reto **Field Shift: Adapting Far
 | `docs/entrega` | README, textos en inglés y capturas para la entrega | Edwin |
 
 Flujo: cada uno trabaja en su rama → *pull request* a `develop` → cuando `develop` funciona, Jhonny pasa a `main`.
+
+## Estructura
+
+| Carpeta | Contenido |
+|---|---|
+| `01. documentacion` | Documentación y textos de la entrega |
+| `02. backend/java` | `api-gateway` y `agro-service` (Spring Boot) |
+| `02. backend/python` | `climate-service` (FastAPI, datos NASA) |
+| `03. frontend` | Vue 3 + Leaflet |
+| `04. base de datos` | PostgreSQL: `ddl/` y `ddl/seed/` |
+| `05. mobile` | Capacitor (Android / iOS) y `release/` |
+| `deploy/vps` | docker-compose para el servidor |

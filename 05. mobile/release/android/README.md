@@ -1,0 +1,3 @@
+# Release Android
+
+APK generados.
