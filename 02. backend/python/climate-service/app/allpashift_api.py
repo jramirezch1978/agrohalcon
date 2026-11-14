@@ -76,7 +76,11 @@ def datos_nasa(lat: float, lon: float) -> dict[str, Any]:
         clim = nasa.climatologia(lat, lon)
     except Exception as e:  # noqa: BLE001
         raise HTTPException(status_code=503, detail=f"NASA POWER no respondió: {e}") from e
-    return {"climatologia": clim, "reciente": nasa.reciente(lat, lon), "sstAnomalia": nasa.sst_anomalia(lat, lon), "fuente": "NASA POWER"}
+    sst, respaldo = nasa.sst_anomalia(lat, lon), None
+    if sst is None:  # ERDDAP de NOAA caído o sin respuesta: Plan B con la última semana de MUR SST en la caja Niño 1+2
+        respaldo = nasa.sst_respaldo(lat, lon)
+        sst = respaldo["anomalia"] if respaldo else None
+    return {"climatologia": clim, "reciente": nasa.reciente(lat, lon), "sstAnomalia": sst, "sstRespaldo": respaldo, "fuente": "NASA POWER"}
 
 
 def entrada_contrato(lat: float, lon: float, d: dict[str, Any]) -> IndicadoresRequest:
@@ -94,13 +98,16 @@ def entrada_contrato(lat: float, lon: float, d: dict[str, Any]) -> IndicadoresRe
     return IndicadoresRequest(lat=lat, lon=lon, actual=act, historico=hist, meta=meta)
 
 
-def indicadores_app(ind: Any, hay_sst: bool) -> dict[str, Any]:
-    """Indicadores con el campo opcional 'detalle'; sin MUR SST no se muestra El Niño."""
+def indicadores_app(ind: Any, hay_sst: bool, sst_respaldo: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Indicadores con los campos opcionales 'detalle' y 'aviso'; sin MUR SST no se muestra El Niño."""
     out = {}
     for k, v in ind.model_dump().items():
         if k == "elNino" and not hay_sst:
             continue
         v["detalle"] = _detalle(k, v["valor"], v["normal"])
+        if k == "elNino" and sst_respaldo:  # la fuente sigue siendo MUR SST (NASA); el aviso dice que es el promedio semanal de la caja
+            v["aviso"] = (f"Dato de respaldo: promedio de la caja Niño 1+2 de la semana del {sst_respaldo['semana']} "
+                          "(el servidor de NOAA no respondió)")
         out[k] = v
     return out
 
@@ -200,11 +207,12 @@ def tipo_accion(accion: str) -> str:
     a = (accion or "").lower()
     if "drena" in a:
         return "preparar drenaje"
-    if "esper" in a or "no siembres" in a or "todavía no" in a:
+    # Los textos de que_hacer.py: inundación y El Niño extraordinario piden esperar y consultar (no es "sembrar")
+    if "esper" in a or "no siembres" in a or "todavía no" in a or "consulta" in a:
         return "esperar"
     if "proteg" in a:
         return "proteger"
-    if "reg" in a:
+    if "rieg" in a or "reg" in a:
         return "regar"
     return "sembrar"
 
@@ -220,7 +228,7 @@ def calcular(req: CalcularRequest) -> dict[str, Any]:
     d = datos_nasa(req.lat, req.lon)
     entrada = entrada_contrato(req.lat, req.lon, d)
     ind_obj = calcular_indicadores(entrada)
-    ind = indicadores_app(ind_obj, d["sstAnomalia"] is not None)
+    ind = indicadores_app(ind_obj, d["sstAnomalia"] is not None, d["sstRespaldo"])
     contrato = None
     reco: dict[str, Any] = {"lat": req.lat, "lon": req.lon, "fecha": hoy.isoformat(), "indicadores": ind}
 
@@ -258,7 +266,7 @@ def calcular(req: CalcularRequest) -> dict[str, Any]:
 @router.post("/indicadores-punto", summary="Datos NASA + los 4 indicadores de un punto (mapa)")
 def indicadores_punto(req: PuntoRequest) -> dict[str, Any]:
     d = datos_nasa(req.lat, req.lon)
-    ind = indicadores_app(calcular_indicadores(entrada_contrato(req.lat, req.lon, d)), d["sstAnomalia"] is not None)
+    ind = indicadores_app(calcular_indicadores(entrada_contrato(req.lat, req.lon, d)), d["sstAnomalia"] is not None, d["sstRespaldo"])
     orden = {"alto": 2, "medio": 1, "bajo": 0}
     nivel = max((v["nivel"] for v in ind.values()), key=lambda n: orden[n], default=None)
     return {"datosNasa": _datos_para_guardar(req.lat, req.lon, d), "indicadores": ind, "nivel": nivel}
@@ -320,6 +328,9 @@ def _datos_para_guardar(lat: float, lon: float, d: dict[str, Any]) -> list[dict[
         for var, val in (("PRECTOTCORR:lluviaMm", r["lluviaMmDia"]), ("GWETTOP:humedadSuelo", r["humedadSup"]),
                          ("T2M_MAX:tempMaxC", r["tMax"]), ("T2M_MIN:tempMinC", r["tMin"])):
             filas.append({"lat": lat, "lon": lon, "fecha": f, "fuente": "NASA POWER", "variable": var + ":prom30d", "valor": round(val, 4)})
-    if d["sstAnomalia"] is not None:
+    if d["sstRespaldo"]:  # no se graba como "hoy en este punto": es la semana de la caja Niño 1+2
+        filas.append({"lat": lat, "lon": lon, "fecha": d["sstRespaldo"]["semana"], "fuente": "MUR SST",
+                      "variable": "sstAnom:sstAnomaliaC:nino12semanal", "valor": round(d["sstRespaldo"]["anomalia"], 3), "version": "4.1"})
+    elif d["sstAnomalia"] is not None:
         filas.append({"lat": lat, "lon": lon, "fecha": date.today().isoformat(), "fuente": "MUR SST", "variable": "sstAnom:sstAnomaliaC", "valor": round(d["sstAnomalia"], 3), "version": "4.1"})
     return filas

@@ -13,7 +13,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from . import __version__, asistente
-from .allpashift_api import router as router_allpashift  # Java → Python: descargas NASA y cálculo (doc 29)
+from .allpashift_api import router as router_allpashift  # Java → Python (doc 29)
 from .crops import DatosInvalidos
 from .indicators import calcular_indicadores
 from .que_hacer import construir_que_hacer
