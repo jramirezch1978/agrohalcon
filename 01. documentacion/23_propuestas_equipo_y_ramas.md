@@ -31,14 +31,14 @@
   - **Global:** funciona con cualquier coordenada.
   - **"IA que explica, no inventa":** los cálculos salen de la NASA y la IA solo los traduce.
 
-⚠️ **Nombre por decidir:** el resumen dice **AgroShift**, pero el repo, el logo, el APK y la web dicen **AgroHalcón**.
+✅ **Nombre decidido (2026-11-14): AllpaShift** (*allpa* = tierra en quechua + *Shift* del reto). Reemplaza a AgroHalcón y a la propuesta AgroShift en el repo, el logo, el APK y la web.
 
 ## 3. Estrategia de ramas (repo remoto reiniciado el 2026-11-14)
 
-Por pedido de Jhonny se limpió el historial remoto de https://github.com/jramirezch1978/agrohalcon:
+Por pedido de Jhonny se limpió el historial remoto de https://github.com/jramirezch1978/allpashift:
 - Ahora tiene **un solo commit** (`e5e4682`) con README, .gitignore y LICENSE.
 - Las 7 ramas salen de ese commit.
-- La copia local (`agrohalcon/`, último commit `dbb118a`) quedó intacta, con todo el código anterior.
+- La copia local (`allpashift/`, último commit `dbb118a`) quedó intacta, con todo el código anterior.
 
 | Rama | Para qué | Quién |
 |---|---|---|

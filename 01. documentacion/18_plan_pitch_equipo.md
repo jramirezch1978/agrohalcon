@@ -10,7 +10,7 @@
 
 | # | Diapositiva | Contenido | Responsable | Apoyo |
 |---|---|---|---|---|
-| 0 | Cover | AgroHalcón · Team Halcón Dorado · NASA Space Apps Piura 2026 | **Edwin** | — |
+| 0 | Cover | AllpaShift · Team Halcón Dorado · NASA Space Apps Piura 2026 | **Edwin** | — |
 | 1 | The problem | El Niño, sequías y suelos degradados en el norte del Perú; cifras reales (POWER 1998/2017) | **Alejandro** | David (cifras) |
 | 2 | The chosen challenge | Field Shift: comparar rotaciones con datos NASA, beneficios, riesgos, incertidumbre | **Edwin** | Jhonny |
 | 3 | NASA data | Tabla dataset → variable → uso → enlace (POWER, MODIS, SMAP, GPM…) | **David** | Jhonny |
@@ -19,7 +19,7 @@
 | 6 | Demonstration | Capturas reales de la app (web y móvil) con un caso de Piura | **Sheila** | Jhonny |
 | 7 | Impact | Agua ahorrada, suelo protegido, riesgo reducido; escalable a todo el Perú | **Alejandro** | Edwin |
 
-**Diseño en Canva (identidad AgroHalcón):** Edwin · **Revisión del inglés:** Edwin + Jhonny.
+**Diseño en Canva (identidad AllpaShift):** Edwin · **Revisión del inglés:** Edwin + Jhonny.
 
 ## Video de 30 segundos (en inglés o con subtítulos en inglés)
 

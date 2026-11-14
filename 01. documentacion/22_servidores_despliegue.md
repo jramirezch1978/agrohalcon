@@ -1,4 +1,4 @@
-# Servidores para el despliegue de AgroHalcón (investigado el 2026-11-13)
+# Servidores para el despliegue de AllpaShift (investigado el 2026-11-13)
 
 Necesitamos: **API Java 17 (Spring Boot)** + **servicio Python (FastAPI)** + **web estática (Vue)**, accesibles por enlace público **al menos hasta el 19 nov** (jurado local) e idealmente hasta enero 2027 (etapa global).
 
@@ -37,17 +37,17 @@ Necesitamos: **API Java 17 (Spring Boot)** + **servicio Python (FastAPI)** + **w
 
 ## Servidor contratado (2026-11-14)
 
-- **Hetzner CPX32** (4 vCPU AMD, 8 GB RAM, 160 GB) · Helsinki · Rocky Linux 9.8 · nombre `agrohalcon-vps` · IP pública `2.29.101.199` · ~US$36/mes por hora.
-- Docker 29.9.3 + Compose v5.7.1 · contexto Docker `agrohalcon-vps` (ssh://root@2.29.101.199) · firewall Hetzner aplicado.
+- **Hetzner CPX32** (4 vCPU AMD, 8 GB RAM, 160 GB) · Helsinki · Rocky Linux 9.8 · nombre `allpashift-vps` · IP pública `2.29.101.199` · ~US$36/mes por hora.
+- Docker 29.9.3 + Compose v5.7.1 · contexto Docker `allpashift-vps` (ssh://root@2.29.101.199) · firewall Hetzner aplicado.
 - En línea: http://2.29.101.199 (web), `/api/agro/health`, `/api/climate/health`.
 
 ## Pendiente: HTTPS con Cloudflare (decisión de Jhonny)
 
 1. Conseguir un dominio (Cloudflare no regala dominios: comprarlo en Cloudflare Registrar ~US$10/año o en otro registrador y apuntar los DNS a Cloudflare).
-2. En Cloudflare: registro **A** `agrohalcon.<dominio>` → `2.29.101.199` con **proxy activado (nube naranja)**.
+2. En Cloudflare: registro **A** `allpashift.<dominio>` → `2.29.101.199` con **proxy activado (nube naranja)**.
 3. SSL/TLS: modo **Full** con certificado *Origin* de Cloudflare instalado en el Nginx del frontend (o **Flexible** como solución rápida para la demo).
 4. Firewall Hetzner: dejar 80/443 abiertos (idealmente solo a los rangos IP de Cloudflare) y 22 para el despliegue.
-5. Actualizar `05. mobile/capacitor.config.json` → `https://agrohalcon.<dominio>` y quitar `cleartext` / `usesCleartextTraffic`.
+5. Actualizar `05. mobile/capacitor.config.json` → `https://allpashift.<dominio>` y quitar `cleartext` / `usesCleartextTraffic`.
 6. Alternativa sin abrir puertos: **Cloudflare Tunnel** (`cloudflared` en el VPS).
 
 ## Fuentes

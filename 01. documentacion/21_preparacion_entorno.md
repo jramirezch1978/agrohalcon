@@ -1,4 +1,4 @@
-# Preparación del entorno — AgroHalcón
+# Preparación del entorno — AllpaShift
 
 > **Regla:** el código del proyecto empieza con el hackathon (la sede dice sáb 14, 00:00; el FAQ de NASA dice 9:00 hora local → empezamos a programar a las **9:00** para no arriesgar).
 > **Antes** se permite y se recomienda: instalar software, crear cuentas y probar herramientas ("Software listo antes del sábado", guía de la sede, p. 5).
@@ -6,7 +6,7 @@
 ## 1. Todos
 
 - [ ] Cuenta en **spaceappschallenge.org** (ya en Members ✅)
-- [ ] Cuenta en **GitHub** y aceptar la invitación a https://github.com/jramirezch1978/agrohalcon
+- [ ] Cuenta en **GitHub** y aceptar la invitación a https://github.com/jramirezch1978/allpashift
 - [ ] **Git** instalado: `git --version`
 - [ ] **VS Code** (o IntelliJ para Java)
 - [ ] **Earthdata Login** (gratis): https://urs.earthdata.nasa.gov
@@ -26,14 +26,14 @@
 | **Sheila** (Vue + Capacitor) | Node.js 20 LTS · npm · VS Code + extensión **Vue - Official** · Android Studio (SDK y un emulador o celular con depuración USB) | `node -v` · `npm -v` · abrir Android Studio sin errores |
 | **David** (Python + datos) | Python 3.12 · pip · VS Code + extensión Python/Jupyter · librerías: `fastapi uvicorn pandas numpy scipy pymannkendall httpx` | `python --version` · `pip install …` sin errores · probar una llamada a NASA POWER |
 | **Alejandro** (catálogo de cultivos) | Excel o Google Sheets · Python básico opcional | Tener a mano los calendarios agrícolas de MIDAGRI y fuentes FAO |
-| **Edwin** (comunicación) | Canva (cuenta) · CapCut o editor de video · Grammarly/DeepL para revisar inglés | Plantilla de Canva con colores y logo de AgroHalcón (`logo/agrohalcon_logo.png`) |
+| **Edwin** (comunicación) | Canva (cuenta) · CapCut o editor de video · Grammarly/DeepL para revisar inglés | Plantilla de Canva con colores y logo de AllpaShift (`logo/allpashift_logo.png`) |
 
 Colores de la identidad: verde `#78CD6E` · oro `#E8B740` · fondo verde oscuro `#0E1E14`.
 
 ## 3. Estructura del repositorio (se crea al iniciar el hackathon)
 
 ```
-agrohalcon/
+allpashift/
 ├── README.md              # descripción en inglés (requisito de la entrega)
 ├── docs/                  # diagramas, capturas, tabla de datasets NASA, uso de IA
 │   └── img/

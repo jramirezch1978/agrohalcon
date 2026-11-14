@@ -96,7 +96,7 @@ For data and resources related to this challenge, refer to the Resources tab at 
 - **Formatos aceptados:** modelo de IA, mapa interactivo, visualización, herramienta de apoyo a decisiones u otra cosa nueva.
 - **Expertos (JSC, NASA):** autora del reto (ingeniera, Artemis/base lunar), Manideep Gogineni (arquitectura de datos, apps web), William Stefanov (científico del sistema terrestre, SME del reto), Alex Token (ML sobre fotografía astronáutica).
 
-## 5. Requisitos derivados para AgroHalcón (checklist)
+## 5. Requisitos derivados para AllpaShift (checklist)
 
 - [ ] Usar al menos 1 dataset NASA, idealmente varios (POWER, MODIS, SMAP, GPM; probar ECOSTRESS, Landsat, GRACE, SRTM, GEDI cuando se publiquen el 13 nov).
 - [ ] Integrar información local: suelos, características de cultivos (mango, limón, arroz…), prioridades del agricultor.

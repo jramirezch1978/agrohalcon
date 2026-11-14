@@ -1,4 +1,6 @@
-# AgroHalcón — Equipo Halcón Dorado
+![AllpaShift](01.%20documentacion/img/allpashift_banner.png)
+
+# AllpaShift — Equipo Halcón Dorado
 
 NASA Space Apps Challenge 2026 · Sede Piura · Reto **Field Shift: Adapting Farms with NASA Data**.
 

@@ -1,4 +1,4 @@
-# Plan de datos — AgroHalcón (Field Shift)
+# Plan de datos — AllpaShift (Field Shift)
 
 ## ✅ Datasets OFICIALES publicados por NASA (pestaña Resources, leída el 2026-11-13)
 

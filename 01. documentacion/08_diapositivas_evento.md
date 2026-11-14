@@ -53,7 +53,7 @@ El kit permite **una presentación de 7 diapositivas O un video de 30 segundos**
 - 7–20 s: solución y demostración visual
 - 20–30 s: datos NASA e impacto
 
-Guion detallado para AgroHalcón: ver `10_demo_guion.md`.
+Guion detallado para AllpaShift: ver `10_demo_guion.md`.
 
 ## 06 / Fechas críticas — "No esperes al último minuto" (lámina 07)
 
@@ -87,7 +87,7 @@ Requisitos mínimos para que un proyecto pueda ser considerado para **Global Awa
 
 > Categorías publicadas para la edición **2025**; consultar la fuente oficial para 2026 (spaceappschallenge.org/…/awards).
 
-| Categoría | Qué premia | ¿Aplica a AgroHalcón? |
+| Categoría | Qué premia | ¿Aplica a AllpaShift? |
 |---|---|---|
 | **Best Use of Science** | Uso válido de ciencia y método científico | 🟡 Media (Lucía: método ambiental) |
 | **Best Use of Data** | Uso destacado de datos espaciales | ⭐ **Alta** (POWER + MODIS + SMAP combinados) |

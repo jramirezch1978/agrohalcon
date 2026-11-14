@@ -1,4 +1,4 @@
-# Stack tecnológico propuesto — AgroHalcón
+# Stack tecnológico propuesto — AllpaShift
 
 > Requisitos de Jhonny: frontend que dibuje mapas · backend que se conecte de forma transparente a NASA · uso híbrido en celular y tablet (con conexión).
 > Propuesta de Sheila en el grupo: Flutter + FastAPI + Render + Neon.

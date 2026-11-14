@@ -58,7 +58,7 @@ Uso de agua · valor forrajero · fijación de nitrógeno · reducción de erosi
 - **Mapas:** tendencias de humedad, olas de calor, pérdida de agua almacenada; zonas de erosión, estrés hídrico, heladas; líneas de tiempo, capas comparativas, **sliders de escenarios** de lluvia/temperatura.
 - **Diseño centrado en el agricultor:** fácil de entender, que el agricultor ingrese sus prioridades y limitaciones (agua, equipos, mercado), recordatorios de que apoya y no reemplaza el criterio humano.
 
-## Implicancias para AgroHalcón
+## Implicancias para AllpaShift
 
 - El resumen (09) ya encaja; añadir **"compara 3 rotaciones, incluida la actual, con evidencia, beneficios, vacíos y riesgos"**.
 - Datos ya probados: NASA POWER, MODIS (ORNL), SMAP y GPM (vía Earthdata). Faltan probar: **ECOSTRESS, Landsat, GRACE, SRTM, GEDI**.

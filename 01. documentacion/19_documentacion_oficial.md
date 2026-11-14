@@ -50,7 +50,7 @@ High-Level Summary · Project Demo (7 diapositivas o video de 30 s) · Final Pro
 - **Equipos virtuales:** escribir en el **grupo de WhatsApp general de participantes** indicando el **nombre del mentor**; el staff envía el enlace de Google Meet. **No por chat privado.**
 - Se puede pedir mentores presenciales o virtuales indistintamente.
 
-### Mentores más útiles para AgroHalcón
+### Mentores más útiles para AllpaShift
 
 | Mentor | Modalidad | Especialidad relevante | Disponible | Para qué |
 |---|---|---|---|---|

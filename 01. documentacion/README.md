@@ -1,4 +1,4 @@
-# 01. Documentación — AgroHalcón
+# 01. Documentación — AllpaShift
 
 Documentación del equipo **Halcón Dorado** para NASA Space Apps Piura 2026 (reto *Field Shift: Adapting Farms with NASA Data*).
 Cada documento está en **Markdown**, **Word (docx)** y **PDF**. Responsable de mantenerla: Edwin (rama `docs/entrega`).

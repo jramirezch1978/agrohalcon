@@ -1,4 +1,4 @@
-# Comparativa de tecnologías por capa — AgroHalcón
+# Comparativa de tecnologías por capa — AllpaShift
 
 > Requisito de Jhonny (2026-11-10): el proyecto debe tener **backend + frontend web + app móvil**.
 > Contexto: 48 horas, equipo de 5 (Jhonny: Java/Azure/arquitectura · Sheila: Java y Python · David: Python/ML · Lucía: GIS · Edwin: comunicación).

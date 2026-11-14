@@ -1,4 +1,4 @@
-# Plan de trabajo del hackathon — AgroHalcón (14 y 15 nov 2026)
+# Plan de trabajo del hackathon — AllpaShift (14 y 15 nov 2026)
 
 > Equipo: Jhonny · Sheila · David · Edwin · Alejandro. Modalidad virtual.
 > Reunión de coordinación propuesta: **viernes 13 nov, 10:00 p. m., 30 min (Google Meet)**.
