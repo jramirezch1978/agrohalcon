@@ -1,0 +1,25 @@
+[project]
+name = "agroshift-climate-service"
+version = "0.1.0"
+description = "AgroShift: indicadores de riesgo y puntaje de rotaciones con datos NASA"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+    "live: llama a APIs reales de la NASA (necesita internet). Ejecutar con: pytest -m live",
+    "postgres: prueba contra un PostgreSQL real embebido (lenta). Ejecutar con: pytest -m postgres",
+]
+addopts = "-m 'not live and not postgres'"
+filterwarnings = ["ignore:Using .httpx. with:Warning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+# Los nombres del contrato van en camelCase (lluviaMm, humedadSuelo...), no se renombran.
+ignore = ["E501"]
+

@@ -1,0 +1,51 @@
+[
+ {
+  "id": 1,
+  "nombre": "Bajo Piura",
+  "region": "piura",
+  "lat": -5.35,
+  "lon": -80.7
+ },
+ {
+  "id": 2,
+  "nombre": "Valle del Chira",
+  "region": "piura",
+  "lat": -4.9,
+  "lon": -80.85
+ },
+ {
+  "id": 3,
+  "nombre": "Medio Piura - Castilla",
+  "region": "piura",
+  "lat": -5.2,
+  "lon": -80.62
+ },
+ {
+  "id": 4,
+  "nombre": "San Lorenzo - Tambogrande",
+  "region": "piura",
+  "lat": -4.93,
+  "lon": -80.34
+ },
+ {
+  "id": 5,
+  "nombre": "Alto Piura - Chulucanas",
+  "region": "piura",
+  "lat": -5.1,
+  "lon": -80.16
+ },
+ {
+  "id": 6,
+  "nombre": "Sechura - Bernal / Vice",
+  "region": "piura",
+  "lat": -5.45,
+  "lon": -80.8
+ },
+ {
+  "id": 7,
+  "nombre": "Sierra - Huancabamba",
+  "region": "piura",
+  "lat": -5.24,
+  "lon": -79.45
+ }
+]

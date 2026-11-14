@@ -1,0 +1,17 @@
+{
+  "_aviso": "DATOS DE PRUEBA, NO VALIDADOS. Sirven solo para probar el servicio. Alejandro entrega el catálogo real (FAO ECOCROP + calendarios MIDAGRI) en data/crops/ con estos mismos campos.",
+  "cultivos": [
+    {"id": 1, "nombre": "Arroz", "tempMinC": 20, "tempMaxC": 35, "aguaNecesaria": "alta",
+     "mesesSiembra": [11, 12, 1, 2], "mesesCosecha": [4, 5, 6],
+     "accionesPorEtapa": {"siembra": "Nivelar y preparar el terreno", "cosecha": "Cosechar con grano maduro"}},
+    {"id": 2, "nombre": "Maíz amarillo duro", "tempMinC": 18, "tempMaxC": 33, "aguaNecesaria": "media",
+     "mesesSiembra": [11, 12, 1, 2, 3], "mesesCosecha": [5, 6, 7, 8],
+     "accionesPorEtapa": {"siembra": "Sembrar con humedad suficiente", "cosecha": "Cosechar con grano seco"}},
+    {"id": 3, "nombre": "Algodón", "tempMinC": 20, "tempMaxC": 36, "aguaNecesaria": "baja",
+     "mesesSiembra": [11, 12, 1, 2], "mesesCosecha": [6, 7, 8],
+     "accionesPorEtapa": {"siembra": "Sembrar en suelo tibio", "cosecha": "Cosechar con la bellota abierta"}},
+    {"id": 4, "nombre": "Frijol caupí", "tempMinC": 20, "tempMaxC": 35, "aguaNecesaria": "baja",
+     "mesesSiembra": [11, 12, 1, 2, 3, 4], "mesesCosecha": [2, 3, 4, 5, 6, 7],
+     "accionesPorEtapa": {"siembra": "Sembrar con poca agua", "cosecha": "Cosechar con vaina seca"}}
+  ]
+}

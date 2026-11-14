@@ -1,0 +1,15 @@
+.venv/
+.env
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+
+# Descargas pesadas de la NASA (HDF5, NetCDF, GeoTIFF): no se suben al repositorio
+data/raw/
+# Bases generadas (se reconstruyen con `python -m db.build`)
+*.sqlite
+*.sqlite3
+*.h5
+*.nc
+*.nc4
+*.tif

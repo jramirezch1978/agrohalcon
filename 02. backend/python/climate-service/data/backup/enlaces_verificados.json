@@ -1,0 +1,228 @@
+{
+ "verificado": "2026-11-14",
+ "enlaces": [
+  {
+   "nombre": "NASA POWER",
+   "url": "https://power.larc.nasa.gov/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "NASA POWER · API",
+   "url": "https://power.larc.nasa.gov/docs/services/api/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "NASA POWER · visor",
+   "url": "https://power.larc.nasa.gov/data-access-viewer/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "SMAP · misión",
+   "url": "https://smap.jpl.nasa.gov/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "SMAP · SPL3SMP_E",
+   "url": "https://nsidc.org/data/spl3smp_e",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": "https://nsidc.org/data/spl3smp_e/versions/6"
+  },
+  {
+   "nombre": "GPM IMERG · misión",
+   "url": "https://gpm.nasa.gov/data/imerg",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "GPM IMERG · GPM_3IMERGDF",
+   "url": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDF_07/summary",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "GPM IMERG · GPM_3IMERGDL (dato reciente)",
+   "url": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "MODIS · misión",
+   "url": "https://modis.gsfc.nasa.gov/",
+   "estado": "ERROR",
+   "detalle": "ConnectError"
+  },
+  {
+   "nombre": "MODIS · MOD13Q1",
+   "url": "https://lpdaac.usgs.gov/products/mod13q1v061/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": "https://www.earthdata.nasa.gov/data/catalog/lpcloud-mod13q1-061"
+  },
+  {
+   "nombre": "MUR SST",
+   "url": "https://podaac.jpl.nasa.gov/dataset/MUR-JPL-L4-GLOB-v4.1",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "Earthdata Login",
+   "url": "https://urs.earthdata.nasa.gov/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "AppEEARS",
+   "url": "https://appeears.earthdatacloud.nasa.gov/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "CMR (catálogo)",
+   "url": "https://cmr.earthdata.nasa.gov/search/site/docs/search/api.html",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "Vue.js",
+   "url": "https://vuejs.org/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "Leaflet",
+   "url": "https://leafletjs.com/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "Chart.js",
+   "url": "https://www.chartjs.org/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "Capacitor",
+   "url": "https://capacitorjs.com/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "Spring Boot",
+   "url": "https://spring.io/projects/spring-boot",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": "https://spring.io/projects/spring-boot/"
+  },
+  {
+   "nombre": "Python",
+   "url": "https://www.python.org/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "PostgreSQL",
+   "url": "https://www.postgresql.org/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "Microsoft Azure",
+   "url": "https://azure.microsoft.com/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": "https://azure.microsoft.com/en-us"
+  },
+  {
+   "nombre": "GitHub",
+   "url": "https://github.com/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "Canva",
+   "url": "https://www.canva.com/",
+   "estado": "REVISAR A MANO",
+   "http": 403,
+   "urlFinal": null
+  },
+  {
+   "nombre": "Groq API",
+   "url": "https://console.groq.com/docs",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": "https://console.groq.com/docs/overview"
+  },
+  {
+   "nombre": "Llama",
+   "url": "https://www.llama.com/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": "https://dev.meta.ai/"
+  },
+  {
+   "nombre": "INDECI · Compendio 2017",
+   "url": "https://cdn.www.gob.pe/uploads/document/file/1048401/20180227171454120200726-15599-1ptpifw.pdf",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "SENASA · Niño Costero (como sale en el PDF)",
+   "url": "https://www.senasa.gob.pe/senasacontigo/nino-costero-cuantashectareas-se-han-perdido-por-efecto-del-evento-climatico/",
+   "estado": "ROTO",
+   "http": 404,
+   "urlFinal": null
+  },
+  {
+   "nombre": "SENASA · Niño Costero (con guion)",
+   "url": "https://www.senasa.gob.pe/senasacontigo/nino-costero-cuantas-hectareas-se-han-perdido-por-efecto-del-evento-climatico/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "FAO ECOCROP",
+   "url": "https://gaez.fao.org/pages/ecocrop",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "FAO GAEZ",
+   "url": "https://gaez.fao.org/",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  },
+  {
+   "nombre": "NOAA ONI",
+   "url": "https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/ensostuff/ONI_v5.php",
+   "estado": "OK",
+   "http": 200,
+   "urlFinal": null
+  }
+ ]
+}
