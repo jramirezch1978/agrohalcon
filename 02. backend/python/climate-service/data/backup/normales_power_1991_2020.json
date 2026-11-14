@@ -1,0 +1,688 @@
+{
+ "Bajo Piura": {
+  "1": {
+   "ALLSKY_SFC_SW_DWN": 20.941,
+   "GWETROOT": 0.181,
+   "GWETTOP": 0.145,
+   "PRECTOTCORR": 0.7967,
+   "T2M_MAX": 35.7503,
+   "T2M_MIN": 20.833
+  },
+  "2": {
+   "ALLSKY_SFC_SW_DWN": 19.7743,
+   "GWETROOT": 0.191,
+   "GWETTOP": 0.1797,
+   "PRECTOTCORR": 1.462,
+   "T2M_MAX": 36.6903,
+   "T2M_MIN": 22.458
+  },
+  "3": {
+   "ALLSKY_SFC_SW_DWN": 20.5497,
+   "GWETROOT": 0.2037,
+   "GWETTOP": 0.1913,
+   "PRECTOTCORR": 1.649,
+   "T2M_MAX": 37.0077,
+   "T2M_MIN": 22.462
+  },
+  "4": {
+   "ALLSKY_SFC_SW_DWN": 20.883,
+   "GWETROOT": 0.199,
+   "GWETTOP": 0.1723,
+   "PRECTOTCORR": 0.399,
+   "T2M_MAX": 36.5627,
+   "T2M_MIN": 20.6343
+  },
+  "5": {
+   "ALLSKY_SFC_SW_DWN": 18.6827,
+   "GWETROOT": 0.192,
+   "GWETTOP": 0.159,
+   "PRECTOTCORR": 0.1013,
+   "T2M_MAX": 35.4653,
+   "T2M_MIN": 18.8847
+  },
+  "6": {
+   "ALLSKY_SFC_SW_DWN": 16.6067,
+   "GWETROOT": 0.1887,
+   "GWETTOP": 0.1543,
+   "PRECTOTCORR": 0.035,
+   "T2M_MAX": 34.3947,
+   "T2M_MIN": 17.7893
+  },
+  "7": {
+   "ALLSKY_SFC_SW_DWN": 17.255,
+   "GWETROOT": 0.1853,
+   "GWETTOP": 0.1487,
+   "PRECTOTCORR": 0.0333,
+   "T2M_MAX": 33.4423,
+   "T2M_MIN": 16.9893
+  },
+  "8": {
+   "ALLSKY_SFC_SW_DWN": 19.1867,
+   "GWETROOT": 0.182,
+   "GWETTOP": 0.139,
+   "PRECTOTCORR": 0.017,
+   "T2M_MAX": 33.8127,
+   "T2M_MIN": 16.5507
+  },
+  "9": {
+   "ALLSKY_SFC_SW_DWN": 21.933,
+   "GWETROOT": 0.1797,
+   "GWETTOP": 0.1343,
+   "PRECTOTCORR": 0.0347,
+   "T2M_MAX": 33.062,
+   "T2M_MIN": 16.7007
+  },
+  "10": {
+   "ALLSKY_SFC_SW_DWN": 22.6677,
+   "GWETROOT": 0.177,
+   "GWETTOP": 0.1357,
+   "PRECTOTCORR": 0.0923,
+   "T2M_MAX": 33.436,
+   "T2M_MIN": 16.8077
+  },
+  "11": {
+   "ALLSKY_SFC_SW_DWN": 22.6367,
+   "GWETROOT": 0.1747,
+   "GWETTOP": 0.1297,
+   "PRECTOTCORR": 0.079,
+   "T2M_MAX": 33.663,
+   "T2M_MIN": 16.968
+  },
+  "12": {
+   "ALLSKY_SFC_SW_DWN": 21.9147,
+   "GWETROOT": 0.1747,
+   "GWETTOP": 0.1373,
+   "PRECTOTCORR": 0.3007,
+   "T2M_MAX": 34.795,
+   "T2M_MIN": 18.6413
+  }
+ },
+ "Valle del Chira": {
+  "1": {
+   "ALLSKY_SFC_SW_DWN": 18.099,
+   "GWETROOT": 0.406,
+   "GWETTOP": 0.2553,
+   "PRECTOTCORR": 0.9523,
+   "T2M_MAX": 36.2497,
+   "T2M_MIN": 20.6853
+  },
+  "2": {
+   "ALLSKY_SFC_SW_DWN": 17.2153,
+   "GWETROOT": 0.422,
+   "GWETTOP": 0.3263,
+   "PRECTOTCORR": 1.764,
+   "T2M_MAX": 37.01,
+   "T2M_MIN": 21.9847
+  },
+  "3": {
+   "ALLSKY_SFC_SW_DWN": 18.5913,
+   "GWETROOT": 0.4353,
+   "GWETTOP": 0.3513,
+   "PRECTOTCORR": 1.9717,
+   "T2M_MAX": 37.4993,
+   "T2M_MIN": 22.1387
+  },
+  "4": {
+   "ALLSKY_SFC_SW_DWN": 18.9673,
+   "GWETROOT": 0.4327,
+   "GWETTOP": 0.3207,
+   "PRECTOTCORR": 0.5867,
+   "T2M_MAX": 37.21,
+   "T2M_MIN": 20.551
+  },
+  "5": {
+   "ALLSKY_SFC_SW_DWN": 17.778,
+   "GWETROOT": 0.421,
+   "GWETTOP": 0.2727,
+   "PRECTOTCORR": 0.1827,
+   "T2M_MAX": 36.387,
+   "T2M_MIN": 18.985
+  },
+  "6": {
+   "ALLSKY_SFC_SW_DWN": 17.033,
+   "GWETROOT": 0.4123,
+   "GWETTOP": 0.2443,
+   "PRECTOTCORR": 0.0613,
+   "T2M_MAX": 35.5693,
+   "T2M_MIN": 17.904
+  },
+  "7": {
+   "ALLSKY_SFC_SW_DWN": 18.4017,
+   "GWETROOT": 0.408,
+   "GWETTOP": 0.2263,
+   "PRECTOTCORR": 0.0597,
+   "T2M_MAX": 34.6787,
+   "T2M_MIN": 17.1003
+  },
+  "8": {
+   "ALLSKY_SFC_SW_DWN": 20.2153,
+   "GWETROOT": 0.403,
+   "GWETTOP": 0.2063,
+   "PRECTOTCORR": 0.038,
+   "T2M_MAX": 34.981,
+   "T2M_MIN": 16.7233
+  },
+  "9": {
+   "ALLSKY_SFC_SW_DWN": 22.0377,
+   "GWETROOT": 0.4003,
+   "GWETTOP": 0.1947,
+   "PRECTOTCORR": 0.0617,
+   "T2M_MAX": 34.221,
+   "T2M_MIN": 16.9817
+  },
+  "10": {
+   "ALLSKY_SFC_SW_DWN": 22.4863,
+   "GWETROOT": 0.399,
+   "GWETTOP": 0.2,
+   "PRECTOTCORR": 0.1297,
+   "T2M_MAX": 34.5837,
+   "T2M_MIN": 17.068
+  },
+  "11": {
+   "ALLSKY_SFC_SW_DWN": 22.44,
+   "GWETROOT": 0.3977,
+   "GWETTOP": 0.205,
+   "PRECTOTCORR": 0.1443,
+   "T2M_MAX": 34.6257,
+   "T2M_MIN": 17.0427
+  },
+  "12": {
+   "ALLSKY_SFC_SW_DWN": 20.2627,
+   "GWETROOT": 0.4,
+   "GWETTOP": 0.226,
+   "PRECTOTCORR": 0.4,
+   "T2M_MAX": 35.5313,
+   "T2M_MIN": 18.631
+  }
+ },
+ "Medio Piura - Castilla": {
+  "1": {
+   "ALLSKY_SFC_SW_DWN": 20.941,
+   "GWETROOT": 0.406,
+   "GWETTOP": 0.2553,
+   "PRECTOTCORR": 0.9523,
+   "T2M_MAX": 36.2497,
+   "T2M_MIN": 20.6853
+  },
+  "2": {
+   "ALLSKY_SFC_SW_DWN": 19.7743,
+   "GWETROOT": 0.422,
+   "GWETTOP": 0.3263,
+   "PRECTOTCORR": 1.764,
+   "T2M_MAX": 37.01,
+   "T2M_MIN": 21.9847
+  },
+  "3": {
+   "ALLSKY_SFC_SW_DWN": 20.5497,
+   "GWETROOT": 0.4353,
+   "GWETTOP": 0.3513,
+   "PRECTOTCORR": 1.9717,
+   "T2M_MAX": 37.4993,
+   "T2M_MIN": 22.1387
+  },
+  "4": {
+   "ALLSKY_SFC_SW_DWN": 20.883,
+   "GWETROOT": 0.4327,
+   "GWETTOP": 0.3207,
+   "PRECTOTCORR": 0.5867,
+   "T2M_MAX": 37.21,
+   "T2M_MIN": 20.551
+  },
+  "5": {
+   "ALLSKY_SFC_SW_DWN": 18.6827,
+   "GWETROOT": 0.421,
+   "GWETTOP": 0.2727,
+   "PRECTOTCORR": 0.1827,
+   "T2M_MAX": 36.387,
+   "T2M_MIN": 18.985
+  },
+  "6": {
+   "ALLSKY_SFC_SW_DWN": 16.6067,
+   "GWETROOT": 0.4123,
+   "GWETTOP": 0.2443,
+   "PRECTOTCORR": 0.0613,
+   "T2M_MAX": 35.5693,
+   "T2M_MIN": 17.904
+  },
+  "7": {
+   "ALLSKY_SFC_SW_DWN": 17.255,
+   "GWETROOT": 0.408,
+   "GWETTOP": 0.2263,
+   "PRECTOTCORR": 0.0597,
+   "T2M_MAX": 34.6787,
+   "T2M_MIN": 17.1003
+  },
+  "8": {
+   "ALLSKY_SFC_SW_DWN": 19.1867,
+   "GWETROOT": 0.403,
+   "GWETTOP": 0.2063,
+   "PRECTOTCORR": 0.038,
+   "T2M_MAX": 34.981,
+   "T2M_MIN": 16.7233
+  },
+  "9": {
+   "ALLSKY_SFC_SW_DWN": 21.933,
+   "GWETROOT": 0.4003,
+   "GWETTOP": 0.1947,
+   "PRECTOTCORR": 0.0617,
+   "T2M_MAX": 34.221,
+   "T2M_MIN": 16.9817
+  },
+  "10": {
+   "ALLSKY_SFC_SW_DWN": 22.6677,
+   "GWETROOT": 0.399,
+   "GWETTOP": 0.2,
+   "PRECTOTCORR": 0.1297,
+   "T2M_MAX": 34.5837,
+   "T2M_MIN": 17.068
+  },
+  "11": {
+   "ALLSKY_SFC_SW_DWN": 22.6367,
+   "GWETROOT": 0.3977,
+   "GWETTOP": 0.205,
+   "PRECTOTCORR": 0.1443,
+   "T2M_MAX": 34.6257,
+   "T2M_MIN": 17.0427
+  },
+  "12": {
+   "ALLSKY_SFC_SW_DWN": 21.9147,
+   "GWETROOT": 0.4,
+   "GWETTOP": 0.226,
+   "PRECTOTCORR": 0.4,
+   "T2M_MAX": 35.5313,
+   "T2M_MIN": 18.631
+  }
+ },
+ "San Lorenzo - Tambogrande": {
+  "1": {
+   "ALLSKY_SFC_SW_DWN": 18.099,
+   "GWETROOT": 0.406,
+   "GWETTOP": 0.2553,
+   "PRECTOTCORR": 0.9523,
+   "T2M_MAX": 36.2497,
+   "T2M_MIN": 20.6853
+  },
+  "2": {
+   "ALLSKY_SFC_SW_DWN": 17.2153,
+   "GWETROOT": 0.422,
+   "GWETTOP": 0.3263,
+   "PRECTOTCORR": 1.764,
+   "T2M_MAX": 37.01,
+   "T2M_MIN": 21.9847
+  },
+  "3": {
+   "ALLSKY_SFC_SW_DWN": 18.5913,
+   "GWETROOT": 0.4353,
+   "GWETTOP": 0.3513,
+   "PRECTOTCORR": 1.9717,
+   "T2M_MAX": 37.4993,
+   "T2M_MIN": 22.1387
+  },
+  "4": {
+   "ALLSKY_SFC_SW_DWN": 18.9673,
+   "GWETROOT": 0.4327,
+   "GWETTOP": 0.3207,
+   "PRECTOTCORR": 0.5867,
+   "T2M_MAX": 37.21,
+   "T2M_MIN": 20.551
+  },
+  "5": {
+   "ALLSKY_SFC_SW_DWN": 17.778,
+   "GWETROOT": 0.421,
+   "GWETTOP": 0.2727,
+   "PRECTOTCORR": 0.1827,
+   "T2M_MAX": 36.387,
+   "T2M_MIN": 18.985
+  },
+  "6": {
+   "ALLSKY_SFC_SW_DWN": 17.033,
+   "GWETROOT": 0.4123,
+   "GWETTOP": 0.2443,
+   "PRECTOTCORR": 0.0613,
+   "T2M_MAX": 35.5693,
+   "T2M_MIN": 17.904
+  },
+  "7": {
+   "ALLSKY_SFC_SW_DWN": 18.4017,
+   "GWETROOT": 0.408,
+   "GWETTOP": 0.2263,
+   "PRECTOTCORR": 0.0597,
+   "T2M_MAX": 34.6787,
+   "T2M_MIN": 17.1003
+  },
+  "8": {
+   "ALLSKY_SFC_SW_DWN": 20.2153,
+   "GWETROOT": 0.403,
+   "GWETTOP": 0.2063,
+   "PRECTOTCORR": 0.038,
+   "T2M_MAX": 34.981,
+   "T2M_MIN": 16.7233
+  },
+  "9": {
+   "ALLSKY_SFC_SW_DWN": 22.0377,
+   "GWETROOT": 0.4003,
+   "GWETTOP": 0.1947,
+   "PRECTOTCORR": 0.0617,
+   "T2M_MAX": 34.221,
+   "T2M_MIN": 16.9817
+  },
+  "10": {
+   "ALLSKY_SFC_SW_DWN": 22.4863,
+   "GWETROOT": 0.399,
+   "GWETTOP": 0.2,
+   "PRECTOTCORR": 0.1297,
+   "T2M_MAX": 34.5837,
+   "T2M_MIN": 17.068
+  },
+  "11": {
+   "ALLSKY_SFC_SW_DWN": 22.44,
+   "GWETROOT": 0.3977,
+   "GWETTOP": 0.205,
+   "PRECTOTCORR": 0.1443,
+   "T2M_MAX": 34.6257,
+   "T2M_MIN": 17.0427
+  },
+  "12": {
+   "ALLSKY_SFC_SW_DWN": 20.2627,
+   "GWETROOT": 0.4,
+   "GWETTOP": 0.226,
+   "PRECTOTCORR": 0.4,
+   "T2M_MAX": 35.5313,
+   "T2M_MIN": 18.631
+  }
+ },
+ "Alto Piura - Chulucanas": {
+  "1": {
+   "ALLSKY_SFC_SW_DWN": 20.941,
+   "GWETROOT": 0.5267,
+   "GWETTOP": 0.4017,
+   "PRECTOTCORR": 1.4553,
+   "T2M_MAX": 33.087,
+   "T2M_MIN": 15.994
+  },
+  "2": {
+   "ALLSKY_SFC_SW_DWN": 19.7743,
+   "GWETROOT": 0.5473,
+   "GWETTOP": 0.4867,
+   "PRECTOTCORR": 2.832,
+   "T2M_MAX": 33.01,
+   "T2M_MIN": 16.7743
+  },
+  "3": {
+   "ALLSKY_SFC_SW_DWN": 20.5497,
+   "GWETROOT": 0.568,
+   "GWETTOP": 0.516,
+   "PRECTOTCORR": 2.906,
+   "T2M_MAX": 33.2627,
+   "T2M_MIN": 16.942
+  },
+  "4": {
+   "ALLSKY_SFC_SW_DWN": 20.883,
+   "GWETROOT": 0.5693,
+   "GWETTOP": 0.4927,
+   "PRECTOTCORR": 1.4683,
+   "T2M_MAX": 33.5167,
+   "T2M_MIN": 16.65
+  },
+  "5": {
+   "ALLSKY_SFC_SW_DWN": 18.6827,
+   "GWETROOT": 0.5537,
+   "GWETTOP": 0.4357,
+   "PRECTOTCORR": 0.5987,
+   "T2M_MAX": 33.759,
+   "T2M_MIN": 15.7667
+  },
+  "6": {
+   "ALLSKY_SFC_SW_DWN": 16.6067,
+   "GWETROOT": 0.5397,
+   "GWETTOP": 0.3853,
+   "PRECTOTCORR": 0.272,
+   "T2M_MAX": 33.412,
+   "T2M_MIN": 15.194
+  },
+  "7": {
+   "ALLSKY_SFC_SW_DWN": 17.255,
+   "GWETROOT": 0.5297,
+   "GWETTOP": 0.3497,
+   "PRECTOTCORR": 0.2393,
+   "T2M_MAX": 33.6773,
+   "T2M_MIN": 14.605
+  },
+  "8": {
+   "ALLSKY_SFC_SW_DWN": 19.1867,
+   "GWETROOT": 0.522,
+   "GWETTOP": 0.313,
+   "PRECTOTCORR": 0.175,
+   "T2M_MAX": 34.3277,
+   "T2M_MIN": 14.78
+  },
+  "9": {
+   "ALLSKY_SFC_SW_DWN": 21.933,
+   "GWETROOT": 0.5167,
+   "GWETTOP": 0.3013,
+   "PRECTOTCORR": 0.2413,
+   "T2M_MAX": 34.666,
+   "T2M_MIN": 15.319
+  },
+  "10": {
+   "ALLSKY_SFC_SW_DWN": 22.6677,
+   "GWETROOT": 0.515,
+   "GWETTOP": 0.3223,
+   "PRECTOTCORR": 0.4623,
+   "T2M_MAX": 34.244,
+   "T2M_MIN": 14.777
+  },
+  "11": {
+   "ALLSKY_SFC_SW_DWN": 22.6367,
+   "GWETROOT": 0.5143,
+   "GWETTOP": 0.3383,
+   "PRECTOTCORR": 0.563,
+   "T2M_MAX": 32.7293,
+   "T2M_MIN": 14.0247
+  },
+  "12": {
+   "ALLSKY_SFC_SW_DWN": 21.9147,
+   "GWETROOT": 0.5187,
+   "GWETTOP": 0.3663,
+   "PRECTOTCORR": 0.956,
+   "T2M_MAX": 32.947,
+   "T2M_MIN": 15.0423
+  }
+ },
+ "Sechura - Bernal / Vice": {
+  "1": {
+   "ALLSKY_SFC_SW_DWN": 20.941,
+   "GWETROOT": 0.181,
+   "GWETTOP": 0.145,
+   "PRECTOTCORR": 0.7967,
+   "T2M_MAX": 35.7503,
+   "T2M_MIN": 20.833
+  },
+  "2": {
+   "ALLSKY_SFC_SW_DWN": 19.7743,
+   "GWETROOT": 0.191,
+   "GWETTOP": 0.1797,
+   "PRECTOTCORR": 1.462,
+   "T2M_MAX": 36.6903,
+   "T2M_MIN": 22.458
+  },
+  "3": {
+   "ALLSKY_SFC_SW_DWN": 20.5497,
+   "GWETROOT": 0.2037,
+   "GWETTOP": 0.1913,
+   "PRECTOTCORR": 1.649,
+   "T2M_MAX": 37.0077,
+   "T2M_MIN": 22.462
+  },
+  "4": {
+   "ALLSKY_SFC_SW_DWN": 20.883,
+   "GWETROOT": 0.199,
+   "GWETTOP": 0.1723,
+   "PRECTOTCORR": 0.399,
+   "T2M_MAX": 36.5627,
+   "T2M_MIN": 20.6343
+  },
+  "5": {
+   "ALLSKY_SFC_SW_DWN": 18.6827,
+   "GWETROOT": 0.192,
+   "GWETTOP": 0.159,
+   "PRECTOTCORR": 0.1013,
+   "T2M_MAX": 35.4653,
+   "T2M_MIN": 18.8847
+  },
+  "6": {
+   "ALLSKY_SFC_SW_DWN": 16.6067,
+   "GWETROOT": 0.1887,
+   "GWETTOP": 0.1543,
+   "PRECTOTCORR": 0.035,
+   "T2M_MAX": 34.3947,
+   "T2M_MIN": 17.7893
+  },
+  "7": {
+   "ALLSKY_SFC_SW_DWN": 17.255,
+   "GWETROOT": 0.1853,
+   "GWETTOP": 0.1487,
+   "PRECTOTCORR": 0.0333,
+   "T2M_MAX": 33.4423,
+   "T2M_MIN": 16.9893
+  },
+  "8": {
+   "ALLSKY_SFC_SW_DWN": 19.1867,
+   "GWETROOT": 0.182,
+   "GWETTOP": 0.139,
+   "PRECTOTCORR": 0.017,
+   "T2M_MAX": 33.8127,
+   "T2M_MIN": 16.5507
+  },
+  "9": {
+   "ALLSKY_SFC_SW_DWN": 21.933,
+   "GWETROOT": 0.1797,
+   "GWETTOP": 0.1343,
+   "PRECTOTCORR": 0.0347,
+   "T2M_MAX": 33.062,
+   "T2M_MIN": 16.7007
+  },
+  "10": {
+   "ALLSKY_SFC_SW_DWN": 22.6677,
+   "GWETROOT": 0.177,
+   "GWETTOP": 0.1357,
+   "PRECTOTCORR": 0.0923,
+   "T2M_MAX": 33.436,
+   "T2M_MIN": 16.8077
+  },
+  "11": {
+   "ALLSKY_SFC_SW_DWN": 22.6367,
+   "GWETROOT": 0.1747,
+   "GWETTOP": 0.1297,
+   "PRECTOTCORR": 0.079,
+   "T2M_MAX": 33.663,
+   "T2M_MIN": 16.968
+  },
+  "12": {
+   "ALLSKY_SFC_SW_DWN": 21.9147,
+   "GWETROOT": 0.1747,
+   "GWETTOP": 0.1373,
+   "PRECTOTCORR": 0.3007,
+   "T2M_MAX": 34.795,
+   "T2M_MIN": 18.6413
+  }
+ },
+ "Sierra - Huancabamba": {
+  "1": {
+   "ALLSKY_SFC_SW_DWN": 15.0773,
+   "GWETROOT": 0.493,
+   "GWETTOP": 0.4823,
+   "PRECTOTCORR": 1.9863,
+   "T2M_MAX": 26.1863,
+   "T2M_MIN": 10.735
+  },
+  "2": {
+   "ALLSKY_SFC_SW_DWN": 14.0903,
+   "GWETROOT": 0.5207,
+   "GWETTOP": 0.535,
+   "PRECTOTCORR": 3.83,
+   "T2M_MAX": 25.4107,
+   "T2M_MIN": 11.3143
+  },
+  "3": {
+   "ALLSKY_SFC_SW_DWN": 14.8467,
+   "GWETROOT": 0.55,
+   "GWETTOP": 0.565,
+   "PRECTOTCORR": 3.7517,
+   "T2M_MAX": 25.132,
+   "T2M_MIN": 11.2977
+  },
+  "4": {
+   "ALLSKY_SFC_SW_DWN": 15.589,
+   "GWETROOT": 0.555,
+   "GWETTOP": 0.56,
+   "PRECTOTCORR": 2.44,
+   "T2M_MAX": 24.842,
+   "T2M_MIN": 11.0
+  },
+  "5": {
+   "ALLSKY_SFC_SW_DWN": 15.1647,
+   "GWETROOT": 0.5397,
+   "GWETTOP": 0.5257,
+   "PRECTOTCORR": 1.1507,
+   "T2M_MAX": 24.8627,
+   "T2M_MIN": 10.4283
+  },
+  "6": {
+   "ALLSKY_SFC_SW_DWN": 14.9207,
+   "GWETROOT": 0.523,
+   "GWETTOP": 0.5003,
+   "PRECTOTCORR": 0.6607,
+   "T2M_MAX": 24.2417,
+   "T2M_MIN": 9.7227
+  },
+  "7": {
+   "ALLSKY_SFC_SW_DWN": 15.9137,
+   "GWETROOT": 0.509,
+   "GWETTOP": 0.4773,
+   "PRECTOTCORR": 0.538,
+   "T2M_MAX": 24.5927,
+   "T2M_MIN": 9.505
+  },
+  "8": {
+   "ALLSKY_SFC_SW_DWN": 17.344,
+   "GWETROOT": 0.4917,
+   "GWETTOP": 0.4487,
+   "PRECTOTCORR": 0.4257,
+   "T2M_MAX": 25.6887,
+   "T2M_MIN": 9.56
+  },
+  "9": {
+   "ALLSKY_SFC_SW_DWN": 18.161,
+   "GWETROOT": 0.479,
+   "GWETTOP": 0.4277,
+   "PRECTOTCORR": 0.5577,
+   "T2M_MAX": 26.9073,
+   "T2M_MIN": 10.357
+  },
+  "10": {
+   "ALLSKY_SFC_SW_DWN": 18.852,
+   "GWETROOT": 0.4767,
+   "GWETTOP": 0.438,
+   "PRECTOTCORR": 1.0507,
+   "T2M_MAX": 27.3757,
+   "T2M_MIN": 10.3933
+  },
+  "11": {
+   "ALLSKY_SFC_SW_DWN": 19.3753,
+   "GWETROOT": 0.479,
+   "GWETTOP": 0.4467,
+   "PRECTOTCORR": 1.2417,
+   "T2M_MAX": 27.5307,
+   "T2M_MIN": 9.385
+  },
+  "12": {
+   "ALLSKY_SFC_SW_DWN": 16.755,
+   "GWETROOT": 0.4827,
+   "GWETTOP": 0.461,
+   "PRECTOTCORR": 1.7423,
+   "T2M_MAX": 26.7927,
+   "T2M_MIN": 10.1317
+  }
+ }
+}

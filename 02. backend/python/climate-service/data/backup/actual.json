@@ -1,0 +1,586 @@
+{
+ "generado": "2026-11-14",
+ "zonas": [
+  {
+   "zona": {
+    "id": 1,
+    "nombre": "Bajo Piura",
+    "region": "piura",
+    "lat": -5.35,
+    "lon": -80.7
+   },
+   "entrada": {
+    "lat": -5.35,
+    "lon": -80.7,
+    "actual": {
+     "lluviaMm": 2.94,
+     "humedadSuelo": 0.25,
+     "tempMaxC": 33.91,
+     "tempMinC": 24.65,
+     "sstAnomaliaC": 0.0
+    },
+    "historico": {
+     "lluviaMm": 0.079,
+     "humedadSuelo": 0.13,
+     "tempMaxC": 33.66,
+     "tempMinC": 16.97
+    },
+    "meta": {
+     "lluvia": {
+      "fuente": "NASA POWER (PRECTOTCORR)"
+     },
+     "humedadSuelo": {
+      "fuente": "NASA POWER (GWETTOP)",
+      "unidad": "fracción 0-1"
+     },
+     "calor": {
+      "fuente": "NASA POWER (T2M_MAX)"
+     },
+     "elNino": {
+      "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+     }
+    }
+   },
+   "trazabilidad": {
+    "ventanaDias": 14,
+    "ultimoDiaConDato": "2026-11-11",
+    "baseNormal": [
+     1991,
+     2020
+    ],
+    "mesNormal": 11,
+    "advertencias": [
+     "MUR SST no disponible: la anomalía del mar se fijó en 0 °C"
+    ]
+   },
+   "indicadores": {
+    "lluvia": {
+     "valor": 2.94,
+     "normal": 0.079,
+     "unidad": "mm/día",
+     "nivel": "alto",
+     "fuente": "NASA POWER (PRECTOTCORR)"
+    },
+    "humedadSuelo": {
+     "valor": 0.25,
+     "normal": 0.13,
+     "unidad": "fracción 0-1",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (GWETTOP)"
+    },
+    "calor": {
+     "valor": 33.91,
+     "normal": 33.66,
+     "unidad": "°C",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (T2M_MAX)"
+    },
+    "elNino": {
+     "valor": 0.0,
+     "normal": 0.0,
+     "unidad": "°C anomalía",
+     "nivel": "bajo",
+     "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+    }
+   }
+  },
+  {
+   "zona": {
+    "id": 2,
+    "nombre": "Valle del Chira",
+    "region": "piura",
+    "lat": -4.9,
+    "lon": -80.85
+   },
+   "entrada": {
+    "lat": -4.9,
+    "lon": -80.85,
+    "actual": {
+     "lluviaMm": 9.256,
+     "humedadSuelo": 0.419,
+     "tempMaxC": 32.85,
+     "tempMinC": 23.48,
+     "sstAnomaliaC": 0.0
+    },
+    "historico": {
+     "lluviaMm": 0.144,
+     "humedadSuelo": 0.205,
+     "tempMaxC": 34.63,
+     "tempMinC": 17.04
+    },
+    "meta": {
+     "lluvia": {
+      "fuente": "NASA POWER (PRECTOTCORR)"
+     },
+     "humedadSuelo": {
+      "fuente": "NASA POWER (GWETTOP)",
+      "unidad": "fracción 0-1"
+     },
+     "calor": {
+      "fuente": "NASA POWER (T2M_MAX)"
+     },
+     "elNino": {
+      "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+     }
+    }
+   },
+   "trazabilidad": {
+    "ventanaDias": 14,
+    "ultimoDiaConDato": "2026-11-11",
+    "baseNormal": [
+     1991,
+     2020
+    ],
+    "mesNormal": 11,
+    "advertencias": [
+     "MUR SST no disponible: la anomalía del mar se fijó en 0 °C"
+    ]
+   },
+   "indicadores": {
+    "lluvia": {
+     "valor": 9.256,
+     "normal": 0.144,
+     "unidad": "mm/día",
+     "nivel": "alto",
+     "fuente": "NASA POWER (PRECTOTCORR)"
+    },
+    "humedadSuelo": {
+     "valor": 0.419,
+     "normal": 0.205,
+     "unidad": "fracción 0-1",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (GWETTOP)"
+    },
+    "calor": {
+     "valor": 32.85,
+     "normal": 34.63,
+     "unidad": "°C",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (T2M_MAX)"
+    },
+    "elNino": {
+     "valor": 0.0,
+     "normal": 0.0,
+     "unidad": "°C anomalía",
+     "nivel": "bajo",
+     "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+    }
+   }
+  },
+  {
+   "zona": {
+    "id": 3,
+    "nombre": "Medio Piura - Castilla",
+    "region": "piura",
+    "lat": -5.2,
+    "lon": -80.62
+   },
+   "entrada": {
+    "lat": -5.2,
+    "lon": -80.62,
+    "actual": {
+     "lluviaMm": 9.256,
+     "humedadSuelo": 0.419,
+     "tempMaxC": 32.85,
+     "tempMinC": 23.48,
+     "sstAnomaliaC": 0.0
+    },
+    "historico": {
+     "lluviaMm": 0.144,
+     "humedadSuelo": 0.205,
+     "tempMaxC": 34.63,
+     "tempMinC": 17.04
+    },
+    "meta": {
+     "lluvia": {
+      "fuente": "NASA POWER (PRECTOTCORR)"
+     },
+     "humedadSuelo": {
+      "fuente": "NASA POWER (GWETTOP)",
+      "unidad": "fracción 0-1"
+     },
+     "calor": {
+      "fuente": "NASA POWER (T2M_MAX)"
+     },
+     "elNino": {
+      "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+     }
+    }
+   },
+   "trazabilidad": {
+    "ventanaDias": 14,
+    "ultimoDiaConDato": "2026-11-11",
+    "baseNormal": [
+     1991,
+     2020
+    ],
+    "mesNormal": 11,
+    "advertencias": [
+     "MUR SST no disponible: la anomalía del mar se fijó en 0 °C"
+    ]
+   },
+   "indicadores": {
+    "lluvia": {
+     "valor": 9.256,
+     "normal": 0.144,
+     "unidad": "mm/día",
+     "nivel": "alto",
+     "fuente": "NASA POWER (PRECTOTCORR)"
+    },
+    "humedadSuelo": {
+     "valor": 0.419,
+     "normal": 0.205,
+     "unidad": "fracción 0-1",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (GWETTOP)"
+    },
+    "calor": {
+     "valor": 32.85,
+     "normal": 34.63,
+     "unidad": "°C",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (T2M_MAX)"
+    },
+    "elNino": {
+     "valor": 0.0,
+     "normal": 0.0,
+     "unidad": "°C anomalía",
+     "nivel": "bajo",
+     "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+    }
+   }
+  },
+  {
+   "zona": {
+    "id": 4,
+    "nombre": "San Lorenzo - Tambogrande",
+    "region": "piura",
+    "lat": -4.93,
+    "lon": -80.34
+   },
+   "entrada": {
+    "lat": -4.93,
+    "lon": -80.34,
+    "actual": {
+     "lluviaMm": 9.256,
+     "humedadSuelo": 0.419,
+     "tempMaxC": 32.85,
+     "tempMinC": 23.48,
+     "sstAnomaliaC": 0.0
+    },
+    "historico": {
+     "lluviaMm": 0.144,
+     "humedadSuelo": 0.205,
+     "tempMaxC": 34.63,
+     "tempMinC": 17.04
+    },
+    "meta": {
+     "lluvia": {
+      "fuente": "NASA POWER (PRECTOTCORR)"
+     },
+     "humedadSuelo": {
+      "fuente": "NASA POWER (GWETTOP)",
+      "unidad": "fracción 0-1"
+     },
+     "calor": {
+      "fuente": "NASA POWER (T2M_MAX)"
+     },
+     "elNino": {
+      "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+     }
+    }
+   },
+   "trazabilidad": {
+    "ventanaDias": 14,
+    "ultimoDiaConDato": "2026-11-11",
+    "baseNormal": [
+     1991,
+     2020
+    ],
+    "mesNormal": 11,
+    "advertencias": [
+     "MUR SST no disponible: la anomalía del mar se fijó en 0 °C"
+    ]
+   },
+   "indicadores": {
+    "lluvia": {
+     "valor": 9.256,
+     "normal": 0.144,
+     "unidad": "mm/día",
+     "nivel": "alto",
+     "fuente": "NASA POWER (PRECTOTCORR)"
+    },
+    "humedadSuelo": {
+     "valor": 0.419,
+     "normal": 0.205,
+     "unidad": "fracción 0-1",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (GWETTOP)"
+    },
+    "calor": {
+     "valor": 32.85,
+     "normal": 34.63,
+     "unidad": "°C",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (T2M_MAX)"
+    },
+    "elNino": {
+     "valor": 0.0,
+     "normal": 0.0,
+     "unidad": "°C anomalía",
+     "nivel": "bajo",
+     "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+    }
+   }
+  },
+  {
+   "zona": {
+    "id": 5,
+    "nombre": "Alto Piura - Chulucanas",
+    "region": "piura",
+    "lat": -5.1,
+    "lon": -80.16
+   },
+   "entrada": {
+    "lat": -5.1,
+    "lon": -80.16,
+    "actual": {
+     "lluviaMm": 18.133,
+     "humedadSuelo": 0.732,
+     "tempMaxC": 29.33,
+     "tempMinC": 19.28,
+     "sstAnomaliaC": 0.0
+    },
+    "historico": {
+     "lluviaMm": 0.563,
+     "humedadSuelo": 0.338,
+     "tempMaxC": 32.73,
+     "tempMinC": 14.02
+    },
+    "meta": {
+     "lluvia": {
+      "fuente": "NASA POWER (PRECTOTCORR)"
+     },
+     "humedadSuelo": {
+      "fuente": "NASA POWER (GWETTOP)",
+      "unidad": "fracción 0-1"
+     },
+     "calor": {
+      "fuente": "NASA POWER (T2M_MAX)"
+     },
+     "elNino": {
+      "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+     }
+    }
+   },
+   "trazabilidad": {
+    "ventanaDias": 14,
+    "ultimoDiaConDato": "2026-11-11",
+    "baseNormal": [
+     1991,
+     2020
+    ],
+    "mesNormal": 11,
+    "advertencias": [
+     "MUR SST no disponible: la anomalía del mar se fijó en 0 °C"
+    ]
+   },
+   "indicadores": {
+    "lluvia": {
+     "valor": 18.133,
+     "normal": 0.563,
+     "unidad": "mm/día",
+     "nivel": "alto",
+     "fuente": "NASA POWER (PRECTOTCORR)"
+    },
+    "humedadSuelo": {
+     "valor": 0.732,
+     "normal": 0.338,
+     "unidad": "fracción 0-1",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (GWETTOP)"
+    },
+    "calor": {
+     "valor": 29.33,
+     "normal": 32.73,
+     "unidad": "°C",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (T2M_MAX)"
+    },
+    "elNino": {
+     "valor": 0.0,
+     "normal": 0.0,
+     "unidad": "°C anomalía",
+     "nivel": "bajo",
+     "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+    }
+   }
+  },
+  {
+   "zona": {
+    "id": 6,
+    "nombre": "Sechura - Bernal / Vice",
+    "region": "piura",
+    "lat": -5.45,
+    "lon": -80.8
+   },
+   "entrada": {
+    "lat": -5.45,
+    "lon": -80.8,
+    "actual": {
+     "lluviaMm": 2.94,
+     "humedadSuelo": 0.25,
+     "tempMaxC": 33.91,
+     "tempMinC": 24.65,
+     "sstAnomaliaC": 0.0
+    },
+    "historico": {
+     "lluviaMm": 0.079,
+     "humedadSuelo": 0.13,
+     "tempMaxC": 33.66,
+     "tempMinC": 16.97
+    },
+    "meta": {
+     "lluvia": {
+      "fuente": "NASA POWER (PRECTOTCORR)"
+     },
+     "humedadSuelo": {
+      "fuente": "NASA POWER (GWETTOP)",
+      "unidad": "fracción 0-1"
+     },
+     "calor": {
+      "fuente": "NASA POWER (T2M_MAX)"
+     },
+     "elNino": {
+      "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+     }
+    }
+   },
+   "trazabilidad": {
+    "ventanaDias": 14,
+    "ultimoDiaConDato": "2026-11-11",
+    "baseNormal": [
+     1991,
+     2020
+    ],
+    "mesNormal": 11,
+    "advertencias": [
+     "MUR SST no disponible: la anomalía del mar se fijó en 0 °C"
+    ]
+   },
+   "indicadores": {
+    "lluvia": {
+     "valor": 2.94,
+     "normal": 0.079,
+     "unidad": "mm/día",
+     "nivel": "alto",
+     "fuente": "NASA POWER (PRECTOTCORR)"
+    },
+    "humedadSuelo": {
+     "valor": 0.25,
+     "normal": 0.13,
+     "unidad": "fracción 0-1",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (GWETTOP)"
+    },
+    "calor": {
+     "valor": 33.91,
+     "normal": 33.66,
+     "unidad": "°C",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (T2M_MAX)"
+    },
+    "elNino": {
+     "valor": 0.0,
+     "normal": 0.0,
+     "unidad": "°C anomalía",
+     "nivel": "bajo",
+     "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+    }
+   }
+  },
+  {
+   "zona": {
+    "id": 7,
+    "nombre": "Sierra - Huancabamba",
+    "region": "piura",
+    "lat": -5.24,
+    "lon": -79.45
+   },
+   "entrada": {
+    "lat": -5.24,
+    "lon": -79.45,
+    "actual": {
+     "lluviaMm": 10.136,
+     "humedadSuelo": 0.769,
+     "tempMaxC": 23.31,
+     "tempMinC": 15.14,
+     "sstAnomaliaC": 0.0
+    },
+    "historico": {
+     "lluviaMm": 1.242,
+     "humedadSuelo": 0.447,
+     "tempMaxC": 27.53,
+     "tempMinC": 9.38
+    },
+    "meta": {
+     "lluvia": {
+      "fuente": "NASA POWER (PRECTOTCORR)"
+     },
+     "humedadSuelo": {
+      "fuente": "NASA POWER (GWETTOP)",
+      "unidad": "fracción 0-1"
+     },
+     "calor": {
+      "fuente": "NASA POWER (T2M_MAX)"
+     },
+     "elNino": {
+      "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+     }
+    }
+   },
+   "trazabilidad": {
+    "ventanaDias": 14,
+    "ultimoDiaConDato": "2026-11-11",
+    "baseNormal": [
+     1991,
+     2020
+    ],
+    "mesNormal": 11,
+    "advertencias": [
+     "MUR SST no disponible: la anomalía del mar se fijó en 0 °C"
+    ]
+   },
+   "indicadores": {
+    "lluvia": {
+     "valor": 10.136,
+     "normal": 1.242,
+     "unidad": "mm/día",
+     "nivel": "alto",
+     "fuente": "NASA POWER (PRECTOTCORR)"
+    },
+    "humedadSuelo": {
+     "valor": 0.769,
+     "normal": 0.447,
+     "unidad": "fracción 0-1",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (GWETTOP)"
+    },
+    "calor": {
+     "valor": 23.31,
+     "normal": 27.53,
+     "unidad": "°C",
+     "nivel": "bajo",
+     "fuente": "NASA POWER (T2M_MAX)"
+    },
+    "elNino": {
+     "valor": 0.0,
+     "normal": 0.0,
+     "unidad": "°C anomalía",
+     "nivel": "bajo",
+     "fuente": "MUR SST (sin dato: se asumió anomalía 0)"
+    }
+   }
+  }
+ ]
+}

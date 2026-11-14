@@ -1,0 +1,6 @@
+{
+  "lluvia": {"valor": 2.1, "normal": 8.5, "unidad": "mm/día", "nivel": "alto", "fuente": "GPM IMERG"},
+  "humedadSuelo": {"valor": 0.12, "normal": 0.20, "unidad": "m3/m3", "nivel": "alto", "fuente": "SMAP"},
+  "calor": {"valor": 34.0, "normal": 31.0, "unidad": "°C", "nivel": "medio", "fuente": "NASA POWER"},
+  "elNino": {"valor": 1.2, "normal": 0.0, "unidad": "°C anomalía", "nivel": "medio", "fuente": "MUR SST"}
+}
