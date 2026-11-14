@@ -15,6 +15,7 @@ if ($Descargar) {
 }
 if ($Catalogo) { & $py -X utf8 -W ignore -m db.build --catalogo $Catalogo } else { & $py -X utf8 -W ignore -m db.build }
 & $py -X utf8 -W ignore -m db.export_postgres
+& $py -X utf8 -W ignore -m db.export_allpashift   # seed para el esquema de Jhonny (04. base de datos/ddl/seed/02-datos-nasa.sql)
 & $py -X utf8 -W ignore -m db.export_panel
 & $py -X utf8 -m pytest -q
 Write-Host "`nListo. Servicio y panel:  .\.venv\Scripts\python.exe -m uvicorn app.main:app --port 8000   ->  http://localhost:8000/panel/"
