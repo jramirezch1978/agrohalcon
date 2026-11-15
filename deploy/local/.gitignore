@@ -1,0 +1,4 @@
+# generados por levantar-todo.ps1
+.pgdata/
+.logs/
+.pids
