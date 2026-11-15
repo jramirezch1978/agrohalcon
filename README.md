@@ -77,7 +77,7 @@ What the farmer sees:
 
 [![Watch the AllpaShift video](https://img.youtube.com/vi/3UVyc3Y5eFw/hqdefault.jpg)](https://www.youtube.com/watch?v=3UVyc3Y5eFw)
 
-**[▶ Watch on YouTube](https://www.youtube.com/watch?v=3UVyc3Y5eFw)** · English subtitles available
+**[▶ Watch on YouTube](https://www.youtube.com/watch?v=3UVyc3Y5eFw)** · English subtitles available · <sub>Contains SI-generated scenes (Gemini).</sub>
 
 **Slides (7, English):** [AllpaShift_Demo_EN.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Demo_EN.pdf) · [AllpaShift_Demo_EN.pptx](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Demo_EN.pptx)
 <sub>Problem and challenge · NASA data · Solution · How it works · Demo with real screenshots · Impact (2017 validation)</sub>
@@ -227,6 +227,7 @@ Outside the Piura valleys, rainfall and soil moisture come from NASA POWER, and 
 | **What it does not do** | It does not calculate, does not invent numbers, crops, dates or sources, does not change the recommendation and does not decide what to plant. |
 | **Safeguards** | It only cites sources present in the calculated result. Empty or too-long answers are discarded. If the AI fails or takes more than 8 s, the app shows the calculated recommendation instead. The API key lives only on the server. |
 | **During development** | AI coding assistants (Claude Code, by Anthropic) helped draft code, tests and documentation. All output was reviewed, run and verified by the team against the real data. |
+| **Images and video** | **ChatGPT** (OpenAI) made the cover art, the Earth background and the app logo; **Gemini** (Google) made scenes of the demo video. They are illustrative, do not represent real data and are marked as *SI-generated*. |
 
 ---
 
