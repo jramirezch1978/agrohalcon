@@ -35,10 +35,12 @@ public record AsistenteRequest(
         @Pattern(regexp = "ahorrar_agua|arriesgar_menos|cuidar_suelo", message = "prioridad no válida") String prioridad,
         @Pattern(regexp = "arenoso|franco|arcilloso", message = "tipoSuelo no válido") String tipoSuelo,
         @Pattern(regexp = "no|leve|alta", message = "salinidad no válida") String salinidad,
-        @Pattern(regexp = "soilgrids|agricultor", message = "fuenteSuelo no válida") String fuenteSuelo) {
+        @Pattern(regexp = "soilgrids|agricultor", message = "fuenteSuelo no válida") String fuenteSuelo,
+        @Pattern(regexp = "poca|normal|suficiente", message = "aguaDisponible no válida") String aguaDisponible,
+        @Pattern(regexp = "seco|normal|lluvioso", message = "escenario no válido") String escenario) {
 
     public AsistenteRequest(Double lat, Double lon, String pregunta, String idioma, String tipoCultivo, String mesSiembra, String cultivo) {
-        this(lat, lon, pregunta, idioma, tipoCultivo, mesSiembra, cultivo, null, null, null, null);
+        this(lat, lon, pregunta, idioma, tipoCultivo, mesSiembra, cultivo, null, null, null, null, null, null);
     }
 
     public String idiomaOEs() {

@@ -179,7 +179,15 @@ def generar_rotaciones(catalogo: list[Cultivo], mes_siembra: str, clima: pd.Data
     candidatas = [evaluar_rotacion([a, b], mes_siembra, clima, indicadores, lat, lon, lang, u, **perfil)
                   for a, b in permutations(temporales, 2)]
     candidatas.sort(key=lambda r: -r["puntaje"])
-    elegidas = candidatas[: n - 1 if tradicional else n]
+    # Los mismos dos cultivos en otro orden no cuentan como otra opción: queda el mejor orden
+    elegidas, vistos = [], set()
+    for r in candidatas:
+        if (clave := frozenset(r["cultivos"])) in vistos:
+            continue
+        vistos.add(clave)
+        elegidas.append(r)
+        if len(elegidas) == (n - 1 if tradicional else n):
+            break
     if tradicional:
         elegidas.append(evaluar_rotacion([tradicional, tradicional], mes_siembra, clima, indicadores, lat, lon,
                                          lang, u, tradicional=True, **perfil))

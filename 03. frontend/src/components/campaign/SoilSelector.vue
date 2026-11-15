@@ -12,6 +12,7 @@ import type { Salinidad, SueloPropuesto, TipoSuelo } from '@/types/api'
 const store = useAppStore()
 const TIPOS: TipoSuelo[] = ['arenoso', 'franco', 'arcilloso']
 const SALES: Salinidad[] = ['no', 'leve', 'alta']
+const INFILTRACION: Record<TipoSuelo, 'alta' | 'media' | 'baja'> = { arenoso: 'alta', franco: 'media', arcilloso: 'baja' }
 
 const propuesta = ref<SueloPropuesto | null>(null)
 const buscando = ref(false)
@@ -74,15 +75,19 @@ const chip = (activo: boolean) =>
     </div>
 
     <!-- Origen del tipo de suelo / propuesta de SoilGrids -->
-    <p v-if="tipo" class="mt-1.5 flex items-center gap-1 px-1 text-[11px] text-stone-500 dark:text-stone-400">
-      <BookOpen class="size-3 shrink-0" aria-hidden="true" />{{ store.parcela?.fuenteSuelo === 'soilgrids' ? $t('suelo.fuenteSoilgrids') : $t('suelo.fuenteAgricultor') }}
-    </p>
+    <template v-if="tipo">
+      <p class="mt-1.5 flex items-center gap-1 px-1 text-[11px] text-stone-500 dark:text-stone-400">
+        <BookOpen class="size-3 shrink-0" aria-hidden="true" />{{ store.parcela?.fuenteSuelo === 'soilgrids' ? $t('suelo.fuenteSoilgrids') : $t('suelo.fuenteAgricultor') }}
+      </p>
+      <p class="mt-0.5 px-1 text-[11px] text-stone-600 dark:text-stone-300">{{ $t(`suelo.infiltracion_${INFILTRACION[tipo]}`) }}</p>
+    </template>
     <p v-else-if="buscando" class="mt-1.5 flex items-center gap-1 px-1 text-[11px] text-stone-500 dark:text-stone-400" role="status">
       <Loader2 class="size-3 animate-spin" aria-hidden="true" />{{ $t('suelo.buscando') }}
     </p>
     <div v-else-if="propuesta?.tipoSuelo" class="mt-2 flex items-center gap-2 rounded-2xl bg-nasa-50/60 px-3 py-2 ring-1 ring-tinta/8 dark:bg-white/5 dark:ring-white/10">
       <p class="min-w-0 flex-1 text-xs leading-snug text-stone-700 dark:text-stone-200">
         {{ $t('suelo.propuesta', { tipo: $t(`suelo.${propuesta.tipoSuelo}`).toLowerCase(), arena: Math.round(propuesta.arena ?? 0), arcilla: Math.round(propuesta.arcilla ?? 0) }) }}
+        <template v-if="propuesta.carbonoOrganico != null"> {{ $t('suelo.materiaOrganica', { soc: propuesta.carbonoOrganico }) }}</template>
         <span class="block text-[10.5px] text-stone-500 dark:text-stone-400">{{ $t('suelo.fuenteSoilgrids') }}</span>
       </p>
       <button type="button" class="shrink-0 rounded-full bg-tinta px-3 py-1.5 text-xs font-bold text-white dark:bg-brote-400 dark:text-tinta" @click="usarPropuesta">
