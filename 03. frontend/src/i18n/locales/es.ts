@@ -101,6 +101,8 @@ export default {
     },
     medidoPor: 'Medido por',
     tuParcela: 'Tu zona',
+    unidadHumedadSmap: '% de agua en el suelo',
+    unidadHumedadModelo: '% de humedad (saturación)',
     escala: 'Escala del dato: {res}. Es el promedio de tu zona, no de tu parcela exacta.',
     normalHistorico: 'Lo normal es el promedio de este mismo mes en los últimos años (desde 2001).',
     explicacion: {
@@ -204,6 +206,8 @@ export default {
     permisoDenegado: 'No diste permiso para ver tu ubicación. No pasa nada: toca el mapa para elegir tu parcela.',
     errorUbicacion: 'No pudimos encontrar tu ubicación. Toca el mapa para elegir tu parcela.',
     zona: 'Zona de riesgo',
+    elNinoTitulo: 'El Niño: mar {valor} °C',
+    elNinoTexto: 'Igual para toda la costa ({fuente}): no cambia el color de los valles.',
     sinDato: 'Sin dato',
     capaSatelite: 'Vista satélite',
     capaMapa: 'Vista mapa',
@@ -295,6 +299,8 @@ export default {
     items: {
       power: { simple: 'El clima de cualquier lugar del mundo, día a día', variable: 'Lluvia (PRECTOTCORR), humedad del suelo (GWETTOP, modelo) y temperatura máxima (T2M_MAX)', uso: 'Lluvia, humedad del suelo y calor de hoy en todo el mundo, y lo normal de cada mes desde 2001 para el riesgo de la campaña.' },
       imerg: { simple: 'Cuánto llueve, medido desde el espacio', variable: 'Lluvia (precipitation), IMERG V07 Final mensual y Late diario', uso: 'Lluvia de los últimos 30 días en Piura y la lluvia de El Niño 2017 en la prueba «¿Funciona?».' },
+      smap: { simple: 'Cuánta agua tiene el suelo, medida desde el espacio', variable: 'Humedad del suelo (soil_moisture), m³/m³, SPL3SMP_E V006', uso: 'La humedad del suelo de los valles de Piura en los últimos 30 días, frente a lo normal (2016–2025). Fuera de Piura se usa NASA POWER.' },
+      ndvi: { simple: 'Qué tan verdes y sanas están las plantas', variable: 'Verdor de la vegetación (NDVI), MOD13Q1 V061', uso: 'El estado de la vegetación en los valles de Piura frente a lo normal (2016–2025). Solo informa: no cambia el riesgo.' },
       sst: { simple: 'Qué tan caliente está el mar: la señal de El Niño', variable: 'Anomalía de temperatura del mar (sstAnom) en la caja Niño 1+2', uso: 'Señal temprana de El Niño: sube el riesgo de lluvias en la costa norte y da la fecha del aviso de 2017.' },
     },
   },
@@ -332,6 +338,7 @@ export default {
     paso: 'Paso {n} de 3',
   },
   estados: {
+    descargandoNasa: 'Descargando datos de la NASA… La primera vez en un lugar nuevo tarda unos segundos.',
     cargando: 'Cargando…',
     error: 'No pudimos cargar los datos',
     errorRed: 'Revisa tu conexión a internet e inténtalo otra vez.',

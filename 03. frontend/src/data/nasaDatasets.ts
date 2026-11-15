@@ -1,4 +1,4 @@
-import { CloudRain, Thermometer, Waves } from 'lucide-vue-next'
+import { CloudRain, Droplets, Leaf, Thermometer, Waves } from 'lucide-vue-next'
 import type { FuenteNasa } from '@/types/api'
 
 /**
@@ -7,7 +7,7 @@ import type { FuenteNasa } from '@/types/api'
  * van en i18n (datos.items.<id>) en ES y EN.
  */
 export interface NasaDataset {
-  id: 'power' | 'imerg' | 'sst'
+  id: 'power' | 'imerg' | 'smap' | 'ndvi' | 'sst'
   nombre: FuenteNasa
   mision: string
   resolucion: string
@@ -35,6 +35,24 @@ export const NASA_DATASETS: NasaDataset[] = [
     url: 'https://gpm.nasa.gov/data/imerg',
     icono: CloudRain,
     color: 'from-nasa-500 to-nasa-900',
+  },
+  {
+    id: 'smap',
+    nombre: 'SMAP',
+    mision: 'Soil Moisture Active Passive (NASA JPL) · SPL3SMP_E V006, NASA NSIDC DAAC',
+    resolucion: '9 km · diario (pasadas AM y PM) · valles de Piura',
+    url: 'https://nsidc.org/data/spl3smp_e/versions/6',
+    icono: Droplets,
+    color: 'from-sky-600 to-nasa-800',
+  },
+  {
+    id: 'ndvi',
+    nombre: 'MODIS NDVI',
+    mision: 'MODIS Terra · MOD13Q1 V061 (NASA LP DAAC, vía ORNL DAAC)',
+    resolucion: '250 m · cada 16 días · valles de Piura',
+    url: 'https://lpdaac.usgs.gov/products/mod13q1v061/',
+    icono: Leaf,
+    color: 'from-agro-500 to-agro-900',
   },
   {
     id: 'sst',

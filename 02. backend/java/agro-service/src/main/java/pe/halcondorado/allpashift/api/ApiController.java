@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pe.halcondorado.allpashift.api.RecomendacionService.Respuesta;
 import pe.halcondorado.allpashift.calculos.CalculosClient;
+import pe.halcondorado.allpashift.calculos.NombresCultivo;
 import pe.halcondorado.allpashift.catalogo.CatalogoRepository;
 import pe.halcondorado.allpashift.catalogo.ConsultasRepository;
 
@@ -65,13 +67,17 @@ public class ApiController {
         ErroresApi.validarLang(lang);
         var zonas = catalogo.zonas("todas".equals(region) ? null : region);
         List<CompletableFuture<Map<String, Object>>> tareas = new ArrayList<>();
+        // El Niño es el mismo para toda la costa: no pinta los valles, se manda una vez como aviso del mapa
+        AtomicReference<Object> elNino = new AtomicReference<>();
         for (var z : zonas) {
             tareas.add(CompletableFuture.supplyAsync(() -> {
                 String nivel = null;
                 try {
-                    Respuesta r = reco.primeroBd("mapa", "zona:" + z.id() + ":" + lang, Duration.ofHours(3), z.lat(), z.lon(), z.id(),
+                    // v2: desde el 15-nov el nivel del valle no incluye El Niño (las filas viejas no se reutilizan)
+                    Respuesta r = reco.primeroBd("mapa", "zona:v2:" + z.id() + ":" + lang, Duration.ofHours(3), z.lat(), z.lon(), z.id(),
                             () -> calculos.indicadoresPunto(z.lat(), z.lon(), lang));
                     nivel = (String) r.datos().get("nivel");
+                    if (r.datos().get("elNino") != null) elNino.compareAndSet(null, r.datos().get("elNino"));
                 } catch (Exception ex) {
                     log.warn("Zona {} sin dato: {}", z.nombre(), ex.getMessage());   // sin dato: se dibuja gris (nivel null)
                 }
@@ -86,15 +92,17 @@ public class ApiController {
         Map<String, Object> out = new LinkedHashMap<>();
         out.put("region", region);
         out.put("zonas", tareas.stream().map(CompletableFuture::join).toList());
+        out.put("elNino", elNino.get());
         return out;
     }
 
     @GetMapping("/cultivos")
-    public List<Map<String, Object>> cultivos() {
+    public List<Map<String, Object>> cultivos(@RequestParam(defaultValue = "es") String lang) {
+        ErroresApi.validarLang(lang);
         return catalogo.cultivos(null, false).stream().map(c -> {
             Map<String, Object> m = new LinkedHashMap<>();
             m.put("id", c.id());
-            m.put("nombre", c.nombre());
+            m.put("nombre", "en".equals(lang) ? NombresCultivo.en(c.nombre()) : NombresCultivo.es(c.nombre()));
             m.put("usoAgua", switch (c.agua()) { case "baja" -> "bajo"; case "alta" -> "alto"; default -> "medio"; });
             m.put("toleranciaCalor", c.tempMax() >= 35 ? "alto" : c.tempMax() >= 30 ? "medio" : "bajo");
             m.put("toleranciaSequia", c.toleraSequia() ? "alto" : "bajo");

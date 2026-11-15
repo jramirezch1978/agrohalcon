@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field
 from app.calculos.indicadores import calcular_indicadores
 from app.dependencias import cliente_power
 from app.fuentes.nasa_power import ClienteNasaPower, NasaPowerError
-from app.routers.mapa import nivel_zona
+from app.routers.mapa import nivel_zona, senal_el_nino
 
 router = APIRouter()
 
@@ -29,5 +29,6 @@ async def indicadores_punto(p: PeticionPunto, cliente: ClienteNasaPower = Depend
     except NasaPowerError as e:
         raise HTTPException(status_code=502, detail=str(e)) from e
     nivel, decisivo = nivel_zona(r["indicadores"])
+    # nivel = peor indicador LOCAL (sin El Niño ni vegetación); El Niño viene aparte para el aviso del mapa
     return {"lat": p.lat, "lon": p.lon, "nivel": nivel, "indicadorDecisivo": decisivo,
-            "indicadores": r["indicadores"], "fecha": r["fecha"]}
+            "elNino": senal_el_nino(r["indicadores"]), "indicadores": r["indicadores"], "fecha": r["fecha"]}

@@ -11,15 +11,16 @@ import type { ClaveIndicador, Indicador } from '@/types/api'
 const props = withDefaults(defineProps<{ clave: ClaveIndicador; indicador: Indicador; orden?: number }>(), { orden: 0 })
 defineEmits<{ abrir: [] }>()
 
-const { diferencia, escala, decimales } = useIndicador()
+const { diferencia, escala, mostrar } = useIndicador()
+const vista = computed(() => mostrar(props.clave, props.indicador))
 const e = computed(() => escala(props.indicador))
 const dif = computed(() => diferencia(props.clave, props.indicador))
 const estilo = computed(() => ESTILO_RIESGO[props.indicador.nivel])
 const flecha = computed(() => ({ sube: ArrowUp, baja: ArrowDown, igual: Minus })[dif.value.direccion])
 
 // Animaciones: el número sube y la barra se llena, en cascada según "orden"
-const valor = useContador(toRef(() => props.indicador.valor), 1100, 250 + props.orden * 90)
-const valorTexto = computed(() => valor.value.toFixed(decimales(props.indicador)))
+const valor = useContador(toRef(() => vista.value.valor), 1100, 250 + props.orden * 90)
+const valorTexto = computed(() => valor.value.toFixed(vista.value.decimales))
 const montado = useMontado(250 + props.orden * 90)
 </script>
 
@@ -27,7 +28,7 @@ const montado = useMontado(250 + props.orden * 90)
   <button
     type="button"
     class="superficie group relative flex w-full flex-col overflow-hidden p-4 text-left transition duration-300 hover:-translate-y-0.5 hover:shadow-float active:scale-[0.98] sm:p-5"
-    :aria-label="`${$t(`indicadores.${clave}`)}: ${indicador.valor} ${indicador.unidad}, ${$t(`riesgo.${indicador.nivel}`)}. ${$t('indicadores.porQueImporta')}`"
+    :aria-label="`${$t(`indicadores.${clave}`)}: ${vista.valor} ${vista.unidad}, ${$t(`riesgo.${indicador.nivel}`)}. ${$t('indicadores.porQueImporta')}`"
     @click="$emit('abrir')"
   >
     <div class="flex items-start justify-between gap-2">
@@ -41,9 +42,9 @@ const montado = useMontado(250 + props.orden * 90)
 
     <p class="mt-4 flex flex-wrap items-baseline gap-x-1.5">
       <span class="font-display text-[32px] leading-none font-bold tracking-tight tabular-nums">{{ valorTexto }}</span>
-      <span class="text-xs font-medium text-stone-500 dark:text-stone-400">{{ indicador.unidad }}</span>
+      <span class="text-xs font-medium text-stone-500 dark:text-stone-400">{{ vista.unidad }}</span>
     </p>
-    <p class="mt-1 text-xs text-stone-500 dark:text-stone-400">{{ $t('indicadores.normal') }}: {{ indicador.normal }} {{ indicador.unidad }}</p>
+    <p class="mt-1 text-xs text-stone-500 dark:text-stone-400">{{ $t('indicadores.normal') }}: {{ vista.normal }} {{ vista.unidad }}</p>
 
     <!-- Barra comparativa: valor actual (color) vs. normal (línea) -->
     <div class="relative mt-3 h-2.5 rounded-full bg-tinta/6 dark:bg-white/8" aria-hidden="true">

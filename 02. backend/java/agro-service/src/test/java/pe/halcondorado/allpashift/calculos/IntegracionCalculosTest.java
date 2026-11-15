@@ -33,6 +33,17 @@ class IntegracionCalculosTest {
     }
 
     @Test
+    void nombresConTildesYEnIngles() {
+        assertThat(NombresCultivo.es("Frijol caupi")).isEqualTo("Frijol caupí");
+        assertThat(NombresCultivo.en("Frijol caupi")).isEqualTo("Cowpea");
+        assertThat(NombresCultivo.es("Limon")).isEqualTo("Limón");
+        assertThat(NombresCultivo.en("Cana de azucar")).isEqualTo("Sugarcane");
+        assertThat(NombresCultivo.es("Cultivo nuevo")).isEqualTo("Cultivo nuevo");   // si no está, el de la base
+        // el código interno no cambia (sale del nombre de la base)
+        assertThat(CatalogoCalculos.codigo("Frijol caupi")).isEqualTo("frijol_caupi");
+    }
+
+    @Test
     void aguaDeLaBdAlFormatoDelCalculo() {
         assertThat(CatalogoCalculos.agua("baja")).isEqualTo("bajo");
         assertThat(CatalogoCalculos.agua("media")).isEqualTo("medio");

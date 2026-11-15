@@ -103,6 +103,8 @@ const en: typeof es = {
     },
     medidoPor: 'Measured by',
     tuParcela: 'Your area',
+    unidadHumedadSmap: '% water in the soil',
+    unidadHumedadModelo: '% moisture (saturation)',
     escala: 'Data scale: {res}. It is the average for your area, not your exact plot.',
     normalHistorico: 'Normal is the average for this same month in recent years (since 2001).',
     explicacion: {
@@ -206,6 +208,8 @@ const en: typeof es = {
     permisoDenegado: "You didn't allow location access. No problem: tap the map to choose your plot.",
     errorUbicacion: "We couldn't find your location. Tap the map to choose your plot.",
     zona: 'Risk zone',
+    elNinoTitulo: 'El Niño: sea {valor} °C',
+    elNinoTexto: 'Same for the whole coast ({fuente}): it does not change the valley colours.',
     sinDato: 'No data',
     capaSatelite: 'Satellite view',
     capaMapa: 'Map view',
@@ -297,6 +301,8 @@ const en: typeof es = {
     items: {
       power: { simple: 'The climate anywhere in the world, day by day', variable: 'Rainfall (PRECTOTCORR), soil moisture (GWETTOP, model) and maximum temperature (T2M_MAX)', uso: 'Today\'s rainfall, soil moisture and heat worldwide, and the normal for each month since 2001 for the season risk.' },
       imerg: { simple: 'How much it rains, measured from space', variable: 'Rainfall (precipitation), IMERG V07 Final monthly and Late daily', uso: 'Rainfall over the last 30 days in Piura and the El Niño 2017 rainfall in the «Does it work?» test.' },
+      smap: { simple: 'How much water the soil holds, measured from space', variable: 'Soil moisture (soil_moisture), m³/m³, SPL3SMP_E V006', uso: 'Soil moisture of the Piura valleys over the last 30 days, compared with normal (2016–2025). Outside Piura, NASA POWER is used.' },
+      ndvi: { simple: 'How green and healthy the plants are', variable: 'Vegetation greenness (NDVI), MOD13Q1 V061', uso: 'Vegetation status in the Piura valleys compared with normal (2016–2025). Informative only: it does not change the risk.' },
       sst: { simple: 'How warm the sea is: the El Niño signal', variable: 'Sea surface temperature anomaly (sstAnom) in the Niño 1+2 box', uso: 'Early El Niño signal: raises the rain risk on the northern coast and gives the 2017 warning date.' },
     },
   },
@@ -334,6 +340,7 @@ const en: typeof es = {
     paso: 'Step {n} of 3',
   },
   estados: {
+    descargandoNasa: 'Downloading NASA data… The first time for a new place takes a few seconds.',
     cargando: 'Loading…',
     error: "We couldn't load the data",
     errorRed: 'Check your internet connection and try again.',
