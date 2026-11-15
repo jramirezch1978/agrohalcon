@@ -278,6 +278,10 @@ const en: typeof es = {
     fuenteSoilgrids: 'Suggested by SoilGrids (ISRIC, CC-BY 4.0). Not NASA data.',
     fuenteAgricultor: 'You chose it.',
     sinDato: 'No data: choose it if you know.',
+    materiaOrganica: 'Organic matter: {soc} g of carbon per kg.',
+    infiltracion_alta: 'Water soaks in fast and drains away: irrigate little and often.',
+    infiltracion_media: 'Water soaks in and stays well.',
+    infiltracion_baja: 'Water soaks in slowly: watch out for waterlogging.',
   },
   validacion: {
     titulo: 'Does it work? We tested it on El Niño 2017',
@@ -427,6 +431,15 @@ const en: typeof es = {
       { p: 'Where does the suggested soil type come from?', r: 'From SoilGrids, a world soil map by ISRIC (CC-BY 4.0 license). It is not NASA data and may not match your plot: you decide whether to use it or choose another.' },
       { p: 'Can I ask it questions?', r: 'Yes: tap "Ask AllpaShift". It explains the recommendation with the same data; it does not invent new advice.' },
     ],
+  },
+  escenario: {
+    titulo: 'What if the year is…?',
+    seco: 'Dry',
+    normal: 'Normal',
+    lluvioso: 'Wet',
+    notaNormal: 'With the normal rainfall of your area (NASA POWER, 2001-2025).',
+    nota_seco: 'Hypothetical scenario: 40 % less rain than normal. Not a forecast.',
+    nota_lluvioso: 'Hypothetical scenario: 60 % more rain than normal (like an El Niño year). Not a forecast.',
   },
   reto: {
     etiqueta: 'The NASA challenge',
