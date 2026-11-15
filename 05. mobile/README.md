@@ -5,7 +5,7 @@ Los archivos web van dentro de la app y esta llama a la API Java del servidor (r
 
 | Qué | Dónde |
 |---|---|
-| APK de Android (debug, listo para instalar) | `release/android/allpashift-1.0.0.apk` |
+| APK de Android (versión final 1.0.0, firmada) | `release/android/allpashift-1.0.0.apk` |
 | Proyecto de iOS para Xcode (en una Mac: abrir `App/App.xcworkspace` → Product → Archive) | `release/ios/allpashift-ios-xcode.zip` |
 | Proyecto nativo Android / iOS | `03. frontend/android`, `03. frontend/ios` |
 
