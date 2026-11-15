@@ -249,6 +249,13 @@ def test_permanente_desconocido_422(cliente_api):  # noqa: F811
 
 # ---------- 6. /mapa ----------
 
+def test_el_nino_y_la_vegetacion_no_pintan_el_mapa():
+    ind = {"lluvia": {"nivel": "bajo"}, "calor": {"nivel": "medio"}, "elNino": {"nivel": "alto", "valor": 6.0},
+           "vegetacion": {"nivel": "alto"}}
+    assert nivel_zona(ind) == ("medio", "calor")
+    assert nivel_zona(ind, excluir=()) == ("alto", "elNino")
+
+
 def test_nivel_zona_es_el_peor_indicador():
     assert nivel_zona({"lluvia": {"nivel": "bajo"}, "calor": {"nivel": "medio"}, "elNino": {"nivel": None}}) == ("medio", "calor")
     assert nivel_zona({"a": {"nivel": None}}) == (None, None)

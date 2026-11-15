@@ -4,7 +4,7 @@ import { i18n, type Idioma } from '@/i18n'
 import { api, ApiError, MODO } from '@/services/api'
 import { useOrigenStore } from '@/stores/origen'
 import type { ClaveIndicador, CultivoPermanente, MesISO, NivelRiesgo, OpcionesRecomendacion, Recomendacion, TipoCultivo } from '@/types/api'
-import { nombreDeLugar, obtenerUbicacion, type Coordenadas } from '@/services/ubicacion'
+import { ErrorUbicacion, nombreDeLugar, obtenerUbicacion, type Coordenadas, type MotivoUbicacion } from '@/services/ubicacion'
 
 export interface Parcela {
   lat: number
@@ -14,7 +14,7 @@ export interface Parcela {
 
 export type Tema = 'claro' | 'oscuro'
 export type EstadoCarga = 'inicial' | 'cargando' | 'listo' | 'error'
-export type ResultadoUbicacion = { ok: true; coords: Coordenadas } | { ok: false; motivo: 'denegado' | 'error' }
+export type ResultadoUbicacion = { ok: true; coords: Coordenadas } | { ok: false; motivo: MotivoUbicacion }
 
 const CLAVES = {
   parcela: 'allpashift:parcela',
@@ -85,9 +85,7 @@ export const useAppStore = defineStore('app', () => {
       const { lat, lon } = await obtenerUbicacion()
       return { ok: true, coords: { lat: redondear4(lat), lon: redondear4(lon) } }
     } catch (e) {
-      // GeolocationPositionError.PERMISSION_DENIED = 1 (navegador) / mensaje del plugin en Android
-      const denegado = (e as { code?: number })?.code === 1 || /denied|permission/i.test(String((e as Error)?.message))
-      return { ok: false, motivo: denegado ? 'denegado' : 'error' }
+      return { ok: false, motivo: e instanceof ErrorUbicacion ? e.motivo : 'error' }
     } finally {
       ubicando.value = false
     }

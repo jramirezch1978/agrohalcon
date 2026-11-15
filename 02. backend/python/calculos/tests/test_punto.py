@@ -6,6 +6,8 @@ def test_indicadores_punto_da_nivel_e_indicadores(cliente_api):  # noqa: F811
     r = api.post("/indicadores-punto", json={"lat": -1.29, "lon": 36.82}).json()
     assert r["nivel"] == "alto" and r["indicadorDecisivo"] in r["indicadores"]
     assert {"lluvia", "humedadSuelo", "calor", "elNino"} <= set(r["indicadores"])
+    assert r["indicadorDecisivo"] != "elNino"          # El Niño no pinta el valle: va aparte
+    assert "elNino" in r
 
 
 def test_indicadores_punto_valida_coordenadas(cliente_api):  # noqa: F811

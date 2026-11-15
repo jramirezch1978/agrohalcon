@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -135,6 +136,91 @@ class AsistenteTest {
         verify(groq, never()).chat(anyString(), anyString());
     }
 
+    @Test
+    void respuestaQueDiceFuenteJsonUsaRespaldo() {
+        // visto en producción el 14-nov: "...riesgo bajo según la recomendación (fuente: JSON)."
+        when(groq.chat(anyString(), anyString())).thenReturn("El arroz tiene 90 puntos y riesgo bajo (fuente: JSON).");
+        assertThat(servicio.responder(pregunta("¿Me conviene el arroz?")).modo()).isEqualTo("respaldo");
+        assertThat(AsistenteService.validar("Según el json no hay datos.")).isEqualTo("menciona_json");
+        assertThat(AsistenteService.validar("Prepara los drenajes (MUR SST).")).isNull();
+    }
+
+    @Test
+    void elAsistenteSeLlamaAllpaShiftYPideNoDecirJson() {
+        assertThat(AsistenteService.SISTEMA_ES).contains("AllpaShift").doesNotContain("AgroShift").contains("Nunca escribas la palabra JSON");
+        assertThat(AsistenteService.SISTEMA_EN).contains("AllpaShift").doesNotContain("AgroShift").contains("Never write the word JSON");
+    }
+
+    // 5b: números
+    @Test
+    void respuestaConUnNumeroInventadoUsaRespaldo() {
+        when(groq.chat(anyString(), anyString())).thenReturn("La lluvia será de 87 mm esta semana (GPM IMERG).");
+        assertThat(servicio.responder(pregunta("¿Va a llover?")).modo()).isEqualTo("respaldo");
+    }
+
+    @Test
+    void respuestaConNumerosDeLaRecomendacionPasa() {
+        // 6.0 y 90 están en el JSON; 556 % = (0.59 / 0.09 - 1) * 100 es la anomalía de la lluvia; "3 opciones" es una cuenta chica
+        when(groq.chat(anyString(), anyString())).thenReturn(
+                "El mar está +6.0 °C sobre lo normal (MUR SST) y la lluvia está 556 % sobre lo normal (GPM IMERG). Arroz - Frijol tiene 90 de 100 puntos entre 3 opciones.");
+        assertThat(servicio.responder(pregunta("¿Qué pasa?")).modo()).isEqualTo("ia");
+    }
+
+    @Test
+    void losNumerosPermitidosIncluyenRedondeosDiferenciasYPorcentajes() {
+        var permitidos = AsistenteService.numerosPermitidos(AsistenteService.reducir(REC));
+        assertThat(permitidos).contains(6.0, 0.59, 0.09, 0.5, 33.3, 32.5, 0.8, 90.0, 10.0, 100.0, 556.0, 555.6);
+        assertThat(permitidos).doesNotContain(87.0, 7.0);
+        assertThat(AsistenteService.validar("Faltan 0,5 mm/día para llegar a lo normal (GPM IMERG).", AsistenteService.reducir(REC))).isNull();  // coma decimal
+        assertThat(AsistenteService.validar("Habrá 45 mm.", AsistenteService.reducir(REC))).isEqualTo("numero_no_respaldado");
+        assertThat(AsistenteService.validar("En 2027-01 el riesgo es medio (NASA POWER + MUR SST).", AsistenteService.reducir(REC))).isNull();  // una fecha de la recomendación
+    }
+
+    // 5c: caché de respuestas (el cupo gratuito de Groq es muy corto)
+    @Test
+    void laMismaPreguntaSobreLaMismaRecomendacionNoVuelveAGroq() {
+        when(groq.chat(anyString(), anyString())).thenReturn("El mar está +6.0 °C (MUR SST).");
+        AsistenteRespuesta a = servicio.responder(pregunta("¿Por qué esa rotación?"));
+        AsistenteRespuesta b = servicio.responder(pregunta("¿Por qué esa rotación?"));
+        assertThat(a.modo()).isEqualTo("ia");
+        assertThat(b).isEqualTo(a);
+        verify(groq, times(1)).chat(anyString(), anyString());
+    }
+
+    @Test
+    void laCacheIgnoraMayusculasYEspaciosPeroNoMezclaPreguntasDistintasNiIdiomas() {
+        when(groq.chat(anyString(), anyString())).thenReturn("El mar está +6.0 °C (MUR SST).");
+        servicio.responder(pregunta("¿Por qué esa rotación?"));
+        servicio.responder(new AsistenteRequest(-5.19, -80.63, "¿POR QUÉ   ESA ROTACIÓN?", "es", "temporal", "2026-12", null));
+        verify(groq, times(1)).chat(anyString(), anyString());
+        servicio.responder(pregunta("¿Qué significa El Niño?"));
+        servicio.responder(new AsistenteRequest(-5.19, -80.63, "¿Por qué esa rotación?", "en", "temporal", "2026-12", null));
+        verify(groq, times(3)).chat(anyString(), anyString());
+    }
+
+    @Test
+    void losRespaldosYLosFallosNoSeGuardanEnCache() {
+        when(groq.chat(anyString(), anyString())).thenThrow(new GroqClient.GroqException("groq_429_espera_30s"))
+                .thenReturn("El mar está +6.0 °C (MUR SST).");
+        assertThat(servicio.responder(pregunta("¿Qué hago?")).modo()).isEqualTo("respaldo");
+        assertThat(servicio.responder(pregunta("¿Qué hago?")).modo()).isEqualTo("ia");   // el fallo no quedó guardado
+        verify(groq, times(2)).chat(anyString(), anyString());
+    }
+
+    @Test
+    void laRespuestaGuardadaCaducaALos30Minutos() {
+        long[] ahora = {1_000_000L};
+        servicio.usarReloj(() -> ahora[0]);
+        when(groq.chat(anyString(), anyString())).thenReturn("El mar está +6.0 °C (MUR SST).");
+        servicio.responder(pregunta("¿Qué hago?"));
+        ahora[0] += AsistenteService.CACHE_VIGENCIA_MS - 1;
+        servicio.responder(pregunta("¿Qué hago?"));
+        verify(groq, times(1)).chat(anyString(), anyString());
+        ahora[0] += 2;
+        servicio.responder(pregunta("¿Qué hago?"));
+        verify(groq, times(2)).chat(anyString(), anyString());
+    }
+
     // 6
     @Test
     void preguntaVaciaLargaOConEspaciosDa400() throws Exception {
@@ -172,5 +258,20 @@ class AsistenteTest {
                         .with(r -> { r.setRemoteAddr("10.0.8.8"); return r; }))
                 .andExpect(status().isServiceUnavailable())
                 .andExpect(jsonPath("$.error").value("servicio_calculos_no_disponible"));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void smapValeSiVieneEnLaRecomendacionYUnaFuenteAjenaNo() {
+        Map<String, Object> conSmap = new java.util.HashMap<>(REC);
+        Map<String, Object> ind = new java.util.HashMap<>((Map<String, Object>) REC.get("indicadores"));
+        ind.put("humedadSuelo", Map.of("valor", 0.21, "normal", 0.25, "unidad", "m3/m3", "nivel", "bajo", "fuente", "SMAP"));
+        conSmap.put("indicadores", ind);
+        var reducido = AsistenteService.reducir(conSmap);
+        assertThat(AsistenteService.validar("La humedad del suelo según SMAP está cerca de lo normal.", reducido)).isNull();
+        assertThat(AsistenteService.validar("Según MODIS las plantas están bien.", reducido)).isEqualTo("menciona_fuente_ajena");
+        assertThat(AsistenteService.validar("El relieve de SRTM muestra zonas bajas.", reducido)).isEqualTo("menciona_fuente_ajena");
+        // La palabra inglesa "power" no es la fuente NASA POWER
+        assertThat(AsistenteService.fuenteAjena("Water has the power to help.", java.util.Set.of())).isNull();
     }
 }

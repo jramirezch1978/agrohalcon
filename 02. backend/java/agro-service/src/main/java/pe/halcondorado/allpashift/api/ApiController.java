@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import pe.halcondorado.allpashift.api.RecomendacionService.Respuesta;
 import pe.halcondorado.allpashift.calculos.CalculosClient;
+import pe.halcondorado.allpashift.calculos.NombresCultivo;
 import pe.halcondorado.allpashift.catalogo.CatalogoRepository;
 import pe.halcondorado.allpashift.catalogo.ConsultasRepository;
 
@@ -65,13 +67,17 @@ public class ApiController {
         ErroresApi.validarLang(lang);
         var zonas = catalogo.zonas("todas".equals(region) ? null : region);
         List<CompletableFuture<Map<String, Object>>> tareas = new ArrayList<>();
+        // El Niño es el mismo para toda la costa: no pinta los valles, se manda una vez como aviso del mapa
+        AtomicReference<Object> elNino = new AtomicReference<>();
         for (var z : zonas) {
             tareas.add(CompletableFuture.supplyAsync(() -> {
                 String nivel = null;
                 try {
-                    Respuesta r = reco.primeroBd("mapa", "zona:" + z.id() + ":" + lang, Duration.ofHours(3), z.lat(), z.lon(), z.id(),
+                    // v2: desde el 15-nov el nivel del valle no incluye El Niño (las filas viejas no se reutilizan)
+                    Respuesta r = reco.primeroBd("mapa", "zona:v2:" + z.id() + ":" + lang, Duration.ofHours(3), z.lat(), z.lon(), z.id(),
                             () -> calculos.indicadoresPunto(z.lat(), z.lon(), lang));
                     nivel = (String) r.datos().get("nivel");
+                    if (r.datos().get("elNino") != null) elNino.compareAndSet(null, r.datos().get("elNino"));
                 } catch (Exception ex) {
                     log.warn("Zona {} sin dato: {}", z.nombre(), ex.getMessage());   // sin dato: se dibuja gris (nivel null)
                 }
@@ -86,15 +92,17 @@ public class ApiController {
         Map<String, Object> out = new LinkedHashMap<>();
         out.put("region", region);
         out.put("zonas", tareas.stream().map(CompletableFuture::join).toList());
+        out.put("elNino", elNino.get());
         return out;
     }
 
     @GetMapping("/cultivos")
-    public List<Map<String, Object>> cultivos() {
+    public List<Map<String, Object>> cultivos(@RequestParam(defaultValue = "es") String lang) {
+        ErroresApi.validarLang(lang);
         return catalogo.cultivos(null, false).stream().map(c -> {
             Map<String, Object> m = new LinkedHashMap<>();
             m.put("id", c.id());
-            m.put("nombre", c.nombre());
+            m.put("nombre", "en".equals(lang) ? NombresCultivo.en(c.nombre()) : NombresCultivo.es(c.nombre()));
             m.put("usoAgua", switch (c.agua()) { case "baja" -> "bajo"; case "alta" -> "alto"; default -> "medio"; });
             m.put("toleranciaCalor", c.tempMax() >= 35 ? "alto" : c.tempMax() >= 30 ? "medio" : "bajo");
             m.put("toleranciaSequia", c.toleraSequia() ? "alto" : "bajo");
@@ -118,8 +126,32 @@ public class ApiController {
         ErroresApi.validarCoordenadas(lat, lon);
         ErroresApi.validarLang(lang);
         String clave = String.format(Locale.ROOT, "val:%d:%.3f,%.3f:%s", anio, lat, lon, lang);
-        return responder(reco.primeroBd("validacion", clave, Duration.ofDays(30), lat, lon, null,
+        return responder(reco.primeroBd("validacion", clave, frescuraAnio(anio), lat, lon, null,
                 () -> calculos.validacion(anio, lat, lon, lang)));
+    }
+
+    /** Lluvia de un mes día por día y por semana (clic en una barra de "¿Funciona?"). Se guarda en la BD. */
+    @GetMapping("/validacion/detalle")
+    public ResponseEntity<Map<String, Object>> detalleLluvia(@RequestParam int anio, @RequestParam int mes,
+                                                             @RequestParam double lat, @RequestParam double lon) {
+        ErroresApi.validarCoordenadas(lat, lon);
+        if (mes < 1 || mes > 12 || anio < 2001 || anio > 2100) {
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "anio o mes fuera de rango");
+        }
+        String clave = String.format(Locale.ROOT, "valdia:%d-%02d:%.3f,%.3f", anio, mes, lat, lon);
+        return responder(reco.primeroBd("validacion_dia", clave, frescuraMes(anio, mes), lat, lon, null,
+                () -> calculos.detalleLluvia(anio, mes, lat, lon)));
+    }
+
+    /** El año en curso cambia cada día (IMERG Late): 6 h. Años cerrados: 30 días. */
+    static Duration frescuraAnio(int anio) {
+        return anio >= java.time.LocalDate.now(java.time.ZoneId.of("America/Lima")).getYear() ? Duration.ofHours(6) : Duration.ofDays(30);
+    }
+
+    /** Meses de los últimos 60 días aún pueden completarse (IMERG Late): 6 h. Meses viejos: 30 días. */
+    static Duration frescuraMes(int anio, int mes) {
+        var hoy = java.time.LocalDate.now(java.time.ZoneId.of("America/Lima"));
+        return java.time.YearMonth.of(anio, mes).atEndOfMonth().isAfter(hoy.minusDays(60)) ? Duration.ofHours(6) : Duration.ofDays(30);
     }
 
     /** Respuesta tal cual; si vino del respaldo: X-Desde-Cache: true y X-Fecha-Dato (fecha del cálculo guardado). */

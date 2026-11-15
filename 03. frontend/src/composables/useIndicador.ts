@@ -42,5 +42,22 @@ export function useIndicador() {
     return s.includes('.') ? s.split('.')[1].length : 0
   }
 
-  return { diferencia, textoAlerta, escala, decimales }
+  /**
+   * Cómo se MUESTRA un indicador (el cálculo no cambia). La humedad del suelo en 0-1 se lee mal ("0.382 fracción"):
+   * - SMAP: contenido volumétrico (m³/m³) → "25 % de agua en el suelo"
+   * - NASA POWER (GWETTOP): fracción de saturación (0-1) → "38 % de humedad (saturación)"
+   */
+  function mostrar(clave: ClaveIndicador, ind: Indicador): { valor: number; normal: number; unidad: string; decimales: number } {
+    if (clave === 'humedadSuelo' && Math.abs(ind.valor) <= 1 && Math.abs(ind.normal) <= 1) {
+      return {
+        valor: Math.round(ind.valor * 100),
+        normal: Math.round(ind.normal * 100),
+        unidad: t(ind.fuente === 'SMAP' ? 'indicadores.unidadHumedadSmap' : 'indicadores.unidadHumedadModelo'),
+        decimales: 0,
+      }
+    }
+    return { valor: ind.valor, normal: ind.normal, unidad: ind.unidad, decimales: decimales(ind) }
+  }
+
+  return { diferencia, textoAlerta, escala, decimales, mostrar }
 }

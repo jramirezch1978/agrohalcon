@@ -34,12 +34,25 @@ def zonas_config() -> dict[str, list[dict]]:
         return yaml.safe_load(f)
 
 
-def nivel_zona(indicadores: dict) -> tuple[str | None, str | None]:
-    """(peor nivel, indicador que lo decide) entre los indicadores con dato."""
-    con_dato = [(ind["nivel"], clave) for clave, ind in indicadores.items() if ind.get("nivel")]
+# El Niño es el MISMO valor para toda la costa (si entra, pinta todos los valles del mismo color) y la vegetación
+# solo informa: el color de cada valle sale de sus indicadores LOCALES. El Niño se informa aparte (senal_el_nino).
+NO_CUENTAN_EN_EL_MAPA = ("elNino", "vegetacion")
+
+
+def nivel_zona(indicadores: dict, excluir: tuple[str, ...] = NO_CUENTAN_EN_EL_MAPA) -> tuple[str | None, str | None]:
+    """(peor nivel, indicador que lo decide) entre los indicadores locales con dato."""
+    con_dato = [(ind["nivel"], clave) for clave, ind in indicadores.items() if ind.get("nivel") and clave not in excluir]
     if not con_dato:
         return None, None
     return max(con_dato, key=lambda x: NIVELES.index(x[0]))
+
+
+def senal_el_nino(indicadores: dict) -> dict | None:
+    """El Niño para el aviso del mapa (mismo valor en toda la región), o None si no hay dato."""
+    n = indicadores.get("elNino") or {}
+    if n.get("valor") is None:
+        return None
+    return {k: n.get(k) for k in ("valor", "nivel", "fuente", "semana", "unidad")}
 
 
 @router.post("/mapa")
@@ -56,9 +69,14 @@ async def mapa(p: PeticionMapa, cliente: ClienteNasaPower = Depends(cliente_powe
         nivel, decisivo = nivel_zona(r["indicadores"])
         return {"nombre": z["nombre"], "lat": z["lat"], "lon": z["lon"], "nivel": nivel,
                 "indicadorDecisivo": decisivo,
-                "fuentes": {k: v["fuente"] for k, v in r["indicadores"].items()}}
+                "fuentes": {k: v["fuente"] for k, v in r["indicadores"].items()},
+                "elNino": senal_el_nino(r["indicadores"])}
 
     try:
-        return {"region": p.region.lower(), "zonas": await asyncio.gather(*(una(z) for z in zonas))}
+        resultado = await asyncio.gather(*(una(z) for z in zonas))
+        el_nino = next((z.pop("elNino") for z in resultado if z.get("elNino")), None)
+        for z in resultado:
+            z.pop("elNino", None)
+        return {"region": p.region.lower(), "zonas": resultado, "elNino": el_nino}
     except NasaPowerError as e:
         raise HTTPException(status_code=502, detail=str(e)) from e

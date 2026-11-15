@@ -3,6 +3,9 @@
 Se revisó la rama `feature/calculos-sheila` (commit `f1143f6`, carpeta `calculos/`) contra lo que el backend de verdad usa:
 Java (`agro-service`) → `climate-service` (puerto 8000) → PostgreSQL de Jhonny. Todo lo de abajo se **ejecutó**, no se supuso.
 
+> **Estado final (14-nov, noche): la integración de Sheila ya está en `develop`.** Java llama a `calculos`; se levantó toda la plataforma en una PC (Java 17, PostgreSQL embebido, frontend) y funciona de punta a punta;
+> `climate-service` ya no está en el flujo de la app (decisión 29 de `DECISIONES_ABIERTAS.md`). Lo que sigue es la revisión que se hizo ANTES de esa integración.
+>
 > **Actualización (14-nov, 15:48): Sheila subió `feature/integracion-sheila`** (3 commits sobre `develop`, 0 de retraso, 0 conflictos con las demás ramas).
 > Mueve su servicio a `02. backend/python/calculos/` (:8001), agrega `CalculosClient.java` y adapta `agro-service` para llamarlo, suma un asistente con Groq
 > en Java (`AsistenteService`, `GroqClient`) y agrega el contenedor `calculos` a `docker-compose.app.yml`. **Con esa rama, el "no cuadra" de las secciones 1 y 2

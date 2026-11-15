@@ -90,7 +90,7 @@ export const useAsistenteStore = defineStore('asistente', () => {
         api.preguntarAsistente({ lat, lon, pregunta: texto, idioma: app.idioma, ...app.opcionesCultivo }, app.recomendacion),
         LIMITE_ESPERA_MS,
       )
-      historial.value.push({ id: nuevoId(), rol: 'asistente', texto: r.respuesta, fuentes: r.fuentes })
+      historial.value.push({ id: nuevoId(), rol: 'asistente', texto: r.respuesta, fuentes: r.fuentes, respaldo: r.modo === 'respaldo' })
     } catch {
       // Plan B: solo mostramos lo que ya calculó /api/recomendacion
       if (!app.recomendacion) await app.cargarRecomendacion()

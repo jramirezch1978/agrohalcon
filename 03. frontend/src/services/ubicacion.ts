@@ -6,18 +6,62 @@ export interface Coordenadas {
   lon: number
 }
 
-/** Geolocalización: plugin nativo en Android, API del navegador en web. */
-export async function obtenerUbicacion(): Promise<Coordenadas> {
-  if (Capacitor.isNativePlatform()) {
-    const p = await Geolocation.getCurrentPosition({ enableHighAccuracy: false, timeout: 12000 })
-    return { lat: p.coords.latitude, lon: p.coords.longitude }
+/** Por qué no se pudo obtener la ubicación (cada motivo tiene su mensaje en mapa.aviso.*) */
+export type MotivoUbicacion = 'denegado' | 'denegadoApp' | 'gpsApagado' | 'inseguro' | 'error'
+
+export class ErrorUbicacion extends Error {
+  constructor(public motivo: MotivoUbicacion, detalle?: string) {
+    super(detalle ?? motivo)
   }
+}
+
+const NO_ACTIVADO = /not enabled|disabled|services/i
+
+/**
+ * App Android / iOS: pide el permiso del sistema operativo (diálogo nativo) y luego la posición.
+ * - Android: el plugin falla con "Location services are not enabled" si el GPS está apagado.
+ * - Si el usuario negó el permiso para siempre, el sistema ya no muestra el diálogo: hay que ir a Ajustes.
+ */
+async function ubicacionNativa(): Promise<Coordenadas> {
+  let estado
+  try {
+    estado = await Geolocation.checkPermissions()
+  } catch (e) {
+    throw new ErrorUbicacion(NO_ACTIVADO.test(String((e as Error)?.message)) ? 'gpsApagado' : 'error', String(e))
+  }
+  if (estado.location !== 'granted' && estado.coarseLocation !== 'granted') {
+    try {
+      estado = await Geolocation.requestPermissions({ permissions: ['location', 'coarseLocation'] })
+    } catch (e) {
+      throw new ErrorUbicacion(NO_ACTIVADO.test(String((e as Error)?.message)) ? 'gpsApagado' : 'denegadoApp', String(e))
+    }
+    if (estado.location !== 'granted' && estado.coarseLocation !== 'granted') throw new ErrorUbicacion('denegadoApp')
+  }
+  // Primero precisión alta (GPS); si tarda o falla, red/wifi (precisión baja)
+  for (const enableHighAccuracy of [true, false]) {
+    try {
+      const p = await Geolocation.getCurrentPosition({ enableHighAccuracy, timeout: enableHighAccuracy ? 15000 : 10000, maximumAge: 300000 })
+      return { lat: p.coords.latitude, lon: p.coords.longitude }
+    } catch (e) {
+      const msg = String((e as Error)?.message)
+      if (NO_ACTIVADO.test(msg)) throw new ErrorUbicacion('gpsApagado', msg)
+      if (/denied|permission/i.test(msg)) throw new ErrorUbicacion('denegadoApp', msg)
+    }
+  }
+  throw new ErrorUbicacion('error')
+}
+
+/** Geolocalización: permiso y GPS nativos en Android/iOS, API del navegador en la web. */
+export async function obtenerUbicacion(): Promise<Coordenadas> {
+  if (Capacitor.isNativePlatform()) return ubicacionNativa()
+  // Los navegadores solo dan la ubicación en sitios seguros (https o localhost): en http ni siquiera preguntan
+  if (!window.isSecureContext) throw new ErrorUbicacion('inseguro')
+  if (!('geolocation' in navigator)) throw new ErrorUbicacion('error')
   return new Promise((resolve, reject) => {
-    if (!('geolocation' in navigator)) return reject(new Error('sin geolocalización'))
     navigator.geolocation.getCurrentPosition(
       (p) => resolve({ lat: p.coords.latitude, lon: p.coords.longitude }),
-      reject,
-      { enableHighAccuracy: false, timeout: 12000, maximumAge: 600000 },
+      (e) => reject(new ErrorUbicacion(e.code === 1 ? 'denegado' : 'error', e.message)),
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 600000 },
     )
   })
 }
