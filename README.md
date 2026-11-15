@@ -1,45 +1,252 @@
-![AllpaShift](01.%20documentacion/img/allpashift_banner.png)
+<div align="center">
 
-# AllpaShift — Equipo Halcón Dorado
+<img src="01.%20documentacion/img/allpashift_banner_app.png" alt="AllpaShift — With NASA satellite data" width="760">
 
-NASA Space Apps Challenge 2026 · Sede Piura · Reto **Field Shift: Adapting Farms with NASA Data**.
+### Plant for the climate ahead — with NASA satellite data
 
-## ¿Qué hace AllpaShift?
+**NASA Space Apps Challenge 2026 · Challenge: _Field Shift: Adapting Farms with NASA Data_ · Local event: Piura, Peru**
 
-**AllpaShift le dice al agricultor qué sembrar, cuándo y qué hacer esta quincena, según el riesgo climático que muestran los satélites de la NASA para su valle.** (*Allpa* = tierra en quechua · *Shift* = el cambio del reto Field Shift).
+[![NASA Space Apps 2026](https://img.shields.io/badge/NASA%20Space%20Apps-2026-0B3D91?style=for-the-badge)](https://www.spaceappschallenge.org/)
+[![Challenge](https://img.shields.io/badge/Challenge-Field%20Shift-8FE43E?style=for-the-badge)](https://www.spaceappschallenge.org/)
+[![Location](https://img.shields.io/badge/Piura-Peru-0E2414?style=for-the-badge)](#)
+[![License](https://img.shields.io/badge/License-Apache%202.0-3D8BFF?style=for-the-badge)](LICENSE)
 
-1. **Ubica la parcela** en el mapa y su valle (18 valles del norte del Perú: Bajo Piura, Chira, San Lorenzo, Alto Piura, Sechura, sierra...).
-2. **Lee los satélites:** lluvia (GPM IMERG), humedad del suelo (SMAP), clima (NASA POWER), vegetación (MODIS NDVI), temperatura del mar (MUR SST) y relieve (SRTM).
-3. **Calcula el riesgo** de sequía, lluvia extrema, calor y El Niño costero, frente a lo normal (1991-2020).
-4. **"¿Qué hago esta quincena?":** la fase de cada cultivo y las acciones a tomar, con la alerta NASA que las justifica.
-5. **Compara rotaciones** (la actual frente a 2 alternativas) con beneficios, sacrificios e incertidumbre. Los cultivos permanentes (mango, limón, uva, banano, café, cacao) reciben acciones, no rotaciones.
-6. **Perspectiva de la campaña:** una barra de meses de la siembra a la cosecha en 🟢 verde, 🟡 ámbar o 🔴 rojo.
-7. **Máquina del tiempo:** qué habría recomendado antes del Niño Costero 2017, cuando en marzo llovió entre 5 y 9 veces lo normal en los valles de Piura.
+![Vue](https://img.shields.io/badge/Vue%203-35495E?logo=vuedotjs&logoColor=4FC08D)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?logo=springboot&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
+![Capacitor](https://img.shields.io/badge/Capacitor-119EFF?logo=capacitor&logoColor=white)
+![Leaflet](https://img.shields.io/badge/Leaflet-199900?logo=leaflet&logoColor=white)
 
-Catálogo: **37 cultivos** (cereales, menestras, frutales, hortalizas, tubérculos, industriales). Detalle en [27_que_hace_allpashift](01.%20documentacion/27_que_hace_allpashift.md) y modelo de datos en [26_modelo_base_de_datos](01.%20documentacion/26_modelo_base_de_datos.md).
+[High-Level Summary](#summary) ·
+[Project Demo](#demo) ·
+[Final Project Link](#link) ·
+[Project Details](#details) ·
+[Use of AI / NASA Data](#ai-data) ·
+[References](#references)
 
-## Ramas
+</div>
 
-| Rama | Para qué | Quién |
-|---|---|---|
-| `main` | Solo la versión que funciona, la que se muestra en la demo y se entrega | Jhonny la actualiza |
-| `develop` | Donde se juntan las partes para probarlas juntas | Todos hacen merge aquí |
-| `feature/api-java` | API en Spring Boot, conexión con Groq y despliegue | Jhonny |
-| `feature/frontend-vue` | App en Vue y Capacitor | Sheila |
-| `feature/datos-python` | Indicadores, puntajes de rotación y datos de la NASA | David |
-| `feature/catalogo-cultivos` | Catálogo de cultivos (JSON o SQL) | Alejandro |
-| `docs/entrega` | README, textos en inglés y capturas para la entrega | Edwin |
+---
 
-Flujo: cada uno trabaja en su rama → *pull request* a `develop` → cuando `develop` funciona, Jhonny pasa a `main`.
+<a id="summary"></a>
 
-## Estructura
+## 🌱 High-Level Summary
 
-| Carpeta | Contenido |
+**AllpaShift tells a farmer what to do in the next two weeks, what to plant and when, based on the climate risk that NASA satellites show for their valley.**
+*Allpa* means "land" in Quechua; *Shift* is the change the Field Shift challenge asks for.
+
+**Why it matters.** In northern Peru, a single coastal El Niño can ruin a whole season: in **March 2017** the Piura region received about **5 times its normal rainfall** (GPM IMERG) and the Piura River overflowed. The warning signs were in the ocean weeks earlier, but they never reached the farmer in a form they could act on.
+
+**How it answers the challenge.** AllpaShift turns NASA Earth observation data into one clear action and a season outlook:
+
+| | Feature | What the farmer sees |
+|:-:|---|---|
+| ✅ | **What should I do now?** | One action for the next two weeks (plant, wait, irrigate, protect from heat, prepare drainage) and the NASA data point behind it |
+| 🌾 | **What should I plant?** | Three crop rotations scored 0–100, always including the traditional one (e.g. rice–rice) for comparison, with every point deducted shown and explained |
+| 📅 | **Season outlook** | Month-by-month risk from planting to harvest: 🟢 low · 🟡 medium · 🔴 high |
+| 🌳 | **Perennial crops** | Mango, lime and banana get a 12-month plan by growth stage instead of rotations |
+| 🗺️ | **Valley map** | Risk level for the valleys of Piura, and any place in the world |
+| ⏳ | **Does it work?** | A "time machine" that replays the 2017 coastal El Niño with real data |
+
+> **We don't predict the weather. We help farmers prepare for it.**
+> Risk is estimated by comparing current NASA data with the historical normal and adding early signals such as El Niño.
+
+---
+
+<a id="demo"></a>
+
+## 🎬 Project Demo
+
+<div align="center">
+
+[![Watch the AllpaShift video](https://img.youtube.com/vi/3UVyc3Y5eFw/hqdefault.jpg)](https://www.youtube.com/watch?v=3UVyc3Y5eFw)
+
+**[▶ Watch on YouTube](https://www.youtube.com/watch?v=3UVyc3Y5eFw)** · English subtitles available
+
+</div>
+
+---
+
+<a id="link"></a>
+
+## 🔗 Final Project Link
+
+| | Link |
 |---|---|
-| `01. documentacion` | Documentación y textos de la entrega |
-| `02. backend/java` | `api-gateway` y `agro-service` (Spring Boot) |
-| `02. backend/python` | `climate-service` (FastAPI, datos NASA) |
-| `03. frontend` | Vue 3 + Leaflet |
-| `04. base de datos` | PostgreSQL: `ddl/` y `ddl/seed/` |
-| `05. mobile` | Capacitor (Android / iOS) y `release/` |
-| `deploy/vps` | docker-compose para el servidor |
+| 💻 **Source code** | https://github.com/jramirezch1978/allpashift |
+| 🎬 **Demo video** | https://www.youtube.com/watch?v=3UVyc3Y5eFw |
+| 🌐 **Live app** (team server) | http://2.29.101.199 |
+
+---
+
+<a id="details"></a>
+
+## ⚙️ Project Details
+
+### How it works
+
+1. The farmer picks their plot on the map (or shares their location).
+2. The app asks the **Java API**. If a fresh result is already in **PostgreSQL**, it answers from there.
+3. If not, the Java API asks the **calculation service (Python)**, sending the crop catalog stored in the database (37 crops, 18 valleys, calendars and rotations).
+4. The calculation service reads **NASA data** (NASA POWER, GPM IMERG, SMAP, MODIS and MUR SST) and computes indicators, the season outlook, rotation scores and this fortnight's action.
+5. The Java API stores the result and answers the app. An **assistant** explains it in plain words.
+
+```mermaid
+flowchart LR
+    A[📍 Farmer picks the plot] --> B[📱 App<br/>Vue 3 · Android]
+    B -->|/api| C[☕ api-gateway<br/>Spring Cloud Gateway]
+    C --> D[☕ agro-service<br/>Spring Boot]
+    D <-->|reads first · stores| E[(🐘 PostgreSQL)]
+    D -->|catalog + point| F[🐍 calculations service<br/>FastAPI]
+    F -->|indicators · rotations · action| D
+    F --> G[(🛰️ NASA POWER · GPM IMERG<br/>SMAP · MODIS NDVI<br/>MUR SST)]
+    D --> H[🤖 Assistant<br/>only explains]
+```
+
+### Design rules
+
+- **Rule-based, explainable calculations.** Every risk level, score and action comes from fixed, documented rules and thresholds (`02. backend/python/calculos/config/umbrales.yaml`). Assumptions made by the team are marked as such.
+- **AI never decides.** The assistant only explains the result that was already calculated.
+- **Data honesty.** Every value shows the dataset it really comes from. Missing data is shown as "no data", never filled in. If the app ever shows sample data, a fixed banner says *"Sample data – not real NASA data"*.
+- **Works when the network is weak.** The Java API answers from the database first, and the app keeps the last recommendation for offline use.
+
+### Indicators
+
+| Indicator | Current value | Compared with ("normal") | Dataset |
+|---|---|---|---|
+| 🌧️ Rainfall | Mean of the last 30 days | Same months, 2001–2020 (Piura) / 2001–2025 (worldwide) | GPM IMERG in Piura · NASA POWER elsewhere |
+| 💧 Soil moisture | Mean of the last 30 days | Same days of the year, 2016–2025 (Piura) / same months, 2001–2025 (worldwide) | SMAP in Piura · NASA POWER elsewhere |
+| 🌡️ Heat | Mean daily maximum, last 30 days | Same days of the year, 2001–2025 | NASA POWER (`T2M_MAX`) |
+| 🌊 El Niño | Weekly sea surface temperature anomaly, Niño 1+2 box | MUR climatology 2003–2014 | MUR SST v4.1 |
+| 🌿 Vegetation | Latest 16-day composite | Same composite, 2016–2025 | MODIS NDVI (Piura; informative, does not change the risk) |
+
+### What we found with real data
+
+- 🌊 **A coastal El Niño is under way:** the Niño 1+2 region is **+6.0 °C** above normal (MUR SST, week of 9 Nov 2026). We cross-checked it with NOAA CPC's weekly index (+5.6 °C, week of 4 Nov 2026).
+- 🛰️ **Satellite vs. model:** for the last 30 days in Piura, NASA POWER (a model) shows 5 to 10 times more rain than GPM IMERG (satellite). That is why the app uses IMERG for rainfall in Piura.
+- ⏳ **2017 replay:** with today's rules, the ocean would have given a first signal on **5 Dec 2016** (+0.6 °C) and the drainage alert on **16 Jan 2017** (+1.9 °C), about **6 weeks before** the March rainfall peak.
+
+### Tools
+
+| Part | Technologies |
+|---|---|
+| App (`03. frontend`) | Vue 3, TypeScript, Vite, Tailwind CSS, Pinia, vue-i18n (English/Spanish), Leaflet, Chart.js, Capacitor (Android) |
+| API (`02. backend/java`) | Java 17, Spring Boot, Spring Cloud Gateway, JDBC, PostgreSQL |
+| Calculations (`02. backend/python/calculos`) | Python 3.11, FastAPI, pandas, NumPy, httpx; earthaccess and xarray for the download scripts |
+| Data & infrastructure | PostgreSQL, Docker, Nginx |
+| Quality | Automated tests (pytest and JUnit) and a data-honesty check that runs before every app build |
+
+### Goals
+
+- Give smallholder farmers **one clear action** they can take this fortnight.
+- Make climate risk **visible before planting**, not after the loss.
+- Show that NASA open data can be turned into **simple, trustworthy advice** that explains itself.
+
+---
+
+<a id="ai-data"></a>
+
+## 🛰️ Use of AI / NASA Data
+
+### NASA data
+
+| Dataset | Version / product | Variables | How we use it |
+|---|---|---|---|
+| **NASA POWER** | API v2.10, Agroclimatology community | `PRECTOTCORR`, `GWETTOP`, `T2M_MAX`, `T2M_MIN` (daily and 2001–2025 climatology) | Current rainfall (outside Piura), soil moisture and heat anywhere in the world; monthly climate normals for the season outlook |
+| **GPM IMERG** | V07: `GPM_3IMERGM` (Final, monthly) and `GPM_3IMERGDL` (Late, daily) | `precipitation` | Rainfall of the last 30 days for the Piura valleys; monthly rainfall and its 2001–2020 normal for the "Does it work?" replay |
+| **SMAP** | `SPL3SMP_E` V006, Enhanced L3, 9 km (NASA NSIDC DAAC) | `soil_moisture` (AM and PM passes) | Soil moisture of the last 30 days for the Piura valleys, compared with the same days in 2016–2025 |
+| **MODIS NDVI** | `MOD13Q1` V061, 250 m, 16-day composite (via ORNL DAAC web service) | `250m_16_days_NDVI` | Vegetation status of the Piura valleys, compared with the same composite in 2016–2025 (informative) |
+| **MUR SST** | v4.1, NASA JPL PO.DAAC (via NOAA CoastWatch ERDDAP) | `analysed_sst`, `sstAnom` | Weekly sea temperature anomaly in the Niño 1+2 box: El Niño indicator, season risk on the northern coast and the 2017 alert date |
+| **NASA GIBS** | Blue Marble Next Generation | True-colour imagery | Satellite base layer of the map |
+
+Outside the Piura valleys, rainfall and soil moisture come from NASA POWER, and the app says so. The team also explored VIIRS NDVI, SRTM and HLS in the `climate-service` folder; **they are not used by the current app.**
+
+**Partner and other open data:** NOAA CoastWatch ERDDAP (MUR SST access), NOAA CPC weekly Niño indices (cross-check), OpenStreetMap (map and place search), INDECI (summary of the 2017 impacts in Piura).
+
+### Use of AI
+
+| | |
+|---|---|
+| **In the app** | The assistant uses **Groq** with the model **`openai/gpt-oss-20b`** (Apache 2.0 license). |
+| **What it does** | Explains, in up to four sentences and in English or Spanish, the recommendation that AllpaShift already calculated, naming the NASA source of each value. |
+| **What it does not do** | It does not calculate, does not invent numbers, crops, dates or sources, does not change the recommendation and does not decide what to plant. |
+| **Safeguards** | It only cites sources present in the calculated result. Empty or too-long answers are discarded. If the AI fails or takes more than 8 s, the app shows the calculated recommendation instead. The API key lives only on the server. |
+| **During development** | AI coding assistants (Claude Code, by Anthropic) helped draft code, tests and documentation. All output was reviewed, run and verified by the team against the real data. |
+
+---
+
+<a id="references"></a>
+
+## 📚 References
+
+**NASA data**
+- NASA Langley Research Center, POWER Project. *Prediction Of Worldwide Energy Resources (POWER) API v2.10*. https://power.larc.nasa.gov/
+- Huffman, G. J., et al. (2023). *GPM IMERG Final Precipitation L3 1 month 0.1° × 0.1° V07 (GPM_3IMERGM)*. NASA GES DISC. doi:10.5067/GPM/IMERG/3B-MONTH/07
+- Huffman, G. J., et al. (2023). *GPM IMERG Late Precipitation L3 1 day 0.1° × 0.1° V07 (GPM_3IMERGDL)*. NASA GES DISC. doi:10.5067/GPM/IMERGDL/DAY/07
+- O'Neill, P. E., et al. *SMAP Enhanced L3 Radiometer Global Daily 9 km EASE-Grid Soil Moisture, Version 6 (SPL3SMP_E)*. NASA NSIDC DAAC. doi:10.5067/M20OXIZHY3RJ
+- Didan, K. (2021). *MODIS/Terra Vegetation Indices 16-Day L3 Global 250m SIN Grid V061 (MOD13Q1)*. NASA LP DAAC. doi:10.5067/MODIS/MOD13Q1.061. Accessed via the ORNL DAAC MODIS Web Service.
+- JPL MUR MEaSUREs Project (2015). *GHRSST Level 4 MUR Global Foundation Sea Surface Temperature Analysis (v4.1)*. NASA PO.DAAC. doi:10.5067/GHGMR-4FJ04. Accessed via NOAA CoastWatch ERDDAP (`jplMURSST41`, `jplMURSST41anom1day`).
+- NASA Global Imagery Browse Services (GIBS). *Blue Marble Next Generation*. https://earthdata.nasa.gov/gibs
+
+**Other data**
+- NOAA Climate Prediction Center. *Weekly Niño indices (OISST v2.1)*. https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for
+- OpenStreetMap contributors. Map data and Nominatim search, ODbL. https://www.openstreetmap.org/copyright
+- INDECI (Instituto Nacional de Defensa Civil, Peru). Reports on the 2017 coastal El Niño.
+- Crop catalog of northern Peru (crops, valleys, calendars and rotations): team database, `04. base de datos`.
+
+**Software (all open source)**
+- App: Vue, Vite, TypeScript, Tailwind CSS, Pinia, vue-router, vue-i18n, axios, Chart.js, vue-chartjs, Capacitor (MIT); Leaflet (BSD-2); Lucide icons (ISC); Inter and Bricolage Grotesque fonts (SIL OFL 1.1).
+- API: Spring Boot, Spring Cloud Gateway (Apache 2.0); PostgreSQL JDBC driver (BSD-2).
+- Calculations: FastAPI, Pydantic, PyYAML, earthaccess, netCDF4 (MIT); Uvicorn, httpx, pandas, NumPy, h5netcdf (BSD); xarray (Apache 2.0).
+- AI: Groq API with `openai/gpt-oss-20b` (Apache 2.0).
+
+---
+
+## 🗂️ Repository structure
+
+| Folder | Contents |
+|---|---|
+| `01. documentacion` | Project documentation (Spanish) |
+| `02. backend/java` | `api-gateway` (8080) and `agro-service` (8081), Spring Boot |
+| `02. backend/python/calculos` | Calculation service (8001): indicators, season risk, rotations, map and the 2017 replay; download scripts for IMERG, SMAP, MODIS NDVI and MUR SST |
+| `02. backend/python/climate-service` | Data exploration service (8000) |
+| `03. frontend` | Vue 3 app and Android build (Capacitor) |
+| `04. base de datos` | PostgreSQL schema and seed: 37 crops, 18 valleys |
+| `05. mobile` | Mobile releases |
+| `deploy/vps` | `docker-compose` for the server |
+
+## 🚀 Run it
+
+```bash
+# Everything with Docker (server)
+cd deploy/vps
+docker compose -f docker-compose.app.yml up -d
+```
+
+Each service has its own README with the steps to run it on its own. Set `GROQ_API_KEY` on the server to turn on the AI assistant; without it the app still works and shows the calculated recommendation.
+
+---
+
+## 🦅 Team Halcón Dorado
+
+| | Member | Role |
+|:-:|---|---|
+| 👨‍💻 | **Jhonny Ramirez Chiroque** | Technical lead · API and deployment |
+| 💻 | **Sheila Jacqueline Principe Merino** | Frontend and mobile app |
+| 📊 | **David Blas** | NASA data and calculations |
+| 🌾 | **Alejandro David Riofrio Chulle** | Crop catalog |
+| 🎬 | **Edwin Joel Maza Castro** | Submission texts, slides and video |
+
+## 📄 License
+
+Code released under the **[Apache 2.0](LICENSE)** license, as required by the NASA Space Apps Challenge terms.
+NASA data is open. The licenses of every library are listed in [References](#references).
+
+<div align="center">
+
+<img src="01.%20documentacion/img/allpashift_icon.png" width="90" alt="AllpaShift icon">
+
+**AllpaShift** · NASA Space Apps Challenge 2026 · Piura, Peru
+
+</div>
