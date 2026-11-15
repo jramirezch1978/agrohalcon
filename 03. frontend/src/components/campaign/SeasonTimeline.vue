@@ -144,6 +144,7 @@ const etiquetaCelda = (m: Mes) =>
         <p>
           <strong class="font-bold">{{ mayusculaInicial(conAnio(detalle.mes)) }}</strong><template v-if="detalle.etapa"> · {{ detalle.etapa }}</template>:
           {{ detalle.motivo }}
+          <span v-if="detalle.et0MmDia != null" class="mt-1 block text-xs opacity-80">{{ $t('campana.et0', { et0: detalle.et0MmDia }) }}</span>
         </p>
         <p class="mt-1 inline-flex items-center gap-1 text-xs font-semibold" :class="sobreOscuro ? 'text-nasa-200' : 'text-nasa-800 dark:text-nasa-200'">
           <Satellite class="size-3.5" aria-hidden="true" />{{ $t('campana.fuente', { fuente: detalle.fuente }) }}

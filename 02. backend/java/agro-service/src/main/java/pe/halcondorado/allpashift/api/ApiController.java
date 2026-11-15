@@ -58,10 +58,11 @@ public class ApiController {
                                                              @RequestParam(required = false) String prioridad,
                                                              @RequestParam(required = false) String tipoSuelo,
                                                              @RequestParam(required = false) String salinidad,
-                                                             @RequestParam(required = false) String fuenteSuelo) {
+                                                             @RequestParam(required = false) String fuenteSuelo,
+                                                             @RequestParam(required = false) String aguaDisponible) {
         ErroresApi.validarCoordenadas(lat, lon);
         ErroresApi.validarLang(lang);
-        var perfil = PerfilAgricultor.de(prioridad, tipoSuelo, salinidad, fuenteSuelo);
+        var perfil = PerfilAgricultor.de(prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible);
         return responder(reco.recomendacion(lat, lon, lang, tipoCultivo, mesSiembra, cultivo, perfil));
     }
 

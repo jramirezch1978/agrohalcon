@@ -156,6 +156,7 @@ const en: typeof es = {
     riesgo: '{nivel} risk',
     hoy: 'Now',
     aviso: 'AllpaShift does not predict the exact weather months ahead. It estimates the season risk by combining NASA climate history with early signals such as El Niño.',
+    et0: 'Water demand (evapotranspiration ET₀): {et0} mm/day · FAO-56 with NASA POWER temperatures',
     apoyo: 'AllpaShift supports your decision; it does not replace it. Your experience and that of local experts (extension office, cooperative, water users board) always come first.',
   },
   plan: {
@@ -349,7 +350,16 @@ const en: typeof es = {
       sst: { simple: 'How warm the sea is: the El Niño signal', variable: 'Sea surface temperature anomaly (sstAnom) in the Niño 1+2 box', uso: 'Early El Niño signal: raises the rain risk on the northern coast and gives the 2017 warning date.' },
     },
   },
+  aguaDisponible: {
+    titulo: 'How much irrigation water do you have?',
+    poca: 'Little',
+    normal: 'Normal',
+    suficiente: 'Plenty',
+    ayuda: 'With little water, water-hungry crops lose points.',
+  },
   revision: {
+    desnudo: 'With this rotation the soil is bare {n} months a year.',
+    cubierto: 'With this rotation the soil is covered all year.',
     resta: 'Loses {p} points',
     titulo: 'Before you decide',
     ventajas: 'Benefits',
@@ -375,6 +385,7 @@ const en: typeof es = {
     titulo: 'Words we use',
     subtitulo: 'Satellite and soil terms, in plain words.',
     terminos: [
+      { t: 'Frost', d: 'When the minimum temperature drops below about 2 °C, cold burns leaves and flowers. It happens in the highlands (Huancabamba, Ayabaca); the app marks those months as high risk.' },
       { t: 'NDVI (vegetation greenness)', d: 'An index from 0 to 1 measured by the MODIS satellite: the greener and healthier the plant, the higher. If it drops below normal, the crop may be stressed by lack of water or disease.' },
       { t: 'Soil moisture and its anomaly', d: 'How much water the top layer of soil holds (SMAP satellite or NASA POWER). The anomaly is the difference from what is normal for that time of year: negative = drier than usual.' },
       { t: 'Evapotranspiration', d: 'Water the field loses to the air: what evaporates from the soil and what plants "transpire". It rises with heat and wind, so the crop needs more irrigation.' },

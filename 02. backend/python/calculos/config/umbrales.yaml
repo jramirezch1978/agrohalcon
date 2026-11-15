@@ -50,6 +50,8 @@ campana:
   exceso_alto: {ratio: 2.0, mm: 200}
   # Meses en que El Niño costero sube un nivel el riesgo de lluvia (costa norte de Perú y sur de Ecuador)
   meses_nino: [1, 2, 3, 4]
+  # Helada: mínima normal del mes en o bajo este valor (°C) → riesgo alto (sierra: Huancabamba, Ayabaca). Supuesto.
+  helada_tmin_c: 2.0
 
 # ---------- Fase 2: puntaje de rotaciones (100 puntos menos descuentos) ----------
 rotaciones:
@@ -89,6 +91,9 @@ salud_suelo:
     leve: {baja: -10, media: 0, alta: 0}
     alta: {baja: -20, media: -10, alta: 0}
   arenoso_agua_alta: -10    # suelo arenoso retiene poca agua: castiga cultivos de uso de agua ALTO
+  # Suelo desnudo: meses del año sin cultivo en la rotación (12 - duración de los dos cultivos)
+  suelo_desnudo_desde_meses: 3
+  suelo_desnudo: -10        # suelo pelado: erosión por viento y lluvia, pierde materia orgánica
 
 # ---------- Prioridad del agricultor: puntaje final = clima·w + suelo·w + agua·w ----------
 # Supuestos del equipo. Sin prioridad elegida se usa "por_defecto".
@@ -99,6 +104,11 @@ prioridades:
     cuidar_suelo:    {clima: 0.35, suelo: 0.50, agua: 0.15}
     ahorrar_agua:    {clima: 0.35, suelo: 0.15, agua: 0.50}
   puntaje_agua: {bajo: 100, medio: 60, alto: 20}   # uso de agua de la rotación (el cultivo que más usa)
+  # Restricción del agricultor: cuánta agua de riego tiene. Cambia el puntaje de agua (supuesto del equipo).
+  puntaje_agua_disponible:
+    poca:       {bajo: 100, medio: 40, alto: 0}
+    normal:     {bajo: 100, medio: 60, alto: 20}
+    suficiente: {bajo: 100, medio: 80, alto: 60}
 
 # ---------- Textura del suelo (SoilGrids, ISRIC; 0-30 cm) → tipo de suelo de la app ----------
 suelo_textura:

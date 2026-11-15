@@ -117,7 +117,7 @@ public class RecomendacionService {
         String perm = cultivo == null || cultivo.isBlank() ? "mango" : cultivo;
         PerfilAgricultor pf = perfil == null ? PerfilAgricultor.VACIO : perfil;
         String clave = String.format(Locale.ROOT, "reco:%.3f,%.3f:%s:%s:%s", lat, lon, tipo, "permanente".equals(tipo) ? perm : mes, idioma)
-                + ("permanente".equals(tipo) ? "" : ":v2:" + pf.clave());   // v2: rotaciones con suelo y prioridad (15-nov)
+                + ("permanente".equals(tipo) ? "" : ":v3:" + pf.clave());   // v3: + agua disponible, heladas, ET0 y suelo desnudo (15-nov)
         Zona zona = zonaCercana(lat, lon, 0.09);   // ~30 km: solo se asocia si el punto está en un valle conocido
         Integer zonaId = zona == null ? null : zona.id();
 

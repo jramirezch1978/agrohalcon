@@ -22,7 +22,7 @@ import pandas as pd
 
 from app.calculos.campana import NIVELES, armar_ciclo, en_zona_costera, riesgo_mes, senal_nino
 from app.catalogo import Cultivo
-from app.calculos.salud_suelo import puntaje_suelo
+from app.calculos.salud_suelo import puntaje_suelo, meses_suelo_desnudo
 from app.textos.plantillas import signo, texto
 
 FUENTE_CATALOGO = "catálogo de cultivos"
@@ -86,7 +86,7 @@ def descuentos_rotacion(cultivos: list[Cultivo], siembras: list[pd.Period], mese
 
 def peor_temp(mes: dict) -> str:
     comp = mes["componentes"]
-    return max(comp["calor"], comp["frio"], key=NIVELES.index)
+    return max(comp["calor"], comp["frio"], comp.get("helada", "bajo"), key=NIVELES.index)
 
 
 def nivel_puntaje(p: int, u: dict) -> str:
@@ -122,7 +122,7 @@ def explicacion(cultivos: list[Cultivo], desc: list[dict], tradicional: bool, la
 def evaluar_rotacion(cultivos: list[Cultivo], mes_siembra: str, clima: pd.DataFrame, indicadores: dict,
                      lat: float, lon: float, lang: str, u: dict, tradicional: bool = False,
                      salinidad: str | None = None, prioridad: str | None = None, tipo_suelo: str | None = None,
-                     fuente_suelo: str | None = None) -> dict[str, Any]:
+                     fuente_suelo: str | None = None, agua_disponible: str | None = None) -> dict[str, Any]:
     nino_ind = indicadores.get("elNino")
     nino = senal_nino(nino_ind, lat, lon)
     sin_dato_costa = en_zona_costera(lat, lon) and (not nino_ind or nino_ind.get("valor") is None)
@@ -130,14 +130,15 @@ def evaluar_rotacion(cultivos: list[Cultivo], mes_siembra: str, clima: pd.DataFr
     for c in cultivos:
         siembras.append(inicio)
         for i in range(c.duracion_meses or 4):
-            meses.append(riesgo_mes(c, inicio + i, clima, nino, sin_dato_costa, lang, u))
+            meses.append(riesgo_mes(c, inicio + i, clima, nino, sin_dato_costa, lang, u, lat))
         inicio = inicio + (c.duracion_meses or 4)
 
     desc = descuentos_rotacion(cultivos, siembras, meses, indicadores, u, extremo=nino_extremo(nino_ind, lat, lon, u))
     clima_p = max(0, 100 + sum(d["puntos"] for d in desc))
     uso = max((c.usoAgua or c.agua for c in cultivos), key=NIVELES.index)
     suelo, desc_suelo = puntaje_suelo(cultivos, u, lang, salinidad, tipo_suelo, fuente_suelo)
-    agua_p = u["prioridades"]["puntaje_agua"][uso]
+    tabla_agua = u["prioridades"].get("puntaje_agua_disponible", {}).get(agua_disponible or "", u["prioridades"]["puntaje_agua"])
+    agua_p = tabla_agua[uso]
     return {
         "nombre": " - ".join(c.nombre_en(lang) for c in cultivos),
         "cultivos": [c.id for c in cultivos],
@@ -146,6 +147,7 @@ def evaluar_rotacion(cultivos: list[Cultivo], mes_siembra: str, clima: pd.DataFr
         "explicacion": explicacion(cultivos, desc, tradicional, lang),
         "descuentos": desc, "tradicional": tradicional,
         "ciclo": armar_ciclo(meses),
+        "mesesSueloDesnudo": meses_suelo_desnudo(cultivos),
     }
 
 
@@ -166,12 +168,13 @@ def motivo_recomendada(r: dict, prioridad: str | None, lang: str, u: dict) -> st
 def generar_rotaciones(catalogo: list[Cultivo], mes_siembra: str, clima: pd.DataFrame, indicadores: dict,
                        lat: float, lon: float, lang: str, u: dict, n: int = 3, prioridad: str | None = None,
                        salinidad: str | None = None, tipo_suelo: str | None = None,
-                       fuente_suelo: str | None = None) -> list[dict]:
+                       fuente_suelo: str | None = None, agua_disponible: str | None = None) -> list[dict]:
     """La tradicional de la zona (p. ej. Arroz - Arroz) + las mejores combinaciones de dos cultivos distintos,
     ordenadas por el puntaje final según la prioridad del agricultor."""
     temporales = [c for c in catalogo if c.tipo == "temporal"]
     tradicional = next((c for c in temporales if c.tradicional), None)
-    perfil = {"prioridad": prioridad, "salinidad": salinidad, "tipo_suelo": tipo_suelo, "fuente_suelo": fuente_suelo}
+    perfil = {"prioridad": prioridad, "salinidad": salinidad, "tipo_suelo": tipo_suelo, "fuente_suelo": fuente_suelo,
+              "agua_disponible": agua_disponible}
 
     candidatas = [evaluar_rotacion([a, b], mes_siembra, clima, indicadores, lat, lon, lang, u, **perfil)
                   for a, b in permutations(temporales, 2)]
