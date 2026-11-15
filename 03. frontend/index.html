@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -14,7 +14,7 @@
       // Aplica el tema antes de pintar para evitar parpadeo
       try {
         const t = localStorage.getItem('allpashift:tema')
-        if (t === 'oscuro' || (!t && matchMedia('(prefers-color-scheme: dark)').matches))
+        if (t === 'oscuro') // por defecto tema claro; el oscuro solo si el usuario lo eligió
           document.documentElement.classList.add('dark')
       } catch {}
     </script>

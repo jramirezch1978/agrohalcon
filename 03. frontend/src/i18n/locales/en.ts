@@ -350,6 +350,7 @@ const en: typeof es = {
     },
   },
   revision: {
+    resta: 'Loses {p} points',
     titulo: 'Before you decide',
     ventajas: 'Benefits',
     riesgos: 'Risks and trade-offs',
