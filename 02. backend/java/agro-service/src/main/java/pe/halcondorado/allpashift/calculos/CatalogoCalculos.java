@@ -60,6 +60,12 @@ public class CatalogoCalculos {
             m.put("usoAgua", agua(c.agua()));
             m.put("meses_siembra", c.mesesSiembra());
             m.put("tradicional", tradicional != null && tradicional == c.id());
+            // Salud del suelo: sin dato → no se envía y Python no aplica la regla
+            m.put("leguminosa", c.fijaNitrogeno());
+            m.put("cobertura", c.cobertura());
+            if (c.familia() != null) m.put("familia", c.familia());
+            if (c.profundidadRaiz() != null) m.put("profundidad_raiz", c.profundidadRaiz());
+            if (c.toleranciaSalinidad() != null) m.put("tolerancia_salinidad", c.toleranciaSalinidad());
             if (!permanente) {
                 int dias = c.cicloDias() == null ? 120 : c.cicloDias();
                 m.put("duracion_meses", Math.max(1, Math.min(24, Math.round(dias / 30f))));

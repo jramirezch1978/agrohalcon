@@ -3,7 +3,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import calcular, mapa, punto, salud, validacion
+from app.routers import calcular, mapa, punto, salud, suelo, validacion
 
 app = FastAPI(
     title="AllpaShift – servicio de cálculos",
@@ -27,3 +27,4 @@ app.include_router(calcular.router)
 app.include_router(mapa.router)
 app.include_router(punto.router)
 app.include_router(validacion.router)
+app.include_router(suelo.router)

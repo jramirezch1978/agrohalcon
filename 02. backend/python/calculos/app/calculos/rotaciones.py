@@ -8,7 +8,10 @@ cosecha. Cada rotación empieza con 100 puntos y resta:
 - riesgo alto: -10 por cada mes de la campaña con riesgo alto.
 - siembra: -15 por cada cultivo sembrado fuera de sus meses recomendados.
 - El Niño extraordinario (mar ≥ +3 °C en la costa norte, con dato real): -35 a TODAS las rotaciones (ninguna siembra es segura).
-Mínimo 0. Riesgo: >= 70 bajo, 45-69 medio, < 45 alto.
+Mínimo 0. Riesgo: >= 70 bajo, 45-69 medio, < 45 alto. Ese es el puntaje CLIMÁTICO ("riesgoClimatico").
+
+Puntaje FINAL ("puntaje") = clima·w + suelo·w + agua·w, con los pesos de la prioridad del agricultor
+(config/umbrales.yaml → prioridades). La rotación recomendada es la de mayor puntaje final.
 """
 from __future__ import annotations
 
@@ -19,6 +22,7 @@ import pandas as pd
 
 from app.calculos.campana import NIVELES, armar_ciclo, en_zona_costera, riesgo_mes, senal_nino
 from app.catalogo import Cultivo
+from app.calculos.salud_suelo import puntaje_suelo
 from app.textos.plantillas import signo, texto
 
 FUENTE_CATALOGO = "catálogo de cultivos"
@@ -116,7 +120,9 @@ def explicacion(cultivos: list[Cultivo], desc: list[dict], tradicional: bool, la
 
 
 def evaluar_rotacion(cultivos: list[Cultivo], mes_siembra: str, clima: pd.DataFrame, indicadores: dict,
-                     lat: float, lon: float, lang: str, u: dict, tradicional: bool = False) -> dict[str, Any]:
+                     lat: float, lon: float, lang: str, u: dict, tradicional: bool = False,
+                     salinidad: str | None = None, prioridad: str | None = None, tipo_suelo: str | None = None,
+                     fuente_suelo: str | None = None) -> dict[str, Any]:
     nino_ind = indicadores.get("elNino")
     nino = senal_nino(nino_ind, lat, lon)
     sin_dato_costa = en_zona_costera(lat, lon) and (not nino_ind or nino_ind.get("valor") is None)
@@ -128,32 +134,55 @@ def evaluar_rotacion(cultivos: list[Cultivo], mes_siembra: str, clima: pd.DataFr
         inicio = inicio + (c.duracion_meses or 4)
 
     desc = descuentos_rotacion(cultivos, siembras, meses, indicadores, u, extremo=nino_extremo(nino_ind, lat, lon, u))
-    puntaje = max(0, 100 + sum(d["puntos"] for d in desc))
+    clima_p = max(0, 100 + sum(d["puntos"] for d in desc))
     uso = max((c.usoAgua or c.agua for c in cultivos), key=NIVELES.index)
+    suelo, desc_suelo = puntaje_suelo(cultivos, u, lang, salinidad, tipo_suelo, fuente_suelo)
+    agua_p = u["prioridades"]["puntaje_agua"][uso]
     return {
         "nombre": " - ".join(c.nombre_en(lang) for c in cultivos),
         "cultivos": [c.id for c in cultivos],
-        "puntaje": puntaje, "riesgo": nivel_puntaje(puntaje, u), "usoAgua": uso,
+        "puntaje": puntaje_final(clima_p, suelo, agua_p, prioridad, u), "riesgo": nivel_puntaje(clima_p, u), "usoAgua": uso,
+        "riesgoClimatico": clima_p, "saludSuelo": suelo, "puntajeAgua": agua_p, "descuentosSuelo": desc_suelo,
         "explicacion": explicacion(cultivos, desc, tradicional, lang),
         "descuentos": desc, "tradicional": tradicional,
         "ciclo": armar_ciclo(meses),
     }
 
 
+def prioridad_o_defecto(prioridad: str | None, u: dict) -> str:
+    return prioridad if prioridad in u["prioridades"]["pesos"] else u["prioridades"]["por_defecto"]
+
+
+def puntaje_final(clima_p: int, suelo: int, agua: int, prioridad: str | None, u: dict) -> int:
+    w = u["prioridades"]["pesos"][prioridad_o_defecto(prioridad, u)]
+    return round(clima_p * w["clima"] + suelo * w["suelo"] + agua * w["agua"])
+
+
+def motivo_recomendada(r: dict, prioridad: str | None, lang: str, u: dict) -> str:
+    p = prioridad_o_defecto(prioridad, u)
+    return texto(lang, f"p_{p}", clima=r["riesgoClimatico"], suelo=r["saludSuelo"], agua=texto(lang, f"agua_{r['usoAgua']}"))
+
+
 def generar_rotaciones(catalogo: list[Cultivo], mes_siembra: str, clima: pd.DataFrame, indicadores: dict,
-                       lat: float, lon: float, lang: str, u: dict, n: int = 3) -> list[dict]:
-    """La tradicional de la zona (p. ej. Arroz - Arroz) + las mejores combinaciones de dos cultivos distintos."""
+                       lat: float, lon: float, lang: str, u: dict, n: int = 3, prioridad: str | None = None,
+                       salinidad: str | None = None, tipo_suelo: str | None = None,
+                       fuente_suelo: str | None = None) -> list[dict]:
+    """La tradicional de la zona (p. ej. Arroz - Arroz) + las mejores combinaciones de dos cultivos distintos,
+    ordenadas por el puntaje final según la prioridad del agricultor."""
     temporales = [c for c in catalogo if c.tipo == "temporal"]
     tradicional = next((c for c in temporales if c.tradicional), None)
+    perfil = {"prioridad": prioridad, "salinidad": salinidad, "tipo_suelo": tipo_suelo, "fuente_suelo": fuente_suelo}
 
-    candidatas = [evaluar_rotacion([a, b], mes_siembra, clima, indicadores, lat, lon, lang, u)
+    candidatas = [evaluar_rotacion([a, b], mes_siembra, clima, indicadores, lat, lon, lang, u, **perfil)
                   for a, b in permutations(temporales, 2)]
     candidatas.sort(key=lambda r: -r["puntaje"])
     elegidas = candidatas[: n - 1 if tradicional else n]
     if tradicional:
         elegidas.append(evaluar_rotacion([tradicional, tradicional], mes_siembra, clima, indicadores, lat, lon,
-                                         lang, u, tradicional=True))
+                                         lang, u, tradicional=True, **perfil))
     elegidas.sort(key=lambda r: -r["puntaje"])
     for i, r in enumerate(elegidas, start=1):
         r["id"] = i
+    if elegidas and not elegidas[0]["tradicional"]:
+        elegidas[0]["motivoRecomendada"] = motivo_recomendada(elegidas[0], prioridad, lang, u)
     return elegidas

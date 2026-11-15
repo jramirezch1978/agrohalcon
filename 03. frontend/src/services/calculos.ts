@@ -6,7 +6,7 @@
  * Estas funciones LANZAN error si el servicio falla: quien llama decide el respaldo y lo avisa.
  */
 import axios from 'axios'
-import type { AniosValidacion, DetalleLluvia, ClaveIndicador, Indicador, MapaRiesgo, OpcionesRecomendacion, Recomendacion, Validacion } from '@/types/api'
+import type { AniosValidacion, DetalleLluvia, ClaveIndicador, Indicador, MapaRiesgo, OpcionesRecomendacion, Recomendacion, SueloPropuesto, Validacion } from '@/types/api'
 
 export const CALCULOS_URL: string = import.meta.env.VITE_CALCULOS_URL || ''
 
@@ -27,16 +27,23 @@ export function soloConDato(indicadores: Record<string, IndicadorPython>): Recom
 }
 
 export async function calcularRecomendacion(lat: number, lon: number, idioma: Idioma, opciones: OpcionesRecomendacion): Promise<Recomendacion> {
-  const { tipoCultivo, mesSiembra, cultivo } = opciones
+  const { tipoCultivo, mesSiembra, cultivo, prioridad, tipoSuelo, salinidad, fuenteSuelo } = opciones
+  const temporal = tipoCultivo !== 'permanente'
   const { data } = await http.post('/calcular', {
     lat,
     lon,
     lang: idioma,
     tipoCultivo: tipoCultivo ?? 'temporal',
-    mesSiembra: tipoCultivo === 'permanente' ? undefined : mesSiembra,
-    cultivo: tipoCultivo === 'permanente' ? cultivo : undefined,
+    mesSiembra: temporal ? mesSiembra : undefined,
+    cultivo: temporal ? undefined : cultivo,
+    ...(temporal ? { prioridad, tipoSuelo, salinidad, fuenteSuelo } : {}),
   })
   return { ...data, indicadores: soloConDato(data.indicadores) } as Recomendacion
+}
+
+export async function sueloPython(lat: number, lon: number): Promise<SueloPropuesto> {
+  const { data } = await http.get<SueloPropuesto>('/suelo', { params: { lat, lon }, timeout: 65000 })
+  return data
 }
 
 export async function calcularMapa(region: string, idioma: Idioma): Promise<MapaRiesgo> {

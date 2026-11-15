@@ -54,10 +54,22 @@ public class ApiController {
                                                              @RequestParam(defaultValue = "es") String lang,
                                                              @RequestParam(required = false) String tipoCultivo,
                                                              @RequestParam(required = false) String mesSiembra,
-                                                             @RequestParam(required = false) String cultivo) {
+                                                             @RequestParam(required = false) String cultivo,
+                                                             @RequestParam(required = false) String prioridad,
+                                                             @RequestParam(required = false) String tipoSuelo,
+                                                             @RequestParam(required = false) String salinidad,
+                                                             @RequestParam(required = false) String fuenteSuelo) {
         ErroresApi.validarCoordenadas(lat, lon);
         ErroresApi.validarLang(lang);
-        return responder(reco.recomendacion(lat, lon, lang, tipoCultivo, mesSiembra, cultivo));
+        var perfil = PerfilAgricultor.de(prioridad, tipoSuelo, salinidad, fuenteSuelo);
+        return responder(reco.recomendacion(lat, lon, lang, tipoCultivo, mesSiembra, cultivo, perfil));
+    }
+
+    /** Tipo de suelo PROPUESTO para la parcela (SoilGrids, ISRIC; no es dato NASA). Python lo guarda en caché 90 días. */
+    @GetMapping("/suelo")
+    public Map<String, Object> suelo(@RequestParam double lat, @RequestParam double lon) {
+        ErroresApi.validarCoordenadas(lat, lon);
+        return calculos.suelo(lat, lon);
     }
 
     /** Riesgo de cada valle (agro.zonas): de la BD si está fresco (3 h); si no, Python lo calcula y Java lo graba. */

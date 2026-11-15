@@ -78,6 +78,15 @@ CREATE TABLE IF NOT EXISTS agro.cultivos (
     validado           BOOLEAN NOT NULL DEFAULT FALSE   -- TRUE cuando Alejandro lo valida con MIDAGRI / FAO
 );
 
+-- Salud del suelo (rotaciones): columnas opcionales; NULL = sin dato. Valores en seed/03-salud-suelo.sql.
+ALTER TABLE agro.cultivos ADD COLUMN IF NOT EXISTS familia VARCHAR(40);                 -- familia botánica (Poaceae, Fabaceae...)
+ALTER TABLE agro.cultivos ADD COLUMN IF NOT EXISTS profundidad_raiz VARCHAR(12)
+    CHECK (profundidad_raiz IN ('superficial', 'media', 'profunda'));
+ALTER TABLE agro.cultivos ADD COLUMN IF NOT EXISTS tolerancia_salinidad VARCHAR(5)
+    CHECK (tolerancia_salinidad IN ('baja', 'media', 'alta'));
+ALTER TABLE agro.cultivos ADD COLUMN IF NOT EXISTS es_leguminosa BOOLEAN
+    GENERATED ALWAYS AS (familia = 'Fabaceae') STORED;
+
 -- En que zonas se siembra cada cultivo y con que superficie (DRAP / MIDAGRI SIEA)
 CREATE TABLE IF NOT EXISTS agro.cultivos_zona (
     cultivo_id     INTEGER  NOT NULL REFERENCES agro.cultivos(id) ON DELETE CASCADE,

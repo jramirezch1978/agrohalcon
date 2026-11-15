@@ -125,7 +125,7 @@ def test_siembra_fuera_de_meses_resta_15(umbrales):
 def test_puntaje_minimo_0_y_niveles(umbrales):
     r = evaluar_rotacion([ARROZ, ARROZ], "2026-06", clima(lluvia_mm_mes=900, tmax=40), indicadores(
         humedad=ind("alto", "deficit")), *PIURA, "es", umbrales)
-    assert r["puntaje"] == 0 and r["riesgo"] == "alto"
+    assert r["riesgoClimatico"] == 0 and r["riesgo"] == "alto"
     assert sum(d["puntos"] for d in r["descuentos"]) < -100
 
 
@@ -136,7 +136,7 @@ def test_generar_incluye_tradicional_y_ordena(umbrales):
     assert [r["id"] for r in rots] == [1, 2, 3]
     for r in rots:
         assert r["ciclo"]["meses"] and r["explicacion"] and r["usoAgua"] in ("bajo", "medio", "alto")
-        assert 100 + sum(d["puntos"] for d in r["descuentos"]) == r["puntaje"] or r["puntaje"] == 0
+        assert 100 + sum(d["puntos"] for d in r["descuentos"]) == r["riesgoClimatico"] or r["riesgoClimatico"] == 0
 
 
 def test_explicacion_en_ingles(umbrales):

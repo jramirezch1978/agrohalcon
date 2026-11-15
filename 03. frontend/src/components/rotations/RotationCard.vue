@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Award, ChevronRight, Droplet } from 'lucide-vue-next'
+import { Award, ChevronRight, CloudSun, Droplet, Sprout } from 'lucide-vue-next'
 import RiskBadge from '@/components/ui/RiskBadge.vue'
 import { nombreRotacion } from '@/composables/useRotacion'
 import type { NivelRiesgo, Rotacion } from '@/types/api'
@@ -53,11 +53,29 @@ const GOTAS: Record<NivelRiesgo, number> = { bajo: 1, medio: 2, alto: 3 }
             {{ $t('rotaciones.usoAgua') }}: {{ $t(`riesgo.${rotacion.usoAgua}`).toLowerCase() }}
           </span>
         </div>
+        <!-- Los dos puntajes que forman el puntaje final -->
+        <div v-if="rotacion.saludSuelo != null" class="mt-2 flex flex-wrap gap-2 md:justify-center">
+          <span
+            v-for="p in [
+              { icono: CloudSun, etiqueta: $t('rotaciones.clima'), valor: rotacion.riesgoClimatico ?? rotacion.puntaje, titulo: $t('rotaciones.puntajeClima', { p: rotacion.riesgoClimatico ?? rotacion.puntaje }) },
+              { icono: Sprout, etiqueta: $t('rotaciones.suelo'), valor: rotacion.saludSuelo, titulo: $t('rotaciones.puntajeSuelo', { p: rotacion.saludSuelo }) },
+            ]"
+            :key="p.etiqueta"
+            :title="p.titulo"
+            class="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold tabular-nums"
+            :class="recomendada ? 'bg-white/10 text-white ring-1 ring-white/15' : 'bg-arena text-stone-700 ring-1 ring-tinta/10 dark:bg-white/5 dark:text-stone-200 dark:ring-white/10'"
+          >
+            <component :is="p.icono" class="size-3.5" aria-hidden="true" />{{ p.etiqueta }} {{ p.valor }}
+          </span>
+        </div>
       </div>
     </div>
 
     <p class="mt-4 line-clamp-2 text-[15px] leading-relaxed" :class="recomendada ? 'text-white/85' : 'text-stone-700 dark:text-stone-300'">
       {{ rotacion.explicacion }}
+    </p>
+    <p v-if="recomendada && rotacion.motivoRecomendada" class="mt-2 rounded-2xl bg-white/10 px-3 py-2 text-sm leading-snug font-semibold text-brote-200 ring-1 ring-white/12">
+      {{ rotacion.motivoRecomendada }}
     </p>
     <span class="mt-3 inline-flex items-center gap-1 text-sm font-semibold" :class="recomendada ? 'text-brote-300' : 'text-agro-700 dark:text-brote-400'">
       {{ $t('rotaciones.porQuePuntaje') }}<ChevronRight class="size-4 transition group-hover:translate-x-0.5" aria-hidden="true" />

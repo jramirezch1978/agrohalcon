@@ -32,7 +32,7 @@ def test_el_nino_extraordinario_resta_35_a_la_rotacion(umbrales):
     r = evaluar(indicadores(nino=nino(6.0)), umbrales=umbrales)
     d = next(x for x in r["descuentos"] if x["regla"] == "el_nino_extremo")
     assert (d["indicador"], d["puntos"], d["fuente"], d["valor"]) == ("elNino", -35, "MUR SST", 6.0)
-    assert r["puntaje"] == base["puntaje"] - 35
+    assert r["riesgoClimatico"] == base["riesgoClimatico"] - 35
     assert "El Niño" in r["explicacion"] and "+6.0 °C" in r["explicacion"]
 
 
@@ -60,8 +60,8 @@ def test_si_el_yaml_no_trae_el_umbral_la_regla_queda_apagada(umbrales):
 def test_todas_las_rotaciones_pierden_lo_mismo_y_el_orden_no_cambia(umbrales):
     sin = generar_rotaciones(CAT, "2026-12", clima_normal(), indicadores(), *PIURA, "es", umbrales)
     con = generar_rotaciones(CAT, "2026-12", clima_normal(), indicadores(nino=nino(6.0)), *PIURA, "es", umbrales)
-    antes = {r["nombre"]: r["puntaje"] for r in sin}
-    assert len(con) == len(sin) and all(r["puntaje"] == max(0, antes[r["nombre"]] - 35) for r in con)  # todas pierden 35 (mínimo 0)
+    antes = {r["nombre"]: r["riesgoClimatico"] for r in sin}
+    assert len(con) == len(sin) and all(r["riesgoClimatico"] == max(0, antes[r["nombre"]] - 35) for r in con)  # todas pierden 35 (mínimo 0)
     assert [r["nombre"] for r in con] == [r["nombre"] for r in sorted(con, key=lambda r: -r["puntaje"])]  # y siguen ordenadas
 
 
@@ -72,7 +72,7 @@ def test_la_app_ya_no_pide_drenar_y_a_la_vez_muestra_riesgo_bajo(umbrales):
     q = que_hacer(ii, *PIURA, "es", date(2026, 12, 1), "temporal", MEJOR, ARROZ)
     assert q["tipo"] == "preparar drenaje"
     rotaciones = generar_rotaciones(CAT, "2026-12", clima_normal(), ii, *PIURA, "es", umbrales)
-    assert rotaciones and all(r["puntaje"] <= 65 for r in rotaciones), [(r["nombre"], r["puntaje"]) for r in rotaciones]
+    assert rotaciones and all(r["riesgoClimatico"] <= 65 for r in rotaciones), [(r["nombre"], r["riesgoClimatico"]) for r in rotaciones]
     assert not any(r["riesgo"] == "bajo" for r in rotaciones)
 
 
