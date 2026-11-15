@@ -259,4 +259,19 @@ class AsistenteTest {
                 .andExpect(status().isServiceUnavailable())
                 .andExpect(jsonPath("$.error").value("servicio_calculos_no_disponible"));
     }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void smapValeSiVieneEnLaRecomendacionYUnaFuenteAjenaNo() {
+        Map<String, Object> conSmap = new java.util.HashMap<>(REC);
+        Map<String, Object> ind = new java.util.HashMap<>((Map<String, Object>) REC.get("indicadores"));
+        ind.put("humedadSuelo", Map.of("valor", 0.21, "normal", 0.25, "unidad", "m3/m3", "nivel", "bajo", "fuente", "SMAP"));
+        conSmap.put("indicadores", ind);
+        var reducido = AsistenteService.reducir(conSmap);
+        assertThat(AsistenteService.validar("La humedad del suelo según SMAP está cerca de lo normal.", reducido)).isNull();
+        assertThat(AsistenteService.validar("Según MODIS las plantas están bien.", reducido)).isEqualTo("menciona_fuente_ajena");
+        assertThat(AsistenteService.validar("El relieve de SRTM muestra zonas bajas.", reducido)).isEqualTo("menciona_fuente_ajena");
+        // La palabra inglesa "power" no es la fuente NASA POWER
+        assertThat(AsistenteService.fuenteAjena("Water has the power to help.", java.util.Set.of())).isNull();
+    }
 }

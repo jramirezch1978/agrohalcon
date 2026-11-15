@@ -34,12 +34,25 @@ public class AsistenteService {
 
     private static final Logger log = LoggerFactory.getLogger(AsistenteService.class);
     static final int MAX_CARACTERES_RESPUESTA = 800;
-    /** Datos que AllpaShift NO usa: si la IA los menciona, está inventando → respaldo. */
     /** Una respuesta buena de la IA se guarda 30 min: las preguntas sugeridas se repiten y el cupo gratuito de Groq es muy corto. */
     static final long CACHE_VIGENCIA_MS = 30 * 60 * 1000L;
     static final int CACHE_MAXIMO = 300;
     static final Pattern NUMERO = Pattern.compile("(?<![\\w.])(\\d+(?:[.,]\\d+)?)");
-    static final Pattern DATOS_NO_USADOS = Pattern.compile("\\b(SMAP|MODIS|NDVI)\\b", Pattern.CASE_INSENSITIVE);
+    /**
+     * Cómo se nombra cada fuente en un texto → la fuente tal como aparece en la recomendación. Si la IA menciona una fuente
+     * que NO está en la recomendación calculada, está inventando → respaldo. (Antes se rechazaban siempre SMAP, MODIS y
+     * NDVI; desde el 14-nov son datos reales en Piura, así que solo se rechazan si no vienen en el JSON.)
+     * "POWER" distingue mayúsculas para no confundirlo con la palabra inglesa "power".
+     */
+    static final Map<String, Pattern> MENCIONES_DE_FUENTE = Map.of(
+            "NASA POWER", Pattern.compile("\\bPOWER\\b"),
+            "GPM IMERG", Pattern.compile("\\b(IMERG|GPM)\\b", Pattern.CASE_INSENSITIVE),
+            "SMAP", Pattern.compile("\\bSMAP\\b", Pattern.CASE_INSENSITIVE),
+            "MODIS NDVI", Pattern.compile("\\b(MODIS|NDVI)\\b", Pattern.CASE_INSENSITIVE),
+            "MUR SST", Pattern.compile("\\bMUR\\b", Pattern.CASE_INSENSITIVE));
+    /** Datos que AllpaShift no usa en ningún caso: mencionarlos siempre es inventar. */
+    static final Pattern FUENTES_NUNCA_USADAS =
+            Pattern.compile("\\b(VIIRS|SRTM|HLS|Landsat|Sentinel|ECOSTRESS|CHIRPS|ERA5)\\b", Pattern.CASE_INSENSITIVE);
     /** El agricultor no sabe qué es un JSON: "(fuente: JSON)" no es una fuente (se vio en producción el 14-nov). */
     static final Pattern MENCIONA_JSON = Pattern.compile("\\bJSON\\b", Pattern.CASE_INSENSITIVE);
 
@@ -136,8 +149,16 @@ public class AsistenteService {
     static String validar(String texto) {
         if (texto == null || texto.isBlank()) return "respuesta_vacia";
         if (texto.length() > MAX_CARACTERES_RESPUESTA) return "respuesta_larga";
-        if (DATOS_NO_USADOS.matcher(texto).find()) return "menciona_dato_no_usado";
+        if (FUENTES_NUNCA_USADAS.matcher(texto).find()) return "menciona_fuente_ajena";
         if (MENCIONA_JSON.matcher(texto).find()) return "menciona_json";
+        return null;
+    }
+
+    /** "menciona_fuente_ajena" si el texto nombra una fuente que no está en la recomendación calculada; si no, null. */
+    static String fuenteAjena(String texto, Set<String> fuentesDelJson) {
+        for (var e : MENCIONES_DE_FUENTE.entrySet()) {
+            if (e.getValue().matcher(texto).find() && !fuentesDelJson.contains(e.getKey())) return "menciona_fuente_ajena";
+        }
         return null;
     }
 
@@ -149,6 +170,8 @@ public class AsistenteService {
     static String validar(String texto, Map<String, Object> reducido) {
         String basico = validar(texto);
         if (basico != null) return basico;
+        String ajena = fuenteAjena(texto, fuentesDelJson(reducido));
+        if (ajena != null) return ajena;
         List<Double> permitidos = numerosPermitidos(reducido);
         var m = NUMERO.matcher(texto);
         while (m.find()) {

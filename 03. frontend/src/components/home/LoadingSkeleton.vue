@@ -1,9 +1,13 @@
 <script setup lang="ts">
+import { Satellite } from 'lucide-vue-next'
 import SkeletonBlock from '@/components/ui/SkeletonBlock.vue'
 </script>
 
 <template>
-  <div class="space-y-4" aria-busy="true" role="status" :aria-label="$t('estados.cargando')">
+  <div class="space-y-4" aria-busy="true" role="status" :aria-label="$t('estados.descargandoNasa')">
+    <p class="flex items-center gap-2 text-sm font-medium text-stone-600 dark:text-stone-300">
+      <Satellite class="size-4 shrink-0 animate-pulse text-nasa-600 dark:text-nasa-300" aria-hidden="true" />{{ $t('estados.descargandoNasa') }}
+    </p>
     <div class="bosque space-y-4 rounded-[30px] p-6 sm:p-8">
       <SkeletonBlock oscuro ancho="w-48" alto="h-6" redondo="rounded-full" />
       <SkeletonBlock oscuro alto="h-9" ancho="w-11/12" />

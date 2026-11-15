@@ -133,7 +133,10 @@ export interface ZonaRiesgo {
 /** GET /api/mapa?region= */
 export interface MapaRiesgo {
   region: string
+  /** Color de cada valle = su riesgo LOCAL (lluvia, humedad del suelo, calor), sin El Niño */
   zonas: ZonaRiesgo[]
+  /** El Niño: igual para toda la costa; se muestra aparte (leyenda), no pinta los valles */
+  elNino?: { valor: number; nivel: NivelRiesgo; fuente: string; semana?: string; unidad?: string } | null
 }
 
 /** GET /api/cultivos */
@@ -228,6 +231,8 @@ export interface PreguntaAsistente {
 
 /** Respuesta del asistente: plantillas sobre resultados ya calculados (sin IA). */
 export interface RespuestaAsistente {
+  /** 'ia' = Groq; 'respaldo' = recomendación calculada (la IA falló, tardó o no está configurada) */
+  modo?: 'ia' | 'respaldo'
   respuesta: string
   /** Solo las fuentes que trae la recomendación calculada */
   fuentes: FuenteDato[]

@@ -52,7 +52,7 @@ public class CatalogoCalculos {
             Map<String, Object> m = new LinkedHashMap<>();
             String codigo = codigo(c.nombre());
             m.put("id", codigo);
-            m.put("nombre", Map.of("es", c.nombre(), "en", c.nombre()));
+            m.put("nombre", Map.of("es", NombresCultivo.es(c.nombre()), "en", NombresCultivo.en(c.nombre())));
             m.put("tipo", permanente ? "permanente" : "temporal");
             m.put("temp_min", c.tempMin());
             m.put("temp_max", c.tempMax());

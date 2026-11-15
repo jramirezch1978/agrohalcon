@@ -10,7 +10,8 @@ import type { ClaveIndicador, Indicador } from '@/types/api'
 const props = defineProps<{ clave: ClaveIndicador | null; indicador: Indicador | null }>()
 defineEmits<{ cerrar: [] }>()
 
-const { diferencia, escala } = useIndicador()
+const { diferencia, escala, mostrar } = useIndicador()
+const vista = computed(() => (props.clave && props.indicador ? mostrar(props.clave, props.indicador) : null))
 
 /** Resolución espacial aproximada de cada fuente */
 const RESOLUCION: Record<string, string> = {
@@ -40,13 +41,13 @@ const e = computed(() => (props.indicador ? escala(props.indicador) : { actual: 
       <div class="mt-6 grid grid-cols-2 gap-3">
         <div class="rounded-2xl p-4" :class="ESTILO_RIESGO[indicador.nivel].fondo">
           <p class="text-xs font-semibold text-stone-600 dark:text-stone-300">{{ $t('indicadores.tuParcela') }}</p>
-          <p class="mt-1 font-display text-3xl font-bold tabular-nums">{{ indicador.valor }}</p>
-          <p class="text-xs text-stone-600 dark:text-stone-400">{{ indicador.unidad }}</p>
+          <p class="mt-1 font-display text-3xl font-bold tabular-nums">{{ vista?.valor }}</p>
+          <p class="text-xs text-stone-600 dark:text-stone-400">{{ vista?.unidad }}</p>
         </div>
         <div class="rounded-2xl bg-arena p-4 dark:bg-white/5">
           <p class="text-xs font-semibold text-stone-600 dark:text-stone-300">{{ $t('indicadores.normal') }}</p>
-          <p class="mt-1 font-display text-3xl font-bold text-stone-500 tabular-nums dark:text-stone-400">{{ indicador.normal }}</p>
-          <p class="text-xs text-stone-600 dark:text-stone-400">{{ indicador.unidad }}</p>
+          <p class="mt-1 font-display text-3xl font-bold text-stone-500 tabular-nums dark:text-stone-400">{{ vista?.normal }}</p>
+          <p class="text-xs text-stone-600 dark:text-stone-400">{{ vista?.unidad }}</p>
         </div>
       </div>
       <div class="mt-4 space-y-2" aria-hidden="true">

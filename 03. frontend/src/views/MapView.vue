@@ -12,7 +12,7 @@ import { api } from '@/services/api'
 import L, { iconoParcela } from '@/services/leaflet'
 import { buscarLugar, nombreDeLugar, type LugarEncontrado } from '@/services/ubicacion'
 import { PARCELA_PIURA, useAppStore } from '@/stores/app'
-import type { ZonaRiesgo } from '@/types/api'
+import type { MapaRiesgo, ZonaRiesgo } from '@/types/api'
 
 const store = useAppStore()
 const router = useRouter()
@@ -114,6 +114,7 @@ function analizar(lat: number, lon: number, nombre?: string) {
 // Zonas de riesgo (GET /api/mapa?region=piura)
 // ---------------------------------------------------------------------------
 const errorZonas = ref(false)
+const elNino = ref<MapaRiesgo['elNino']>(null)
 
 /** Contenido del popup como componente Vue (con i18n), montado en un div para Leaflet. */
 function contenidoPopup(z: ZonaRiesgo): HTMLElement {
@@ -128,7 +129,8 @@ function contenidoPopup(z: ZonaRiesgo): HTMLElement {
 async function dibujarZonas() {
   errorZonas.value = false
   try {
-    const { zonas } = await api.getMapa('piura', store.idioma)
+    const { zonas, elNino: nino } = await api.getMapa('piura', store.idioma)
+    elNino.value = nino ?? null
     const m = mapa.value
     if (!m) return
     for (const z of zonas) {
@@ -292,7 +294,7 @@ onBeforeUnmount(() => {
     </p>
 
     <!-- Leyenda (esquina superior izquierda) -->
-    <MapLegend class="absolute top-[5.5rem] left-3 z-[400] lg:top-28 lg:left-6" />
+    <MapLegend :el-nino="elNino" class="absolute top-[5.5rem] left-3 z-[400] lg:top-28 lg:left-6" />
 
     <!-- Controles flotantes (esquina superior derecha) -->
     <div class="absolute top-[5.5rem] right-3 z-[400] flex flex-col items-end gap-2 lg:top-28 lg:right-6">
