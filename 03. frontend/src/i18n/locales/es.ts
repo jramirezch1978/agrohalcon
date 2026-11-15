@@ -276,6 +276,10 @@ export default {
     fuenteSoilgrids: 'Propuesto por SoilGrids (ISRIC, CC-BY 4.0). No es dato de la NASA.',
     fuenteAgricultor: 'Lo elegiste tú.',
     sinDato: 'Sin dato: elígelo si lo sabes.',
+    materiaOrganica: 'Materia orgánica: {soc} g de carbono por kg.',
+    infiltracion_alta: 'El agua entra rápido y se va: riega poco y seguido.',
+    infiltracion_media: 'El agua entra y se queda bien.',
+    infiltracion_baja: 'El agua entra lento: cuidado con los encharcamientos.',
   },
   validacion: {
     titulo: '¿Funciona? Lo probamos con El Niño de 2017',
@@ -425,6 +429,15 @@ export default {
       { p: '¿De dónde sale el tipo de suelo que me sugiere?', r: 'De SoilGrids, un mapa mundial de suelos de ISRIC (licencia CC-BY 4.0). No es dato de la NASA y puede no coincidir con tu parcela: tú decides si lo usas o eliges otro.' },
       { p: '¿Puedo hacerle preguntas?', r: 'Sí: toca «Pregúntale a AllpaShift». Te explica la recomendación con los mismos datos; no inventa consejos nuevos.' },
     ],
+  },
+  escenario: {
+    titulo: '¿Y si el año viene…?',
+    seco: 'Seco',
+    normal: 'Normal',
+    lluvioso: 'Lluvioso',
+    notaNormal: 'Con la lluvia normal de tu zona (NASA POWER, 2001-2025).',
+    nota_seco: 'Escenario hipotético: 40 % menos lluvia que lo normal. No es un pronóstico.',
+    nota_lluvioso: 'Escenario hipotético: 60 % más lluvia que lo normal (como un año de El Niño). No es un pronóstico.',
   },
   reto: {
     etiqueta: 'El reto de la NASA',

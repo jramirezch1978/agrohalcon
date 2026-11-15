@@ -114,3 +114,10 @@ prioridades:
 suelo_textura:
   arenoso_arena_desde: 70   # % de arena >= 70 → arenoso
   arcilloso_arcilla_desde: 35  # % de arcilla >= 35 → arcilloso; si no, franco
+
+# ---------- Escenarios hipotéticos ("¿y si el año viene…?") ----------
+# Multiplica la lluvia NORMAL de cada mes (climatología NASA POWER) para las rotaciones. No es un pronóstico. Supuesto del equipo.
+escenarios:
+  seco: 0.6
+  normal: 1.0
+  lluvioso: 1.6

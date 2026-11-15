@@ -2,6 +2,7 @@
 
 Se usa solo para PROPONER el tipo de suelo de la parcela; el agricultor lo puede cambiar. Promedio 0-30 cm de arena,
 limo y arcilla (g/kg → %), clasificado en arenoso / franco / arcilloso con los cortes de config/umbrales.yaml.
+También el carbono orgánico (materia orgánica, g/kg) y la infiltración esperada según la textura (informativos).
 Si SoilGrids falla o no tiene dato (zonas urbanas, agua), devuelve tipoSuelo = None y la app pide el dato a mano.
 """
 from __future__ import annotations
@@ -18,6 +19,22 @@ PROFUNDIDADES = {"0-5cm": 5, "5-15cm": 10, "15-30cm": 15}   # espesor de cada ca
 
 def sin_dato(motivo: str) -> dict:
     return {"tipoSuelo": None, "arena": None, "limo": None, "arcilla": None, "fuente": "sin dato", "motivo": motivo}
+
+
+INFILTRACION = {"arenoso": "alta", "franco": "media", "arcilloso": "baja"}
+
+
+def promedio_capa(datos: dict, nombre: str) -> float | None:
+    """Promedio 0-30 cm de una propiedad en sus unidades de destino (valor / d_factor), o None."""
+    for capa in datos.get("properties", {}).get("layers", []):
+        if capa.get("name") != nombre:
+            continue
+        factor = capa.get("unit_measure", {}).get("d_factor") or 10
+        pares = [(d.get("values", {}).get("mean"), PROFUNDIDADES.get(d.get("label"))) for d in capa.get("depths", [])]
+        if not pares or any(v is None or w is None for v, w in pares):
+            return None
+        return round(sum(v / factor * w for v, w in pares) / sum(w for _, w in pares), 1)
+    return None
 
 
 def textura_de_respuesta(datos: dict) -> dict[str, float] | None:
@@ -56,23 +73,25 @@ class ClienteSoilGrids:
         self.cache, self.timeout_s, self.transport = cache, timeout_s, transport
 
     async def suelo(self, lat: float, lon: float, u: dict) -> dict:
-        clave = f"soilgrids:{lat:.3f},{lon:.3f}"
+        clave = f"soilgrids:v2:{lat:.3f},{lon:.3f}"   # v2: con carbono orgánico
         if self.cache and (guardado := self.cache.leer(clave)) is not None:
             return guardado
         params = [("lat", lat), ("lon", lon), ("value", "mean")]
-        params += [("property", p) for p in ("sand", "silt", "clay")] + [("depth", d) for d in PROFUNDIDADES]
+        params += [("property", p) for p in ("sand", "silt", "clay", "soc")] + [("depth", d) for d in PROFUNDIDADES]
         try:
             async with httpx.AsyncClient(timeout=self.timeout_s, transport=self.transport) as cli:
                 r = await cli.get(URL, params=params)
                 r.raise_for_status()
-                textura = textura_de_respuesta(r.json())
+                datos = r.json()
+                textura = textura_de_respuesta(datos)
         except (httpx.HTTPError, ValueError) as e:
             return sin_dato(f"SoilGrids no respondió ({type(e).__name__})")   # no se guarda: se reintenta luego
         if textura is None:
             out = sin_dato("SoilGrids no tiene dato en este punto (zona urbana o agua)")
         else:
-            out = {"tipoSuelo": clasificar(textura, u), **textura, "profundidad": "0-30 cm",
-                   "fuente": FUENTE, "licencia": LICENCIA}
+            tipo = clasificar(textura, u)
+            out = {"tipoSuelo": tipo, **textura, "carbonoOrganico": promedio_capa(datos, "soc"),   # g/kg (sin dato → None)
+                   "infiltracion": INFILTRACION[tipo], "profundidad": "0-30 cm", "fuente": FUENTE, "licencia": LICENCIA}
         if self.cache:
             self.cache.guardar(clave, out)
         return out

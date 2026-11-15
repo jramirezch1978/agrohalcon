@@ -41,4 +41,15 @@ class PerfilAgricultorTest {
         assertThatThrownBy(() -> PerfilAgricultor.de(null, "rocoso", null, null)).isInstanceOf(ErroresApi.ApiError.class);
         assertThatThrownBy(() -> PerfilAgricultor.de(null, null, "mucha", null)).isInstanceOf(ErroresApi.ApiError.class);
     }
+
+    @Test
+    void escenarioVaAPythonYNormalNoSeEnvia() {
+        Map<String, Object> pedido = new LinkedHashMap<>();
+        var seco = PerfilAgricultor.de(null, null, null, null, null, "seco");
+        seco.ponerEn(pedido);
+        assertThat(pedido).containsEntry("escenario", "seco");
+        assertThat(seco.clave()).isNotEqualTo(PerfilAgricultor.VACIO.clave());
+        assertThat(PerfilAgricultor.de(null, null, null, null, null, "normal").escenario()).isNull();
+        assertThatThrownBy(() -> PerfilAgricultor.de(null, null, null, null, null, "catastrofe")).isInstanceOf(ErroresApi.ApiError.class);
+    }
 }
