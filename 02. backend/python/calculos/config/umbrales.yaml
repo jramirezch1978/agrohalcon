@@ -66,3 +66,41 @@ rotaciones:
   # Mismos valores que usa climate-service (EL_NINO_EXTREMO_C / EL_NINO_EXTREMO_PTS). Supuesto del equipo.
   el_nino_extremo_c: 3.0
   el_nino_extremo_puntos: -35
+
+# ---------- Salud del suelo de cada rotación (0-100; base + reglas) ----------
+# Supuestos del equipo, explicables y ajustables. Una rotación de dos cultivos distintos, de familias distintas y sin
+# más datos queda en la base. Con leguminosa + raíces alternas + cobertura llega a 100. Arroz - Arroz queda en 40.
+salud_suelo:
+  base: 70
+  monocultivo: -30          # el mismo cultivo dos veces seguidas: agota los mismos nutrientes y mantiene sus plagas
+  misma_familia: -15        # cultivos distintos de la misma familia botánica (p. ej. arroz y maíz, Poaceae)
+  leguminosa: 15            # alguna leguminosa (Fabaceae): fija nitrógeno del aire
+  raices_alternas: 10       # raíces de distinta profundidad: exploran capas distintas del suelo
+  cobertura: 5              # cultivo que cubre el suelo (protege de erosión y sol)
+  agua_alta_seguidos: -10   # dos cultivos de uso de agua ALTO seguidos: tanto riego cansa el suelo y lo puede salinizar
+  agua_alta_suelo_salino:   # cultivo de uso de agua ALTO según la salinidad que declara el agricultor
+    no: 0
+    leve: -10
+    alta: -20
+  riesgo_bajo_desde: 70     # mismos cortes que el puntaje climático: >= 70 bueno, 45-69 regular, < 45 malo
+  riesgo_medio_desde: 45
+  # Información local del suelo (Punto 2). Solo si la parcela trae el dato.
+  salinidad_tolerancia:     # cultivo poco tolerante a la sal en suelo salino (una vez por rotación, el peor caso)
+    leve: {baja: -10, media: 0, alta: 0}
+    alta: {baja: -20, media: -10, alta: 0}
+  arenoso_agua_alta: -10    # suelo arenoso retiene poca agua: castiga cultivos de uso de agua ALTO
+
+# ---------- Prioridad del agricultor: puntaje final = clima·w + suelo·w + agua·w ----------
+# Supuestos del equipo. Sin prioridad elegida se usa "por_defecto".
+prioridades:
+  por_defecto: arriesgar_menos
+  pesos:
+    arriesgar_menos: {clima: 0.60, suelo: 0.25, agua: 0.15}
+    cuidar_suelo:    {clima: 0.35, suelo: 0.50, agua: 0.15}
+    ahorrar_agua:    {clima: 0.35, suelo: 0.15, agua: 0.50}
+  puntaje_agua: {bajo: 100, medio: 60, alto: 20}   # uso de agua de la rotación (el cultivo que más usa)
+
+# ---------- Textura del suelo (SoilGrids, ISRIC; 0-30 cm) → tipo de suelo de la app ----------
+suelo_textura:
+  arenoso_arena_desde: 70   # % de arena >= 70 → arenoso
+  arcilloso_arcilla_desde: 35  # % de arcilla >= 35 → arcilloso; si no, franco

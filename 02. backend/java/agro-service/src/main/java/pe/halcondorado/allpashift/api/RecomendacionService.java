@@ -103,12 +103,21 @@ public class RecomendacionService {
     /** GET /api/recomendacion */
     @SuppressWarnings("unchecked")
     public Respuesta recomendacion(double lat, double lon, String lang, String tipoCultivo, String mesSiembra, String cultivo) {
+        return recomendacion(lat, lon, lang, tipoCultivo, mesSiembra, cultivo, PerfilAgricultor.VACIO);
+    }
+
+    /** GET /api/recomendacion con la prioridad y el suelo que eligió el agricultor (solo afectan a las rotaciones). */
+    @SuppressWarnings("unchecked")
+    public Respuesta recomendacion(double lat, double lon, String lang, String tipoCultivo, String mesSiembra, String cultivo,
+                                   PerfilAgricultor perfil) {
         String idioma = "en".equals(lang) ? "en" : "es";
         String tipo = "permanente".equals(tipoCultivo) ? "permanente" : "temporal";
         String mes = mesSiembra == null || mesSiembra.isBlank()
                 ? LocalDate.now(ZoneId.of("America/Lima")).toString().substring(0, 7) : mesSiembra;
         String perm = cultivo == null || cultivo.isBlank() ? "mango" : cultivo;
-        String clave = String.format(Locale.ROOT, "reco:%.3f,%.3f:%s:%s:%s", lat, lon, tipo, "permanente".equals(tipo) ? perm : mes, idioma);
+        PerfilAgricultor pf = perfil == null ? PerfilAgricultor.VACIO : perfil;
+        String clave = String.format(Locale.ROOT, "reco:%.3f,%.3f:%s:%s:%s", lat, lon, tipo, "permanente".equals(tipo) ? perm : mes, idioma)
+                + ("permanente".equals(tipo) ? "" : ":v2:" + pf.clave());   // v2: rotaciones con suelo y prioridad (15-nov)
         Zona zona = zonaCercana(lat, lon, 0.09);   // ~30 km: solo se asocia si el punto está en un valle conocido
         Integer zonaId = zona == null ? null : zona.id();
 
@@ -123,6 +132,7 @@ public class RecomendacionService {
                 pedido.put("cultivo", CatalogoCalculos.codigo(PERMANENTES.getOrDefault(perm, perm)));
             } else {
                 pedido.put("mesSiembra", mes);
+                pf.ponerEn(pedido);
             }
             pedido.put("catalogo", cat.cultivos());
             Map<String, Object> reco = calculos.calcular(pedido);

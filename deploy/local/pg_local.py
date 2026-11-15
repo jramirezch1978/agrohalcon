@@ -25,7 +25,7 @@ import pgserver
 
 REPO = Path(__file__).resolve().parents[2]
 DDL = REPO / "04. base de datos" / "ddl"
-SEEDS = [DDL / "00-schema.sql", DDL / "seed" / "01-catalogo-norte.sql", DDL / "seed" / "02-datos-nasa.sql"]
+SEEDS = [DDL / "00-schema.sql", DDL / "seed" / "01-catalogo-norte.sql", DDL / "seed" / "02-datos-nasa.sql", DDL / "seed" / "03-salud-suelo.sql"]
 DATOS = Path(__file__).resolve().parent / ".pgdata"
 PG = Path(pgserver.__file__).resolve().parent / "pginstall"
 PSQL = PG / "bin" / ("psql.exe" if sys.platform == "win32" else "psql")

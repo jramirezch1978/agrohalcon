@@ -19,7 +19,7 @@ spring:
             - id: allpashift-api
               uri: ${AGRO_SERVICE_URL:http://localhost:8081}
               predicates:
-                - Path=/api/recomendacion,/api/mapa,/api/validacion,/api/validacion/**,/api/cultivos,/api/asistente,/api/salud
+                - Path=/api/recomendacion,/api/mapa,/api/validacion,/api/validacion/**,/api/cultivos,/api/asistente,/api/salud,/api/suelo
             # Java: agro-service (cultivos, rotaciones, calendario)
             - id: agro-service
               uri: ${AGRO_SERVICE_URL:http://localhost:8081}

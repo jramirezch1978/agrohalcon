@@ -20,7 +20,8 @@ public class CatalogoRepository {
     }
 
     public record Cultivo(int id, String nombre, double tempMin, double tempMax, String agua, List<Integer> mesesSiembra,
-                          List<Integer> mesesCosecha, Integer cicloDias, boolean toleraSequia, boolean toleraInundacion, String tipo) {}
+                          List<Integer> mesesCosecha, Integer cicloDias, boolean toleraSequia, boolean toleraInundacion, String tipo,
+                          boolean fijaNitrogeno, boolean cobertura, String familia, String profundidadRaiz, String toleranciaSalinidad) {}
 
     public record Rotacion(int id, String nombre, int cultivo1Id, int cultivo2Id, boolean monocultivo) {}
 
@@ -33,13 +34,16 @@ public class CatalogoRepository {
     public List<Cultivo> cultivos(String piso, boolean soloAnuales) {
         return jdbc.query("""
                 SELECT v.id, v.nombre, v.temp_min_c, v.temp_max_c, v.agua_necesaria, v.meses_siembra, v.meses_cosecha,
-                       c.ciclo_dias, c.tolera_sequia, c.tolera_inundacion, c.tipo
+                       c.ciclo_dias, c.tolera_sequia, c.tolera_inundacion, c.tipo, c.fija_nitrogeno, c.cultivo_cobertura,
+                       -- columnas de salud del suelo (seed/03-salud-suelo.sql); to_jsonb da NULL si la base aún no las tiene
+                       to_jsonb(c) ->> 'familia', to_jsonb(c) ->> 'profundidad_raiz', to_jsonb(c) ->> 'tolerancia_salinidad'
                   FROM agro.v_cultivos_contrato v JOIN agro.cultivos c ON c.id = v.id
                  WHERE (CAST(? AS text) IS NULL OR EXISTS (SELECT 1 FROM agro.calendario k WHERE k.cultivo_id = c.id AND k.piso = CAST(? AS text)))
                    AND (NOT CAST(? AS boolean) OR c.tipo = 'anual')
                  ORDER BY v.id""",
                 (rs, i) -> new Cultivo(rs.getInt(1), rs.getString(2), rs.getDouble(3), rs.getDouble(4), rs.getString(5),
-                        enteros(rs.getArray(6)), enteros(rs.getArray(7)), (Integer) rs.getObject(8), rs.getBoolean(9), rs.getBoolean(10), rs.getString(11)),
+                        enteros(rs.getArray(6)), enteros(rs.getArray(7)), (Integer) rs.getObject(8), rs.getBoolean(9), rs.getBoolean(10), rs.getString(11),
+                        rs.getBoolean(12), rs.getBoolean(13), rs.getString(14), rs.getString(15), rs.getString(16)),
                 piso, piso, soloAnuales);
     }
 

@@ -14,6 +14,15 @@ export function responderConPlantillas(pregunta: string, rec: Recomendacion, idi
   // Pregunta sobre una rotación concreta ("¿Por qué Arroz - Arroz tiene 55 puntos?")
   const norm = (t: string) => t.toLowerCase().normalize('NFD').replace(/[^a-z]/g, '')
   const rot = rec.rotaciones.find((r) => norm(q).includes(norm(r.nombre)))
+  // Pregunta sobre el suelo: puntaje de suelo de esa rotación (o de la recomendada)
+  if (/suelo|soil|tierra|nitr[oó]g|legum|salin|salitre|\bsal\b|\bsalt|arenos|sandy/.test(q)) {
+    const r = rot ?? ordenar(rec)[0]
+    if (r?.saludSuelo != null) return sobreSuelo(r, es)
+  }
+  if (/recomiend|recomend|recommend/.test(q) && ordenar(rec)[0]?.motivoRecomendada) {
+    const m = ordenar(rec)[0]!
+    return { respuesta: `${m.nombre}. ${m.motivoRecomendada}`, fuentes: [es ? 'puntaje de AllpaShift' : 'AllpaShift score'] }
+  }
   if (rot) return sobreRotacion(rec, rot.id, es)
   if (/arroz|rice/.test(q)) return sobreArroz(rec, es)
   if (/rotaci|rotation|riesgo|risk|mejor|best/.test(q)) return sobreRotaciones(rec, es)
@@ -89,13 +98,22 @@ function sobreMesRiesgoso(rec: Recomendacion, es: boolean): RespuestaAsistente {
   return { respuesta, fuentes: unicas([peor.fuente]) }
 }
 
+/** Puntaje de suelo de una rotación con sus reglas (catálogo de cultivos / dato del agricultor; nunca NASA) */
+function sobreSuelo(r: Recomendacion['rotaciones'][number], es: boolean): RespuestaAsistente {
+  const reglas = [...(r.descuentosSuelo ?? [])].sort((a, b) => b.puntos - a.puntos).slice(0, 3).map((d) => d.explicacion)
+  const respuesta = es
+    ? `${r.nombre}: cuidado del suelo ${r.saludSuelo} de 100. ${reglas.length ? reglas.join(' ') : 'Ninguna regla de suelo le suma ni le resta.'}`
+    : `${r.nombre}: soil care ${r.saludSuelo} out of 100. ${reglas.length ? reglas.join(' ') : 'No soil rule adds or takes points.'}`
+  return { respuesta, fuentes: [es ? 'catálogo de cultivos' : 'crop catalog'] }
+}
+
 function sobreRotaciones(rec: Recomendacion, es: boolean): RespuestaAsistente {
   const [mejor, ...resto] = ordenar(rec)
   if (!mejor) return resumen(rec, es)
   const lista = resto.map((r) => `${r.nombre} (${r.puntaje})`).join(es ? ' y ' : ' and ')
   const respuesta = es
-    ? `La de menos riesgo es ${mejor.nombre}, con ${mejor.puntaje}/100. ${sinPunto(mejor.explicacion)}.${lista ? ` Le siguen ${lista}.` : ''}`
-    : `The lowest-risk option is ${mejor.nombre}, scoring ${mejor.puntaje}/100. ${sinPunto(mejor.explicacion)}.${lista ? ` Next are ${lista}.` : ''}`
+    ? `La recomendada es ${mejor.nombre}, con ${mejor.puntaje}/100. ${sinPunto(mejor.explicacion)}.${lista ? ` Le siguen ${lista}.` : ''}`
+    : `The recommended option is ${mejor.nombre}, scoring ${mejor.puntaje}/100. ${sinPunto(mejor.explicacion)}.${lista ? ` Next are ${lista}.` : ''}`
   return { respuesta, fuentes: unicas(rec.rotaciones.flatMap((r) => fuentesRotacion(rec, r.id))) }
 }
 

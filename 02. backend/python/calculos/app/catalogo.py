@@ -52,6 +52,12 @@ class Cultivo(BaseModel):
     duracion_meses: int | None = Field(default=None, ge=1, le=24)
     meses_siembra: list[int] = Field(default_factory=list)
     tradicional: bool = False
+    # Salud del suelo (opcionales: None / False = sin dato, la regla no se aplica)
+    familia: str | None = None
+    leguminosa: bool = False
+    cobertura: bool = False
+    profundidad_raiz: Literal["superficial", "media", "profunda"] | None = None
+    tolerancia_salinidad: Literal["baja", "media", "alta"] | None = None
     etapas: list[Etapa] = Field(default_factory=list)
     acciones: list[AccionCatalogo] = Field(default_factory=list)
 
