@@ -61,3 +61,8 @@ rotaciones:
   siembra_fuera_de_meses: -15   # por cada cultivo de la rotación sembrado fuera de sus meses
   riesgo_bajo_desde: 70         # puntaje >= 70 → bajo
   riesgo_medio_desde: 45        # 45-69 → medio; < 45 → alto
+  # El Niño EXTRAORDINARIO (anomalía del mar en Niño 1+2 por encima del "fuerte" del ENFEN, ~3 °C): con lluvias e inundaciones fuera de lo
+  # normal ninguna siembra es segura, así que se resta a TODAS las rotaciones (solo en la costa norte y con dato real de MUR SST).
+  # Mismos valores que usa climate-service (EL_NINO_EXTREMO_C / EL_NINO_EXTREMO_PTS). Supuesto del equipo.
+  el_nino_extremo_c: 3.0
+  el_nino_extremo_puntos: -35

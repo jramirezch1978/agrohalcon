@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers import calcular, mapa, punto, salud, validacion
 
 app = FastAPI(
-    title="AgroShift – servicio de cálculos",
+    title="AllpaShift – servicio de cálculos",
     description="Indicadores de riesgo climático con datos de la NASA. Reglas simples y explicables, sin IA.",
     version="0.1.0",
 )
