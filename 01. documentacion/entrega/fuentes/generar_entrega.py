@@ -164,7 +164,8 @@ Drainage Paper 29 and Peruvian agricultural sources listed in References.</p>
 <table><tr><th>Tool</th><th>Purpose</th><th>How we applied it</th></tr>
 <tr><td>Groq with gpt-oss-20b (Apache 2.0)</td><td>In-app assistant that explains the recommendation in plain words.</td><td>It receives the already-calculated recommendation as JSON plus the farmer's question. It is told not to calculate, not to invent numbers and to cite only the sources in the JSON; numbers in the answer are checked. If it fails, the app shows the calculated reason. The API key stays on the server.</td></tr>
 <tr><td>Claude (Anthropic)</td><td>Writing part of the code (frontend, API, calculation service, mobile) and documentation drafts.</td><td>The team defined the architecture, rules and data. It reviewed, tested and fixed the generated code, and verified it with automated tests.</td></tr>
-<tr><td>ChatGPT (OpenAI)</td><td>Visual support: cover image and AllpaShift icon.</td><td>Visual illustration only; it does not represent real data.</td></tr></table>
+<tr><td>ChatGPT (OpenAI)</td><td>Visual support: cover image, Earth background and AllpaShift icon.</td><td>Visual illustration only; it does not represent real data. Each image carries a visible "SI-generated" mark.</td></tr>
+<tr><td>Gemini (Google)</td><td>Video scenes for the demo video.</td><td>The demo video includes SI-generated footage made with Gemini; it is illustrative and marked as SI-generated. App screens and data shown are real.</td></tr></table>
 <p>All AI-generated content was reviewed by the team. The ideas, decisions and data in this project belong to Team Halcón Dorado.</p>
 <h2>Links</h2>
 <table class="lic"><tr><td>NASA POWER</td><td colspan="2">https://power.larc.nasa.gov/</td></tr>
@@ -227,7 +228,8 @@ REFERENCES = pagina("References", "All data, resources and external tools used i
 <tr><td>gpt-oss-20b (OpenAI), in-app assistant model</td><td>Apache-2.0</td><td>https://huggingface.co/openai/gpt-oss-20b</td></tr>
 <tr><td>Groq, platform that runs the model</td><td>Groq terms of service</td><td>https://groq.com/</td></tr>
 <tr><td>Claude (Anthropic), help writing code and documents</td><td>Service</td><td>https://claude.ai/</td></tr>
-<tr><td>ChatGPT (OpenAI), cover and icon</td><td>Service</td><td>https://chatgpt.com/</td></tr></table>
+<tr><td>ChatGPT (OpenAI), cover, Earth image and icon</td><td>Service</td><td>https://chatgpt.com/</td></tr>
+<tr><td>Gemini (Google), demo video scenes</td><td>Service</td><td>https://gemini.google.com/</td></tr></table>
 <h2>Project license</h2>
 <p>AllpaShift original code is released under the Apache 2.0 license and managed on GitHub: https://github.com/jramirezch1978/allpashift</p>
 """)
