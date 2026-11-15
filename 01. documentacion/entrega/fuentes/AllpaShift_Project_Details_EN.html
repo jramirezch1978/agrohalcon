@@ -1,0 +1,78 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>AllpaShift · Project Details</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap');
+@page { size: A4; margin: 16mm 18mm 16mm 18mm; }
+* { box-sizing: border-box; }
+body { font-family: Inter, sans-serif; font-size: 10.2pt; line-height: 1.5; color: #1d2421; margin: 0; }
+header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #1d2421; padding-bottom: 12px; margin-bottom: 18px; }
+.marca { display: flex; align-items: center; gap: 8px; font-family: Poppins; font-weight: 800; font-size: 21pt; color: #0f2a1f; }
+.marca span { color: #2f9d27; }
+.meta { text-align: right; font-size: 8.6pt; color: #4b5560; line-height: 1.55; }
+.meta b { color: #1d2421; }
+h1 { font-family: Poppins; font-weight: 800; font-size: 21pt; margin: 4px 0 2px; color: #1d2421; }
+.sub { color: #5b6470; margin: 0 0 12px; }
+h2 { font-family: Poppins; font-weight: 700; font-size: 13pt; margin: 16px 0 6px; }
+h3 { font-family: Poppins; font-weight: 700; font-size: 11pt; margin: 12px 0 4px; }
+p { margin: 4px 0 6px; }
+.tag { font-family: Poppins; font-weight: 700; font-size: 12pt; color: #2f9d27; margin: 0 0 10px; }
+.caja { border-left: 3px solid #2f9d27; background: #f3f6f2; padding: 7px 14px; margin: 6px 0 10px; }
+ol, ul { margin: 4px 0 8px; padding-left: 22px; }
+li { margin: 2px 0; }
+li::marker { color: #2f9d27; font-weight: 600; }
+.nuevo { display: inline-block; font-size: 7.4pt; font-weight: 600; color: #fff; background: #2f9d27; border-radius: 4px; padding: 0 5px; margin-left: 4px; vertical-align: 1px; }
+table { width: 100%; border-collapse: collapse; margin: 6px 0 8px; font-size: 9pt; }
+th { text-align: left; font-weight: 600; border-bottom: 1.5px solid #1d2421; padding: 5px 6px 5px 0; }
+td { border-bottom: 1px solid #dde2dc; padding: 5px 6px 5px 0; vertical-align: top; }
+td:first-child { font-weight: 600; width: 27%; }
+.refs p { margin: 0 0 6px; font-size: 9pt; }
+.lic td:first-child { width: 30%; } .lic td:nth-child(2) { width: 20%; font-weight: 400; }
+.final { font-family: Poppins; font-weight: 700; color: #2f9d27; margin-top: 10px; }
+.pie { margin-top: 14px; padding-top: 8px; border-top: 1px solid #dde2dc; font-size: 8pt; color: #6b7480; display: flex; justify-content: space-between; }
+.salto { break-before: page; }
+</style></head>
+<body><header><div class="marca"><svg viewBox="0 0 64 64" width="44" height="44"><rect width="64" height="64" rx="18" fill="#0f2a1f"/><ellipse cx="32" cy="34" rx="25" ry="9" fill="none" stroke="#5b85f5" stroke-width="2" transform="rotate(-24 32 34)" opacity=".9"/><path d="M32 50V30" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M32 33c0-9 6-15 15-15 0 9-6 15-15 15z" fill="#c2ee5c"/><path d="M32 39c0-7.5-5-12.5-13-12.5 0 8 5 13 13 12.5z" fill="#80cf9c"/><circle cx="52" cy="22" r="3.5" fill="#fff"/></svg><div>Allpa<span>Shift</span></div></div>
+<div class="meta"><b>Team Halcón Dorado</b> · Piura, Peru<br>Challenge: Field Shift: Adapting Farms with NASA Data<br>NASA Space Apps Challenge 2026</div></header>
+<h1>Project Details</h1><p class="sub">How AllpaShift works, the tools we used and the goals behind it.</p>
+<h2>How does it work?</h2>
+<div class="caja">The farmer picks a plot and sets priorities → the app (web, Android or iOS) calls the AllpaShift API → the API answers from
+the database if the result is fresh, or asks the calculation service, which reads NASA data and applies fixed rules → the app shows what to do and why.</div>
+<ol>
+<li><b>Pick the plot.</b> The farmer taps a point on the map or uses the phone's GPS (native permission on Android and iOS). It works at any coordinate on Earth.</li>
+<li><b>Set priorities.</b><span class="nuevo">NEW</span> The farmer chooses what matters most: save water, protect the soil, income or lower risk. This changes how rotations are ranked.</li>
+<li><b>Get the data.</b> Rainfall, temperature and climatology from NASA POWER for any point. In the Piura pilot area it adds GPM IMERG
+satellite rainfall, SMAP soil moisture and MODIS NDVI vegetation; on the northern coast, MUR SST sea temperature.</li>
+<li><b>Know the local soil.</b><span class="nuevo">NEW</span> Each pilot zone carries its soil conditions (texture and known salinity, e.g. Bajo Piura and Sechura),
+combined with SMAP moisture, so crops that do not tolerate those conditions lose points.</li>
+<li><b>Compute the indicators.</b> Rainfall, soil moisture, heat, El Niño and vegetation compare the current value with the normal for that month and get a level: low, medium or high.</li>
+<li><b>Estimate season risk.</b> For each crop, from planting to harvest, the climate of each month is compared with what the crop tolerates. If sea temperature signals El Niño, rain risk from January to April goes up.</li>
+<li><b>Score the rotations for climate and soil health.</b><span class="nuevo">NEW</span> Each rotation starts at 100 points. It loses points for water needs versus deficit,
+months outside the temperature range, high-risk months and planting out of season; and now also for monoculture and two water-hungry crops in a row,
+while nitrogen-fixing legumes (e.g. zarandaja, bean) earn points. Every change is recorded with its reason and source.</li>
+<li><b>Decide and explain.</b> Priority rules choose the action for this fortnight. The app shows the result with its NASA dataset, and an AI assistant explains it in plain words. The AI does no calculations.</li>
+</ol>
+<h3>Validation with the 2017 El Niño</h3>
+<p>We applied the same rules to real data from 2001 to 2026. Rainfall comes from GPM IMERG and the alert from the MUR SST series. Tapping any
+month shows its rain day by day and week by week (IMERG daily), so the farmer can see exactly when the heaviest rains fell.</p>
+<h3>What the system does not do</h3>
+<p>AllpaShift does not forecast exact weather months ahead: it estimates risk from NASA climate history and the early El Niño signal.
+It does not replace a soil laboratory test. Thresholds and soil-health weights are team assumptions, documented in the code so they can be adjusted.</p>
+<h2 class="salto">What tools did we use?</h2>
+<table><tr><th>Component</th><th>Tools</th></tr>
+<tr><td>App (web, Android, iOS)</td><td>Vue 3, Vite, TypeScript, Tailwind CSS, Pinia, vue-i18n (Spanish and English), Leaflet for the map, Chart.js for charts and Capacitor for Android and iOS.</td></tr>
+<tr><td>AllpaShift API</td><td>Java 17 with Spring Boot and Spring Cloud Gateway. It is the only component that reads and writes the database, and answers from it when data is fresh.</td></tr>
+<tr><td>Database</td><td>PostgreSQL: crop catalog, zones, rotations, saved results and every NASA value used.</td></tr>
+<tr><td>Calculation service</td><td>Python with FastAPI, Pydantic, httpx, pandas and NumPy. Rules and thresholds in configuration files, with automated tests (pytest). It only reads NASA data and calculates.</td></tr>
+<tr><td>NASA data access</td><td>NASA POWER API; NASA Earthdata (CMR and OPeNDAP) for GPM IMERG and SMAP; ORNL DAAC MODIS web service for NDVI; MUR SST v4.1 (NASA JPL, PO.DAAC) through NOAA CoastWatch ERDDAP.</td></tr>
+<tr><td>AI assistant</td><td>Groq as the platform, with the open model gpt-oss-20b (Apache 2.0). It only writes explanations from results that are already calculated.</td></tr>
+<tr><td>Deployment</td><td>Docker and Nginx on a cloud server.</td></tr>
+<tr><td>Maps and collaboration</td><td>OpenStreetMap data and place search (ODbL, with attribution). GitHub for code and version control.</td></tr></table>
+<p>All project code is released under the Apache 2.0 license.</p>
+<h2>Goals</h2>
+<ul>
+<li>Help farmers decide what to plant based on data, not just habit.</li>
+<li>Choose rotations that protect and rebuild the soil, not only the next harvest.</li>
+<li>Respect what each farmer values most: water, soil, income or lower risk.</li>
+<li>Reduce harvest losses from drought, extreme rain, heat and El Niño, and warn early using sea temperature.</li>
+<li>Make NASA data easy to understand for people without technical training, in any farming region of the world.</li>
+</ul>
+
+<div class="pie"><span>AllpaShift · Team Halcón Dorado</span><span>NASA Space Apps Challenge 2026</span></div></body></html>
