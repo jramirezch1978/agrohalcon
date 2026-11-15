@@ -153,6 +153,29 @@ export interface SerieValidacion {
   valores: (number | null)[]
   normal: (number | null)[]
   producto?: string
+  /** Mes en curso: suma de los días que ya tienen dato (IMERG Late), no es el total del mes */
+  parcial?: { mes: number; hasta: string; dias: number } | null
+}
+
+/** GET /api/validacion/detalle?anio=&mes=&lat=&lon= → lluvia de un mes día por día y por semana */
+export interface DetalleLluvia {
+  anio: number
+  mes: number
+  sinDato?: boolean
+  fuente: FuenteDato
+  producto: string
+  unidad: string
+  dias: { fecha: string; mm: number | null }[]
+  semanas: { semana: number; desde: string; hasta: string; mm: number | null; normal: number | null; diasConDato: number; dias: number }[]
+  total: number
+  normalMes: number | null
+  normalDia: number | null
+  veces: number | null
+  diaMaximo: { fecha: string; mm: number }
+  semanaMaxima: number | null
+  diasConLluvia: number
+  parcial: boolean
+  hasta: string
 }
 
 export interface AlertaValidacion {

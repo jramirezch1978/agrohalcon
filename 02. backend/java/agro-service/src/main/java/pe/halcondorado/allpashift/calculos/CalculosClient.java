@@ -45,6 +45,19 @@ public class CalculosClient {
                 .queryParam("lon", lon).queryParam("lang", lang).build()).retrieve().body(Map.class));
     }
 
+    /** GET /validacion/detalle?anio=&mes=&lat=&lon= → lluvia del mes día por día y por semana (IMERG diario). */
+    public Map<String, Object> detalleLluvia(int anio, int mes, double lat, double lon) {
+        try {
+            return llamar(() -> calculos.get().uri(u -> u.path("/validacion/detalle").queryParam("anio", anio).queryParam("mes", mes)
+                    .queryParam("lat", lat).queryParam("lon", lon).build()).retrieve().body(Map.class));
+        } catch (CalculosNoDisponibleException e) {
+            if (e.getCause() instanceof org.springframework.web.client.HttpClientErrorException.NotFound) {
+                return Map.of("anio", anio, "mes", mes, "sinDato", true);   // no hay lluvia diaria para ese mes/lugar
+            }
+            throw e;
+        }
+    }
+
     /** GET /validacion/anios?lat=&lon= → años con datos reales. */
     public Map<String, Object> anios(double lat, double lon) {
         return llamar(() -> calculos.get().uri(u -> u.path("/validacion/anios").queryParam("lat", lat).queryParam("lon", lon).build())

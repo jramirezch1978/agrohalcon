@@ -3,6 +3,7 @@ import { i18n } from '@/i18n'
 import { useOrigenStore } from '@/stores/origen'
 import type {
   AniosValidacion,
+  DetalleLluvia,
   Cultivo,
   MapaRiesgo,
   OpcionesRecomendacion,
@@ -11,7 +12,7 @@ import type {
   RespuestaAsistente,
   Validacion,
 } from '@/types/api'
-import { aniosValidacion, calcularMapa, calcularRecomendacion, calcularValidacion, CALCULOS_URL, soloConDato } from './calculos'
+import { aniosValidacion, detalleLluvia, calcularMapa, calcularRecomendacion, calcularValidacion, CALCULOS_URL, soloConDato } from './calculos'
 import { mockAniosValidacion, mockCultivos, mockMapa, mockRecomendacion, mockValidacion } from './mocks'
 import { responderConPlantillas } from './asistentePlantillas'
 import { climatologiaPower } from './nasaPower'
@@ -163,6 +164,14 @@ export const api = {
     const r = await http.get<Validacion>('/api/validacion', { params: { anio, lat, lon, lang: idioma } })
     marcarOrigenJava('validacion', r.headers)
     return r.data
+  },
+
+  /** Lluvia de un mes día por día y por semana (clic en una barra de "¿Funciona?"). */
+  async getDetalleLluvia(anio: number, mes: number, lat: number, lon: number): Promise<DetalleLluvia> {
+    if (MODO === 'python') return detalleLluvia(anio, mes, lat, lon)
+    if (MODO === 'ejemplo') throw new ApiError('Sin detalle diario en modo de ejemplo', 'desconocido')
+    const { data } = await http.get<DetalleLluvia>('/api/validacion/detalle', { params: { anio, mes, lat, lon }, timeout: 60000 })
+    return data
   },
 
   /** Años con datos reales (el selector de "¿Funciona?" solo ofrece estos). */

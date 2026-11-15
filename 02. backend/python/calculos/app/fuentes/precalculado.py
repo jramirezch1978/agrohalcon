@@ -18,6 +18,7 @@ ARCHIVO_MUR = "mur_sst_nino12.json"
 ARCHIVO_IMERG = "imerg_piura.json"
 ARCHIVO_SMAP = "smap_piura.json"
 ARCHIVO_NDVI = "ndvi_piura.json"
+ARCHIVO_IMERG_DIARIO = "imerg_diario_piura.json"
 
 _cache: dict[Path, tuple[float, Any]] = {}
 
@@ -51,6 +52,11 @@ def smap_piura() -> dict | None:
 def ndvi_piura() -> dict | None:
     """JSON de NDVI MODIS MOD13Q1 para los puntos de Piura (ver scripts/descargar_ndvi.py), o None."""
     return leer_json(ARCHIVO_NDVI)
+
+
+def imerg_diario_piura() -> dict | None:
+    """Lluvia diaria IMERG 2001→ayer para los puntos de Piura (ver scripts/descargar_imerg_diario.py), o None."""
+    return leer_json(ARCHIVO_IMERG_DIARIO)
 
 
 def serie_mur() -> SerieMur | None:

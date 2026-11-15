@@ -118,8 +118,32 @@ public class ApiController {
         ErroresApi.validarCoordenadas(lat, lon);
         ErroresApi.validarLang(lang);
         String clave = String.format(Locale.ROOT, "val:%d:%.3f,%.3f:%s", anio, lat, lon, lang);
-        return responder(reco.primeroBd("validacion", clave, Duration.ofDays(30), lat, lon, null,
+        return responder(reco.primeroBd("validacion", clave, frescuraAnio(anio), lat, lon, null,
                 () -> calculos.validacion(anio, lat, lon, lang)));
+    }
+
+    /** Lluvia de un mes día por día y por semana (clic en una barra de "¿Funciona?"). Se guarda en la BD. */
+    @GetMapping("/validacion/detalle")
+    public ResponseEntity<Map<String, Object>> detalleLluvia(@RequestParam int anio, @RequestParam int mes,
+                                                             @RequestParam double lat, @RequestParam double lon) {
+        ErroresApi.validarCoordenadas(lat, lon);
+        if (mes < 1 || mes > 12 || anio < 2001 || anio > 2100) {
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST, "anio o mes fuera de rango");
+        }
+        String clave = String.format(Locale.ROOT, "valdia:%d-%02d:%.3f,%.3f", anio, mes, lat, lon);
+        return responder(reco.primeroBd("validacion_dia", clave, frescuraMes(anio, mes), lat, lon, null,
+                () -> calculos.detalleLluvia(anio, mes, lat, lon)));
+    }
+
+    /** El año en curso cambia cada día (IMERG Late): 6 h. Años cerrados: 30 días. */
+    static Duration frescuraAnio(int anio) {
+        return anio >= java.time.LocalDate.now(java.time.ZoneId.of("America/Lima")).getYear() ? Duration.ofHours(6) : Duration.ofDays(30);
+    }
+
+    /** Meses de los últimos 60 días aún pueden completarse (IMERG Late): 6 h. Meses viejos: 30 días. */
+    static Duration frescuraMes(int anio, int mes) {
+        var hoy = java.time.LocalDate.now(java.time.ZoneId.of("America/Lima"));
+        return java.time.YearMonth.of(anio, mes).atEndOfMonth().isAfter(hoy.minusDays(60)) ? Duration.ofHours(6) : Duration.ofDays(30);
     }
 
     /** Respuesta tal cual; si vino del respaldo: X-Desde-Cache: true y X-Fecha-Dato (fecha del cálculo guardado). */
