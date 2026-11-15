@@ -7,6 +7,7 @@ cosecha. Cada rotación empieza con 100 puntos y resta:
 - temperatura: -10 por cada mes de la campaña con la temperatura fuera del rango del cultivo (máx. -30).
 - riesgo alto: -10 por cada mes de la campaña con riesgo alto.
 - siembra: -15 por cada cultivo sembrado fuera de sus meses recomendados.
+- El Niño extraordinario (mar ≥ +3 °C en la costa norte, con dato real): -35 a TODAS las rotaciones (ninguna siembra es segura).
 Mínimo 0. Riesgo: >= 70 bajo, 45-69 medio, < 45 alto.
 """
 from __future__ import annotations
@@ -18,7 +19,7 @@ import pandas as pd
 
 from app.calculos.campana import NIVELES, armar_ciclo, en_zona_costera, riesgo_mes, senal_nino
 from app.catalogo import Cultivo
-from app.textos.plantillas import texto
+from app.textos.plantillas import signo, texto
 
 FUENTE_CATALOGO = "catálogo de cultivos"
 
@@ -33,10 +34,23 @@ def deficit_actual(indicadores: dict) -> tuple[str, str, dict] | None:
     return max(candidatos, key=lambda c: NIVELES.index(c[0])) if candidatos else None
 
 
+def nino_extremo(indicador_nino: dict | None, lat: float, lon: float, u: dict) -> dict | None:
+    """El indicador de El Niño si es EXTRAORDINARIO (≥ el_nino_extremo_c) y aplica: costa norte de Perú y sur de Ecuador, con dato real."""
+    umbral = u["rotaciones"].get("el_nino_extremo_c")
+    if umbral is None or not indicador_nino or indicador_nino.get("valor") is None or not en_zona_costera(lat, lon):
+        return None
+    return indicador_nino if indicador_nino["valor"] >= umbral else None
+
+
 def descuentos_rotacion(cultivos: list[Cultivo], siembras: list[pd.Period], meses: list[dict],
-                        indicadores: dict, u: dict) -> list[dict]:
+                        indicadores: dict, u: dict, extremo: dict | None = None) -> list[dict]:
     ur = u["rotaciones"]
     desc: list[dict] = []
+
+    # 0) El Niño extraordinario: lluvias e inundaciones fuera de lo normal → ninguna rotación es segura
+    if extremo:
+        desc.append({"indicador": "elNino", "puntos": ur["el_nino_extremo_puntos"], "fuente": extremo["fuente"],
+                     "regla": "el_nino_extremo", "valor": extremo["valor"]})
 
     # 1) Agua alta vs déficit actual
     if any(c.agua == "alto" for c in cultivos) and (d := deficit_actual(indicadores)):
@@ -86,7 +100,9 @@ def explicacion(cultivos: list[Cultivo], desc: list[dict], tradicional: bool, la
         total = -sum(d["puntos"] for d in desc)
         mayor = min(desc, key=lambda d: d["puntos"])
         regla = mayor["regla"]
-        if regla == "agua":
+        if regla == "el_nino_extremo":
+            razon = texto(lang, "r_nino_extremo", signo=signo(mayor["valor"]), anom=abs(mayor["valor"]))
+        elif regla == "agua":
             razon = texto(lang, "r_agua", ind=texto(lang, f"ind_{mayor['indicador']}"))
         elif regla == "temperatura":
             razon = texto(lang, "r_temp", n=mayor["meses"])
@@ -111,7 +127,7 @@ def evaluar_rotacion(cultivos: list[Cultivo], mes_siembra: str, clima: pd.DataFr
             meses.append(riesgo_mes(c, inicio + i, clima, nino, sin_dato_costa, lang, u))
         inicio = inicio + (c.duracion_meses or 4)
 
-    desc = descuentos_rotacion(cultivos, siembras, meses, indicadores, u)
+    desc = descuentos_rotacion(cultivos, siembras, meses, indicadores, u, extremo=nino_extremo(nino_ind, lat, lon, u))
     puntaje = max(0, 100 + sum(d["puntos"] for d in desc))
     uso = max((c.usoAgua or c.agua for c in cultivos), key=NIVELES.index)
     return {

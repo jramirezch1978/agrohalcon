@@ -79,6 +79,7 @@ TEXTOS["es"].update({
     "r_temp": "{n} mes(es) fuera de su rango de temperatura",
     "r_alto": "{n} mes(es) de la campaña con riesgo alto",
     "r_siembra": "sembrar {cultivo} fuera de sus meses recomendados",
+    "r_nino_extremo": "la señal extraordinaria de El Niño ({signo}{anom:.1f} °C en el mar frente a la costa): lluvias e inundaciones fuera de lo normal",
     "r_tradicional": " Es la rotación tradicional de la zona, para comparar.",
     "ind_lluvia": "la lluvia", "ind_humedadSuelo": "la humedad del suelo",
     # Qué hacer esta quincena
@@ -132,6 +133,7 @@ TEXTOS["en"].update({
     "r_temp": "{n} month(s) outside its temperature range",
     "r_alto": "{n} month(s) of the season at high risk",
     "r_siembra": "planting {cultivo} outside its recommended months",
+    "r_nino_extremo": "the extraordinary El Niño signal ({signo}{anom:.1f} °C in the sea off the coast): rain and flooding far beyond normal",
     "r_tradicional": " It is the traditional rotation of the area, for comparison.",
     "ind_lluvia": "rainfall", "ind_humedadSuelo": "soil moisture",
     "q_drenaje": "Prepare drainage and don't plant in low, flood-prone areas",
