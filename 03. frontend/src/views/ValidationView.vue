@@ -3,6 +3,7 @@ import { BellRing, ChevronLeft, ChevronRight, CloudRain, History, Timer } from '
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import RainChart from '@/components/charts/RainChart.vue'
+import RainDetailSheet from '@/components/charts/RainDetailSheet.vue'
 import ErrorState from '@/components/ui/ErrorState.vue'
 import NasaSourceTag from '@/components/ui/NasaSourceTag.vue'
 import PageHeader from '@/components/ui/PageHeader.vue'
@@ -92,6 +93,8 @@ const fmtMes = (iso: string) =>
   new Intl.DateTimeFormat(store.idioma, { month: 'long', year: 'numeric' }).format(new Date(iso + '-15T12:00:00'))
 
 const lluvia = computed(() => datos.value?.series.lluvia)
+/** Mes abierto en el detalle por días/semanas (null = cerrado) */
+const mesDetalle = ref<number | null>(null)
 /** Solo se dibuja si hay al menos un mes con dato real */
 const hayLluvia = computed(() => !!lluvia.value && lluvia.value.fuente !== 'sin dato' && lluvia.value.valores.some((v) => v !== null))
 
@@ -228,8 +231,19 @@ const signo = (v: number) => `${v > 0 ? '+' : ''}${v.toFixed(1)}`
       <!-- Lluvia mensual vs. lo normal (oculta si no hay dato real) -->
       <div v-if="hayLluvia && lluvia" class="superficie stagger p-5" style="--i: 6">
         <SectionTitle :titulo="$t('validacion.lluvia')" class="mb-3"><NasaSourceTag :fuente="lluvia.fuente" corta /></SectionTitle>
-        <RainChart :valores="lluvia.valores" :normal="lluvia.normal" :anio="anio" />
+        <RainChart
+          :valores="lluvia.valores"
+          :normal="lluvia.normal"
+          :anio="anio"
+          :mes-parcial="lluvia.parcial?.mes ?? null"
+          :hasta="lluvia.parcial?.hasta ?? null"
+          @mes="mesDetalle = $event"
+        />
+        <p class="mt-2 text-center text-xs text-stone-500 dark:text-stone-400">
+          {{ $t('validacion.tocaBarra') }}<template v-if="lluvia.parcial"> · {{ $t('validacion.parcialNota', { fecha: lluvia.parcial.hasta }) }}</template>
+        </p>
       </div>
+      <RainDetailSheet :anio="anio" :mes="mesDetalle" :lat="PARCELA_PIURA.lat" :lon="PARCELA_PIURA.lon" @cerrar="mesDetalle = null" />
 
       <!-- Cronología, armada con los datos -->
       <div v-if="hitos.length" class="superficie stagger p-5 sm:p-6" style="--i: 7">

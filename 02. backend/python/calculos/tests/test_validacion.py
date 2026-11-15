@@ -44,7 +44,7 @@ def test_2017_sin_mur_lluvia_imerg_y_alerta_solo_lluvia(cliente_api, con_imerg):
     assert r["mesLluviaMaxima"] == "2017-03" and r["semanasAnticipacion"] == 4
     assert r["evento"]["nombre"] == "El Niño costero 2017" and r["realidad"]["fuente"] == "INDECI"
     # Compatibilidad con el frontend actual
-    assert len(r["serie"]) == 12 and r["serie"][2] == {"mes": 3, "lluvia": 587.0, "lluviaNormal": 112.6,
+    assert len(r["serie"]) == 12 and r["serie"][2] == {"mes": 3, "lluvia": 587.0, "lluviaNormal": 112.6, "lluviaParcial": False,
                                                         "ndvi": None, "ndviNormal": None}
     assert r["recomendacionPrevia"]["fuente"] == "GPM IMERG" and r["resumen"]
 

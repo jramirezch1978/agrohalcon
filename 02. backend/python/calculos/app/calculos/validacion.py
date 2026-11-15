@@ -18,6 +18,7 @@ from typing import Any
 
 import pandas as pd
 
+from app.calculos.detalle_lluvia import dias_imerg
 from app.calculos.el_nino import primera_alerta
 from app.calculos.reglas import nivel_lluvia
 from app.config import umbrales
@@ -34,13 +35,31 @@ def _serie_vacia(unidad: str) -> dict:
     return {"unidad": unidad, "fuente": SIN_DATO, "valores": [None] * 12, "normal": [None] * 12}
 
 
+def _mes_en_curso(serie: dict, anio: int, lat: float, lon: float) -> None:
+    """El mes que aún no termina no tiene total mensual: se muestra la suma de los días que ya tienen dato
+    (IMERG Late diario), marcada como parcial. No se usa para la alerta ni para el mes de lluvia máxima."""
+    hoy = date.today()
+    for m in range(12, 0, -1):
+        if serie["valores"][m - 1] is not None:
+            break
+        if (anio, m) > (hoy.year, hoy.month):
+            continue
+        d = dias_imerg(lat, lon, anio, m)
+        if d is not None:
+            fechas = [date(anio, m, i + 1) for i, v in enumerate(d[0]) if v is not None]
+            serie["valores"][m - 1] = round(sum(v for v in d[0] if v is not None), 1)
+            serie["parcial"] = {"mes": m, "hasta": fechas[-1].isoformat(), "dias": len(fechas)}
+        break
+
+
 async def serie_lluvia(anio: int, lat: float, lon: float, cliente: ClienteNasaPower) -> tuple[dict, float | None]:
     """(serie de lluvia del año en mm/mes, lluvia de diciembre del año anterior)."""
     imerg = lluvia_mensual_imerg(lat, lon, anio)
     if imerg:
         previo = lluvia_mensual_imerg(lat, lon, anio - 1)
         serie = {"unidad": "mm/mes", "fuente": imerg["fuente"], "valores": imerg["valores"], "normal": imerg["normal"],
-                 "producto": imerg["producto"], "punto": imerg["punto"], "normalPeriodo": "2001-2020"}
+                 "producto": imerg["producto"], "punto": imerg["punto"], "normalPeriodo": "2001-2020", "parcial": None}
+        _mes_en_curso(serie, anio, lat, lon)
         return serie, (previo["valores"][11] if previo else None)
 
     try:
@@ -141,7 +160,8 @@ async def calcular_validacion(anio: int, lat: float, lon: float, lang: str, clie
     elif alerta.get("sinAlerta"):
         alerta = None
 
-    validos = [(v, i + 1) for i, v in enumerate(lluvia["valores"]) if v is not None]
+    mes_parcial = (lluvia.get("parcial") or {}).get("mes")
+    validos = [(v, i + 1) for i, v in enumerate(lluvia["valores"]) if v is not None and i + 1 != mes_parcial]
     mes_pico = max(validos)[1] if validos else None
     semanas = semanas_anticipacion(alerta["fecha"] if alerta else None, anio, mes_pico)
 
@@ -173,7 +193,7 @@ async def calcular_validacion(anio: int, lat: float, lon: float, lang: str, clie
         "realidad": {"resumen": texto(lang, "v_realidad_2017"), "fuente": "INDECI"} if es_2017 else None,
         # Compatibilidad con el contrato actual del frontend (Validacion: serie, recomendacionPrevia, resumen)
         "serie": [{"mes": m, "lluvia": lluvia["valores"][m - 1], "lluviaNormal": lluvia["normal"][m - 1],
-                   "ndvi": None, "ndviNormal": None} for m in range(1, 13)],
+                   "lluviaParcial": m == mes_parcial, "ndvi": None, "ndviNormal": None} for m in range(1, 13)],
         "recomendacionPrevia": recomendacion_previa,
         "resumen": resumen,
     }

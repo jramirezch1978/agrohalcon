@@ -6,7 +6,7 @@
  * Estas funciones LANZAN error si el servicio falla: quien llama decide el respaldo y lo avisa.
  */
 import axios from 'axios'
-import type { AniosValidacion, ClaveIndicador, Indicador, MapaRiesgo, OpcionesRecomendacion, Recomendacion, Validacion } from '@/types/api'
+import type { AniosValidacion, DetalleLluvia, ClaveIndicador, Indicador, MapaRiesgo, OpcionesRecomendacion, Recomendacion, Validacion } from '@/types/api'
 
 export const CALCULOS_URL: string = import.meta.env.VITE_CALCULOS_URL || ''
 
@@ -46,6 +46,11 @@ export async function calcularMapa(region: string, idioma: Idioma): Promise<Mapa
 
 export async function calcularValidacion(anio: number, lat: number, lon: number, idioma: Idioma): Promise<Validacion> {
   const { data } = await http.get<Validacion>('/validacion', { params: { anio, lat, lon, lang: idioma } })
+  return data
+}
+
+export async function detalleLluvia(anio: number, mes: number, lat: number, lon: number): Promise<DetalleLluvia> {
+  const { data } = await http.get<DetalleLluvia>('/validacion/detalle', { params: { anio, mes, lat, lon } })
   return data
 }
 
