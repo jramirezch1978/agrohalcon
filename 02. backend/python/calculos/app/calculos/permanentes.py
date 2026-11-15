@@ -30,6 +30,7 @@ def componentes_actuales(indicadores: dict) -> dict[str, str]:
     return {
         "calor": nivel("calor", "exceso"),
         "frio": "bajo",
+        "helada": "bajo",
         "lluvia_exceso": nivel("lluvia", "exceso"),
         "deficit": peor(nivel("humedadSuelo", "deficit"), nivel("lluvia", "deficit")),
     }

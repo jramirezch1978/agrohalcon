@@ -95,7 +95,7 @@ export const api = {
         throw aApiError(e)
       }
     }
-    const { tipoCultivo, mesSiembra, cultivo, prioridad, tipoSuelo, salinidad, fuenteSuelo } = opciones
+    const { tipoCultivo, mesSiembra, cultivo, prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible } = opciones
     const temporal = tipoCultivo !== 'permanente'
     const params = {
       lat,
@@ -104,7 +104,7 @@ export const api = {
       tipoCultivo,
       mesSiembra: temporal ? mesSiembra : undefined,
       cultivo: temporal ? undefined : cultivo,
-      ...(temporal ? { prioridad, tipoSuelo, salinidad, fuenteSuelo } : {}),
+      ...(temporal ? { prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible } : {}),
     }
     const r = await http.get<Recomendacion>('/api/recomendacion', { params })
     marcarOrigenJava('recomendacion', r.headers)

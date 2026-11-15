@@ -65,6 +65,8 @@ TEXTOS["es"].update({
     # Campaña (motivo de cada mes)
     "c_calor": "La máxima normal de {mes} ({t:.1f} °C) supera lo que tolera el {cultivo} ({lim:.0f} °C).",
     "c_frio": "La mínima normal de {mes} ({t:.1f} °C) queda bajo lo que tolera el {cultivo} ({lim:.0f} °C).",
+    "c_helada": "Riesgo de helada en {mes}: la mínima normal es {t:.1f} °C y puede quemar el {cultivo}.",
+    "s_desnudo": "El suelo queda desnudo {n} meses al año: se erosiona y pierde materia orgánica. Siembra una leguminosa o un cultivo de cobertura en ese tiempo.",
     "c_exceso": "En {mes} llueven normalmente {mm:.0f} mm: {veces:.1f} veces lo que necesita el {cultivo}.",
     "c_deficit": "En {mes} llueven normalmente {mm:.0f} mm de los ~{nec:.0f} que necesita el {cultivo}: depende del riego.",
     "c_ok": "El clima normal de {mes} está dentro de lo que tolera el {cultivo}.",
@@ -136,6 +138,8 @@ TEXTOS["es"].update({
 TEXTOS["en"].update({
     "c_calor": "The normal maximum in {mes} ({t:.1f} °C) is above what {cultivo} tolerates ({lim:.0f} °C).",
     "c_frio": "The normal minimum in {mes} ({t:.1f} °C) is below what {cultivo} tolerates ({lim:.0f} °C).",
+    "c_helada": "Frost risk in {mes}: the normal minimum is {t:.1f} °C and can burn {cultivo}.",
+    "s_desnudo": "The soil is bare {n} months a year: it erodes and loses organic matter. Plant a legume or a cover crop in that time.",
     "c_exceso": "{mes} normally gets {mm:.0f} mm of rain: {veces:.1f} times what {cultivo} needs.",
     "c_deficit": "{mes} normally gets {mm:.0f} mm of the ~{nec:.0f} mm {cultivo} needs: it depends on irrigation.",
     "c_ok": "The normal climate in {mes} is within what {cultivo} tolerates.",

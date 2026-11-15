@@ -154,6 +154,7 @@ export default {
     riesgo: 'Riesgo {nivel}',
     hoy: 'Hoy',
     aviso: 'AllpaShift no predice el clima exacto a meses. Estima el riesgo de la campaña combinando el historial climático de la NASA con señales tempranas como El Niño.',
+    et0: 'Demanda de agua (evapotranspiración ET₀): {et0} mm/día · FAO-56 con temperaturas de NASA POWER',
     apoyo: 'AllpaShift apoya tu decisión, no la reemplaza: tu experiencia y la de los técnicos de tu zona (agencia agraria, cooperativa, junta de usuarios) siempre van primero.',
   },
   plan: {
@@ -347,7 +348,16 @@ export default {
       sst: { simple: 'Qué tan caliente está el mar: la señal de El Niño', variable: 'Anomalía de temperatura del mar (sstAnom) en la caja Niño 1+2', uso: 'Señal temprana de El Niño: sube el riesgo de lluvias en la costa norte y da la fecha del aviso de 2017.' },
     },
   },
+  aguaDisponible: {
+    titulo: '¿Cuánta agua de riego tienes?',
+    poca: 'Poca',
+    normal: 'Normal',
+    suficiente: 'Suficiente',
+    ayuda: 'Con poca agua, los cultivos que usan mucha pierden puntos.',
+  },
   revision: {
+    desnudo: 'Con esta rotación el suelo queda desnudo {n} meses al año.',
+    cubierto: 'Con esta rotación el suelo está cubierto todo el año.',
     resta: 'Resta {p} puntos',
     titulo: 'Antes de decidir',
     ventajas: 'Ventajas',
@@ -373,6 +383,7 @@ export default {
     titulo: 'Palabras que usamos',
     subtitulo: 'Los términos de los satélites y del suelo, en palabras simples.',
     terminos: [
+      { t: 'Helada', d: 'Cuando la temperatura mínima baja de unos 2 °C, el frío quema hojas y flores. Pasa en la sierra (Huancabamba, Ayabaca); la app la marca como riesgo alto en esos meses.' },
       { t: 'NDVI (verdor de la vegetación)', d: 'Índice de 0 a 1 que mide el satélite MODIS: cuanto más verde y sana la planta, más alto. Si baja frente a lo normal, el cultivo puede estar sufriendo por falta de agua o enfermedad.' },
       { t: 'Humedad del suelo y su anomalía', d: 'Cuánta agua tiene la capa de arriba del suelo (satélite SMAP o NASA POWER). La anomalía es la diferencia frente a lo normal de esa época: negativa = más seco que de costumbre.' },
       { t: 'Evapotranspiración', d: 'El agua que el campo pierde al aire: la que se evapora del suelo y la que "transpiran" las plantas. Con calor y viento sube, y el cultivo necesita más riego.' },

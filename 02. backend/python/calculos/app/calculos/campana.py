@@ -13,6 +13,8 @@ Umbrales en config/umbrales.yaml (sección campana).
 """
 from __future__ import annotations
 
+import math
+
 from typing import Any
 
 import pandas as pd
@@ -65,8 +67,22 @@ def senal_nino(indicador_nino: dict | None, lat: float, lon: float) -> dict | No
     return None
 
 
+def et0_hargreaves(lat: float, mes: int, tmax: float, tmin: float) -> float | None:
+    """Evapotranspiración de referencia ET0 (mm/día), método de Hargreaves (FAO-56, ec. 52) con la radiación
+    extraterrestre Ra del día 15 del mes (FAO-56, ec. 21). Solo usa temperaturas de NASA POWER."""
+    if tmax is None or tmin is None or pd.isna(tmax) or pd.isna(tmin) or tmax < tmin:
+        return None
+    j = int(pd.Timestamp(2001, mes, 15).dayofyear)
+    phi = math.radians(lat)
+    dr = 1 + 0.033 * math.cos(2 * math.pi * j / 365)
+    delta = 0.409 * math.sin(2 * math.pi * j / 365 - 1.39)
+    ws = math.acos(max(-1.0, min(1.0, -math.tan(phi) * math.tan(delta))))
+    ra = 24 * 60 / math.pi * 0.0820 * dr * (ws * math.sin(phi) * math.sin(delta) + math.cos(phi) * math.cos(delta) * math.sin(ws))
+    return round(0.0023 * ((tmax + tmin) / 2 + 17.8) * math.sqrt(tmax - tmin) * 0.408 * ra, 1)
+
+
 def riesgo_mes(cultivo: Cultivo, mes: pd.Period, clima: pd.DataFrame, nino: dict | None,
-               nino_sin_dato_costa: bool, lang: str, u: dict) -> dict[str, Any]:
+               nino_sin_dato_costa: bool, lang: str, u: dict, lat: float | None = None) -> dict[str, Any]:
     c = clima.loc[mes.month]
     uc = u["campana"]
     nombre = cultivo.nombre_en(lang).lower()
@@ -74,6 +90,7 @@ def riesgo_mes(cultivo: Cultivo, mes: pd.Period, clima: pd.DataFrame, nino: dict
 
     calor = nivel_temperatura(c["tmax"] - cultivo.temp_max, uc["temperatura"])
     frio = nivel_temperatura(cultivo.temp_min - c["tmin"], uc["temperatura"])
+    helada = "alto" if c["tmin"] <= uc.get("helada_tmin_c", -99) else "bajo"
     necesidad = uc["necesidad_agua_mm_mes"][cultivo.agua]
     exceso, deficit = niveles_lluvia(c["lluvia_mm_mes"], necesidad, uc)
 
@@ -87,7 +104,7 @@ def riesgo_mes(cultivo: Cultivo, mes: pd.Period, clima: pd.DataFrame, nino: dict
         elif nino_sin_dato_costa:
             notas.append(texto(lang, "c_sin_nino"))
 
-    componentes = {"calor": calor, "frio": frio, "lluvia_exceso": exceso, "deficit": deficit}
+    componentes = {"calor": calor, "frio": frio, "helada": helada, "lluvia_exceso": exceso, "deficit": deficit}
     riesgo = peor(*componentes.values())
 
     # El motivo cita el componente decisivo con su número
@@ -99,6 +116,8 @@ def riesgo_mes(cultivo: Cultivo, mes: pd.Period, clima: pd.DataFrame, nino: dict
     elif riesgo == exceso:
         motivo = texto(lang, "c_exceso", mes=mes_txt, mm=c["lluvia_mm_mes"], veces=c["lluvia_mm_mes"] / necesidad,
                        cultivo=nombre)
+    elif riesgo == helada:
+        motivo = texto(lang, "c_helada", mes=mes_txt, t=c["tmin"], cultivo=nombre)
     elif riesgo == calor:
         motivo = texto(lang, "c_calor", mes=mes_txt, t=c["tmax"], lim=cultivo.temp_max, cultivo=nombre)
     elif riesgo == frio:
@@ -111,8 +130,9 @@ def riesgo_mes(cultivo: Cultivo, mes: pd.Period, clima: pd.DataFrame, nino: dict
         motivo = f"{motivo} {' '.join(notas)}"
     motivo = motivo[0].upper() + motivo[1:]
 
+    et0 = et0_hargreaves(lat, mes.month, c["tmax"], c["tmin"]) if lat is not None else None
     return {"mes": str(mes), "riesgo": riesgo, "motivo": motivo, "fuente": fuente,
-            "cultivo": cultivo.id, "componentes": componentes}
+            "cultivo": cultivo.id, "componentes": componentes, "et0MmDia": et0}
 
 
 def riesgo_campana(cultivo: Cultivo, mes_siembra: str | pd.Period, clima: pd.DataFrame, indicador_nino: dict | None,
@@ -122,7 +142,7 @@ def riesgo_campana(cultivo: Cultivo, mes_siembra: str | pd.Period, clima: pd.Dat
     n = duracion or cultivo.duracion_meses or 12
     nino = senal_nino(indicador_nino, lat, lon)
     sin_dato_costa = en_zona_costera(lat, lon) and (not indicador_nino or indicador_nino.get("valor") is None)
-    meses = [riesgo_mes(cultivo, inicio + i, clima, nino, sin_dato_costa, lang, u) for i in range(n)]
+    meses = [riesgo_mes(cultivo, inicio + i, clima, nino, sin_dato_costa, lang, u, lat) for i in range(n)]
     return armar_ciclo(meses)
 
 

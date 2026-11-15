@@ -8,6 +8,7 @@ import PerennialPlan from '@/components/campaign/PerennialPlan.vue'
 import PlantingMonthSelector from '@/components/campaign/PlantingMonthSelector.vue'
 import PrioritySelector from '@/components/campaign/PrioritySelector.vue'
 import SoilSelector from '@/components/campaign/SoilSelector.vue'
+import WaterSelector from '@/components/campaign/WaterSelector.vue'
 import RotationCard from '@/components/rotations/RotationCard.vue'
 import RotationSheet from '@/components/rotations/RotationSheet.vue'
 import RotationsChart from '@/components/rotations/RotationsChart.vue'
@@ -85,6 +86,7 @@ onUnmounted(() => (chat.sugerenciaPantalla = null))
         <template v-if="!modoPermanente">
           <PrioritySelector />
           <SoilSelector />
+          <WaterSelector />
         </template>
       </div>
       <HonestyNote class="mt-3" />

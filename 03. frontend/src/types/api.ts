@@ -72,6 +72,8 @@ export interface Rotacion {
   puntajeAgua?: number
   /** Opcional (solo la recomendada): por qué se recomienda según la prioridad elegida */
   motivoRecomendada?: string
+  /** Meses del año en que el suelo queda sin cultivo con esta rotación */
+  mesesSueloDesnudo?: number | null
 }
 
 /** Lo que el agricultor elige: qué le importa más y el suelo de su parcela (todo opcional) */
@@ -80,6 +82,8 @@ export type TipoSuelo = 'arenoso' | 'franco' | 'arcilloso'
 export type Salinidad = 'no' | 'leve' | 'alta'
 /** De dónde salió el tipo de suelo: propuesto por SoilGrids (ISRIC) o elegido por el agricultor. Nunca NASA. */
 export type FuenteSuelo = 'soilgrids' | 'agricultor'
+/** Restricción del agricultor: agua de riego que tiene */
+export type AguaDisponible = 'poca' | 'normal' | 'suficiente'
 
 /** Perfil con que se calculó la recomendación (lo devuelve el servidor) */
 export interface PerfilRecomendacion {
@@ -107,6 +111,8 @@ export interface MesRiesgo {
   riesgo: NivelRiesgo
   motivo: string
   fuente: FuenteDato
+  /** Evapotranspiración de referencia del mes (mm/día, Hargreaves FAO-56 con temperaturas de NASA POWER) */
+  et0MmDia?: number | null
 }
 
 export interface CicloCultivo {
@@ -171,6 +177,7 @@ export interface OpcionesRecomendacion {
   tipoSuelo?: TipoSuelo
   salinidad?: Salinidad
   fuenteSuelo?: FuenteSuelo
+  aguaDisponible?: AguaDisponible
 }
 
 export interface ZonaRiesgo {

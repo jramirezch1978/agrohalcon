@@ -22,14 +22,14 @@ def test_arroz_tras_arroz_resta(umbrales):
 def test_misma_familia_resta_menos_que_monocultivo(umbrales):
     p, desc = puntaje_suelo([ARROZ, MAIZ], umbrales)       # ambas Poaceae
     assert reglas(desc)["misma_familia"] == -15 and "Poaceae" in desc[0]["explicacion"]
-    assert p == 70 - 15 + 10                               # + raíces alternas (superficial / media)
+    assert p == 70 - 15 + 10 + reglas(desc).get("suelo_desnudo", 0)   # + raíces alternas; − suelo desnudo si aplica
 
 
 def test_frijol_suma_por_leguminosa(umbrales):
     p, desc = puntaje_suelo([ARROZ, FRIJOL], umbrales)
     r = reglas(desc)
     assert r["leguminosa"] == 15 and r["cobertura"] == 5 and r["raices_alternas"] == 10
-    assert p == 100
+    assert p == min(100, 100 + r.get("suelo_desnudo", 0))
     assert "nitrógeno" in next(d for d in desc if d["regla"] == "leguminosa")["explicacion"]
 
 
@@ -65,9 +65,9 @@ def test_agua_alta_en_suelo_salino_resta_solo_si_lo_dice_el_agricultor(umbrales)
 
 def test_rotacion_devuelve_los_dos_puntajes(umbrales):
     r = evaluar_rotacion([ARROZ, FRIJOL], "2027-01", clima(), indicadores(), *NAIROBI, "es", umbrales)
-    assert r["saludSuelo"] == 100 and r["puntajeAgua"] == 20               # arroz: uso de agua alto
+    assert r["saludSuelo"] == 100 + reglas(r["descuentosSuelo"]).get("suelo_desnudo", 0) and r["puntajeAgua"] == 20
     w = umbrales["prioridades"]["pesos"]["arriesgar_menos"]                  # prioridad por defecto
-    assert r["puntaje"] == round(r["riesgoClimatico"] * w["clima"] + 100 * w["suelo"] + 20 * w["agua"])
+    assert r["puntaje"] == round(r["riesgoClimatico"] * w["clima"] + r["saludSuelo"] * w["suelo"] + 20 * w["agua"])
     assert {"regla", "puntos", "explicacion", "fuente"} <= set(r["descuentosSuelo"][0])
 
 
@@ -153,3 +153,36 @@ def test_api_calcular_recibe_prioridad_y_suelo(cliente_api):  # noqa: F811
     sin = api.post("/calcular", json=base).json()                       # sin datos nuevos: sigue funcionando
     assert sin["perfil"]["prioridad"] == "arriesgar_menos" and sin["perfil"]["tipoSuelo"] is None
     assert api.post("/calcular", json={**base, "prioridad": "ganar_mas"}).status_code == 422
+
+
+# ---------------------------------------------------------------- reto: suelo desnudo, agua disponible, heladas, ET0
+def test_suelo_desnudo_resta_y_se_informa(umbrales):
+    from app.calculos.salud_suelo import meses_suelo_desnudo
+    n = meses_suelo_desnudo([ARROZ, FRIJOL])
+    _, desc = puntaje_suelo([ARROZ, FRIJOL], umbrales)
+    if n >= umbrales["salud_suelo"]["suelo_desnudo_desde_meses"]:
+        item = next(d for d in desc if d["regla"] == "suelo_desnudo")
+        assert item["puntos"] == umbrales["salud_suelo"]["suelo_desnudo"] and str(n) in item["explicacion"]
+    else:
+        assert "suelo_desnudo" not in reglas(desc)
+
+
+def test_poca_agua_baja_el_puntaje_de_agua(umbrales):
+    normal = evaluar_rotacion([ARROZ, FRIJOL], "2027-01", clima(), indicadores(), *NAIROBI, "es", umbrales)
+    poca = evaluar_rotacion([ARROZ, FRIJOL], "2027-01", clima(), indicadores(), *NAIROBI, "es", umbrales, agua_disponible="poca")
+    assert normal["puntajeAgua"] == 20 and poca["puntajeAgua"] == 0 and poca["puntaje"] < normal["puntaje"]
+
+
+def test_et0_hargreaves_valores_razonables():
+    from app.calculos.campana import et0_hargreaves
+    assert 4.5 <= et0_hargreaves(-5.19, 1, 34, 22) <= 7.0      # costa de Piura en verano
+    assert et0_hargreaves(-5.19, 1, 20, 25) is None             # máxima menor que mínima: sin dato
+
+
+def test_helada_es_riesgo_alto(umbrales):
+    import pandas as pd
+    from app.calculos.campana import riesgo_mes
+    c = clima().copy()
+    c["tmin"] = 1.0
+    m = riesgo_mes(FRIJOL, pd.Period("2027-07", freq="M"), c, None, False, "es", umbrales, -5.24)
+    assert m["componentes"]["helada"] == "alto" and m["riesgo"] == "alto" and m["et0MmDia"] is not None

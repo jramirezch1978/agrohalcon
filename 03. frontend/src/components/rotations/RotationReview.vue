@@ -53,6 +53,9 @@ const revisarLocal = computed(() => [t('revision.mercado'), t('revision.plagas')
 <template>
   <section class="mt-6 space-y-4" :aria-label="$t('revision.titulo')">
     <h3 class="text-sm font-bold">{{ $t('revision.titulo') }}</h3>
+    <p v-if="rotacion.mesesSueloDesnudo != null" class="rounded-2xl bg-arena p-3 text-sm dark:bg-white/5">
+      {{ rotacion.mesesSueloDesnudo > 0 ? $t('revision.desnudo', { n: rotacion.mesesSueloDesnudo }) : $t('revision.cubierto') }}
+    </p>
 
     <div v-if="ventajas.length" class="rounded-2xl bg-emerald-500/8 p-3 ring-1 ring-emerald-500/20">
       <p class="flex items-center gap-1.5 text-sm font-bold text-emerald-800 dark:text-emerald-300"><ThumbsUp class="size-4" aria-hidden="true" />{{ $t('revision.ventajas') }}</p>
