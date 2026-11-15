@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { MotivoUbicacion } from '@/services/ubicacion'
 import { ArrowRight, Crosshair, Info, LoaderCircle, Map as IconoMapa, MapPin, Satellite, Search, X } from 'lucide-vue-next'
 import { getCurrentInstance, h, onBeforeUnmount, onMounted, ref, render, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -206,7 +207,7 @@ function irA(l: LugarEncontrado) {
 // ---------------------------------------------------------------------------
 // Usar mi ubicación
 // ---------------------------------------------------------------------------
-const avisoUbicacion = ref<'' | 'denegado' | 'error'>('')
+const avisoUbicacion = ref<'' | MotivoUbicacion>('')
 let temporizadorAviso: number | undefined
 
 async function usarMiUbicacion() {
@@ -321,7 +322,7 @@ onBeforeUnmount(() => {
     <Transition enter-from-class="-translate-y-2 opacity-0" leave-to-class="opacity-0" enter-active-class="transition duration-300" leave-active-class="transition duration-200">
       <div v-if="avisoUbicacion" role="alert" class="absolute inset-x-3 top-[13rem] z-[450] mx-auto flex max-w-md items-start gap-3 rounded-2xl bg-white p-4 text-sm shadow-float ring-1 ring-amber-300 lg:top-60 dark:bg-noche-2 dark:ring-amber-400/40">
         <Info class="mt-0.5 size-5 shrink-0 text-amber-600 dark:text-amber-300" aria-hidden="true" />
-        <p class="flex-1">{{ $t(avisoUbicacion === 'denegado' ? 'mapa.permisoDenegado' : 'mapa.errorUbicacion') }}</p>
+        <p class="flex-1">{{ $t(`mapa.aviso.${avisoUbicacion}`) }}</p>
         <button type="button" :aria-label="$t('acciones.cerrar')" class="-m-1 grid size-8 place-items-center rounded-full hover:bg-tinta/5" @click="avisoUbicacion = ''">
           <X class="size-4" aria-hidden="true" />
         </button>

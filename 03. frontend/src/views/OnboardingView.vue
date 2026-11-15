@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { MotivoUbicacion } from '@/services/ubicacion'
 import { ArrowLeft, ArrowRight, CloudRain, Crosshair, Map, Thermometer, Waves } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -10,7 +11,7 @@ import { useAppStore } from '@/stores/app'
 const store = useAppStore()
 const router = useRouter()
 const paso = ref(1)
-const errorUbicacion = ref<'' | 'denegado' | 'error'>('')
+const errorUbicacion = ref<'' | MotivoUbicacion>('')
 
 const claves = computed(() => `onboarding.paso${paso.value}`)
 
@@ -121,7 +122,7 @@ const SATELITES = [
       <div v-else class="mt-8 space-y-3">
         <BaseButton variante="acento" bloque :icono="Crosshair" :cargando="store.ubicando" @click="usarUbicacion">{{ $t('acciones.usarUbicacion') }}</BaseButton>
         <BaseButton variante="vidrio" bloque :icono="Map" @click="elegirMapa">{{ $t('acciones.elegirMapa') }}</BaseButton>
-        <p v-if="errorUbicacion" role="alert" class="rounded-2xl bg-red-500/90 px-4 py-3 text-center text-sm font-medium">{{ $t(errorUbicacion === 'denegado' ? 'mapa.permisoDenegado' : 'mapa.errorUbicacion') }}</p>
+        <p v-if="errorUbicacion" role="alert" class="rounded-2xl bg-red-500/90 px-4 py-3 text-center text-sm font-medium">{{ $t(`mapa.aviso.${errorUbicacion}`) }}</p>
         <button type="button" class="mx-auto block min-h-11 text-sm font-semibold text-white/60 hover:text-white" @click="paso--">{{ $t('acciones.atras') }}</button>
       </div>
     </div>
