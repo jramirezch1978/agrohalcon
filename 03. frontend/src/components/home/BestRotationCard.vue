@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import { ArrowRight, Sprout } from 'lucide-vue-next'
+import { ArrowRight, CloudSun, Droplets, Leaf, Sprout } from 'lucide-vue-next'
+import { computed } from 'vue'
 import type { Rotacion } from '@/types/api'
 
-defineProps<{ rotacion: Rotacion }>()
+const props = defineProps<{ rotacion: Rotacion }>()
+
+/** Lo mejor que la rotación hace por el suelo (la regla que más suma), para que se vea en la portada */
+const razonSuelo = computed(() => {
+  const mas = (props.rotacion.descuentosSuelo ?? []).filter((d) => d.puntos > 0).sort((a, b) => b.puntos - a.puntos)
+  return mas[0]?.explicacion
+})
+/** Clima · suelo · agua: solo si el cálculo trae los tres puntajes */
+const tresPuntajes = computed(() => props.rotacion.saludSuelo != null && props.rotacion.riesgoClimatico != null)
 </script>
 
 <template>
@@ -22,7 +31,21 @@ defineProps<{ rotacion: Rotacion }>()
         <Sprout class="size-3.5" aria-hidden="true" />{{ $t('inicio.mejorRotacion') }}
       </p>
       <p class="font-display text-lg font-bold tracking-tight">{{ rotacion.nombre }}</p>
-      <p class="truncate text-sm text-stone-500 dark:text-stone-400">{{ rotacion.explicacion }}</p>
+
+      <!-- Clima · suelo · agua: el suelo también decide la recomendación -->
+      <p v-if="tresPuntajes" class="mt-1 flex flex-wrap gap-1.5 text-xs font-semibold tabular-nums">
+        <span class="inline-flex items-center gap-1 rounded-full bg-arena px-2 py-0.5 dark:bg-white/8">
+          <CloudSun class="size-3.5" aria-hidden="true" />{{ $t('rotaciones.clima') }} {{ rotacion.riesgoClimatico }}
+        </span>
+        <span class="inline-flex items-center gap-1 rounded-full bg-agro-100 px-2 py-0.5 text-agro-800 dark:bg-agro-400/15 dark:text-agro-200">
+          <Leaf class="size-3.5" aria-hidden="true" />{{ $t('rotaciones.suelo') }} {{ rotacion.saludSuelo }}
+        </span>
+        <span v-if="rotacion.puntajeAgua != null" class="inline-flex items-center gap-1 rounded-full bg-arena px-2 py-0.5 dark:bg-white/8">
+          <Droplets class="size-3.5" aria-hidden="true" />{{ $t('prioridad.agua') }} {{ rotacion.puntajeAgua }}
+        </span>
+      </p>
+      <p v-if="razonSuelo" class="mt-1.5 line-clamp-2 text-sm leading-snug text-agro-800 dark:text-agro-200">🌱 {{ razonSuelo }}</p>
+      <p class="mt-1 line-clamp-2 text-sm leading-snug text-stone-500 dark:text-stone-400">{{ rotacion.motivoRecomendada ?? rotacion.explicacion }}</p>
     </div>
     <ArrowRight class="size-5 shrink-0 text-stone-400 transition group-hover:translate-x-1" aria-hidden="true" />
   </RouterLink>
