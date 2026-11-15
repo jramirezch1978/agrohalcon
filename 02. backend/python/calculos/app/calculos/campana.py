@@ -28,6 +28,16 @@ FUENTE_POWER = "NASA POWER"
 METODO = "climatologia NASA POWER + señal El Niño"
 
 
+def escenario_lluvia(clima: pd.DataFrame, factor: float) -> pd.DataFrame:
+    """Escenario hipotético: la lluvia normal de cada mes multiplicada por factor (las temperaturas no cambian)."""
+    if factor == 1:
+        return clima
+    c = clima.copy()
+    c["lluvia_mm_dia"] = c["lluvia_mm_dia"] * factor
+    c["lluvia_mm_mes"] = c["lluvia_mm_mes"] * factor
+    return c
+
+
 def peor(*niveles: str) -> str:
     return max(niveles, key=NIVELES.index)
 

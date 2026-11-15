@@ -27,7 +27,7 @@ export function soloConDato(indicadores: Record<string, IndicadorPython>): Recom
 }
 
 export async function calcularRecomendacion(lat: number, lon: number, idioma: Idioma, opciones: OpcionesRecomendacion): Promise<Recomendacion> {
-  const { tipoCultivo, mesSiembra, cultivo, prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible } = opciones
+  const { tipoCultivo, mesSiembra, cultivo, prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible, escenario } = opciones
   const temporal = tipoCultivo !== 'permanente'
   const { data } = await http.post('/calcular', {
     lat,
@@ -36,7 +36,7 @@ export async function calcularRecomendacion(lat: number, lon: number, idioma: Id
     tipoCultivo: tipoCultivo ?? 'temporal',
     mesSiembra: temporal ? mesSiembra : undefined,
     cultivo: temporal ? undefined : cultivo,
-    ...(temporal ? { prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible } : {}),
+    ...(temporal ? { prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible, escenario } : {}),
   })
   return { ...data, indicadores: soloConDato(data.indicadores) } as Recomendacion
 }

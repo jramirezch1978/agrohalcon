@@ -103,7 +103,7 @@ public class AsistenteService {
 
         // 1) La recomendación ya calculada (CalculosNoDisponibleException → 503 si Python está caído y no hay dato)
         Map<String, Object> rec = recomendaciones.recomendacion(p.lat(), p.lon(), idioma, p.tipoCultivo(),
-                p.mesSiembra(), p.cultivo(), PerfilAgricultor.de(p.prioridad(), p.tipoSuelo(), p.salinidad(), p.fuenteSuelo())).datos();
+                p.mesSiembra(), p.cultivo(), PerfilAgricultor.de(p.prioridad(), p.tipoSuelo(), p.salinidad(), p.fuenteSuelo(), p.aguaDisponible(), p.escenario())).datos();
         Map<String, Object> reducido = reducir(rec);
 
         // 2-4) IA o respaldo. Misma pregunta sobre la misma recomendación → la respuesta guardada (no gasta cupo de Groq)

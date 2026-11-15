@@ -84,6 +84,8 @@ export type Salinidad = 'no' | 'leve' | 'alta'
 export type FuenteSuelo = 'soilgrids' | 'agricultor'
 /** Restricción del agricultor: agua de riego que tiene */
 export type AguaDisponible = 'poca' | 'normal' | 'suficiente'
+/** "¿Y si el año viene…?" (escenario hipotético sobre la lluvia normal) */
+export type Escenario = 'seco' | 'normal' | 'lluvioso'
 
 /** Perfil con que se calculó la recomendación (lo devuelve el servidor) */
 export interface PerfilRecomendacion {
@@ -92,6 +94,10 @@ export interface PerfilRecomendacion {
   tipoSuelo?: TipoSuelo | null
   salinidad?: Salinidad | null
   fuenteSuelo?: FuenteSuelo | null
+  aguaDisponible?: AguaDisponible | null
+  escenario?: Escenario
+  /** Multiplicador de la lluvia normal del escenario (1 = normal) */
+  factorLluvia?: number
 }
 
 /** Tipo de suelo propuesto por SoilGrids (GET /api/suelo). tipoSuelo null = sin dato */
@@ -103,6 +109,9 @@ export interface SueloPropuesto {
   fuente: string
   licencia?: string
   motivo?: string
+  /** Carbono orgánico 0-30 cm (g/kg), SoilGrids */
+  carbonoOrganico?: number | null
+  infiltracion?: 'alta' | 'media' | 'baja'
 }
 
 /** Riesgo de un mes de la campaña (clima histórico NASA POWER + señal de El Niño) */
@@ -178,6 +187,7 @@ export interface OpcionesRecomendacion {
   salinidad?: Salinidad
   fuenteSuelo?: FuenteSuelo
   aguaDisponible?: AguaDisponible
+  escenario?: Escenario
 }
 
 export interface ZonaRiesgo {
@@ -289,6 +299,8 @@ export interface PreguntaAsistente {
   tipoSuelo?: TipoSuelo
   salinidad?: Salinidad
   fuenteSuelo?: FuenteSuelo
+  aguaDisponible?: AguaDisponible
+  escenario?: Escenario
 }
 
 /** Respuesta del asistente: plantillas sobre resultados ya calculados (sin IA). */

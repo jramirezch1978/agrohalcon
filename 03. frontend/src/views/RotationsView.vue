@@ -7,6 +7,7 @@ import HonestyNote from '@/components/campaign/HonestyNote.vue'
 import PerennialPlan from '@/components/campaign/PerennialPlan.vue'
 import PlantingMonthSelector from '@/components/campaign/PlantingMonthSelector.vue'
 import PrioritySelector from '@/components/campaign/PrioritySelector.vue'
+import ScenarioSelector from '@/components/campaign/ScenarioSelector.vue'
 import SoilSelector from '@/components/campaign/SoilSelector.vue'
 import WaterSelector from '@/components/campaign/WaterSelector.vue'
 import RotationCard from '@/components/rotations/RotationCard.vue'
@@ -87,6 +88,7 @@ onUnmounted(() => (chat.sugerenciaPantalla = null))
           <PrioritySelector />
           <SoilSelector />
           <WaterSelector />
+          <ScenarioSelector />
         </template>
       </div>
       <HonestyNote class="mt-3" />
