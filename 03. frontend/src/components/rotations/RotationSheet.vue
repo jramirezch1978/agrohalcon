@@ -7,6 +7,7 @@ import RiskBadge from '@/components/ui/RiskBadge.vue'
 import { ICONO_INDICADOR } from '@/composables/useRiesgo'
 import { nombreRotacion, useRotacion } from '@/composables/useRotacion'
 import type { Indicadores, PerfilRecomendacion, Rotacion } from '@/types/api'
+import RotationReview from './RotationReview.vue'
 import ScoreRing from './ScoreRing.vue'
 
 defineProps<{ rotacion: Rotacion | null; indicadores?: Indicadores; perfil?: PerfilRecomendacion }>()
@@ -97,6 +98,8 @@ function fuenteSuelo(f: string, t: (k: string) => string) {
           </li>
         </ul>
       </template>
+
+      <RotationReview :rotacion="rotacion" :indicadores="indicadores" :perfil="perfil" />
 
       <BaseButton class="mt-6" bloque variante="acento" :icono="Sparkles" @click="$emit('preguntar', rotacion)">
         {{ $t('asistente.abrir') }}
