@@ -98,7 +98,8 @@ the database if the result is fresh, or asks the calculation service, which read
 <li><b>Get the data.</b> Rainfall, temperature and climatology from NASA POWER for any point. In the Piura pilot area it adds GPM IMERG
 satellite rainfall, SMAP soil moisture and MODIS NDVI vegetation; on the northern coast, MUR SST sea temperature.</li>
 <li><b>Know the local soil.</b><span class="nuevo">NEW</span> The farmer marks the soil type (sandy, loam, clay) and salinity of the plot. The app suggests the soil type
-from SoilGrids (ISRIC, sand/silt/clay at 0–30 cm) and labels it as such, never as NASA data. SMAP adds the current soil moisture.</li>
+from SoilGrids (ISRIC, sand/silt/clay at 0–30 cm), plus organic carbon (organic matter) and infiltration, and labels it as such, never as NASA data. SMAP adds the current soil moisture.</li>
+<li><b>Test a dry or wet year.</b><span class="nuevo">NEW</span> A what-if scenario (dry: −40 % rain, wet: +60 % rain over the NASA POWER normal) shows how the season risk and the rotations would change. It is clearly marked as a scenario, not a forecast.</li>
 <li><b>Compute the indicators.</b> Rainfall, soil moisture, heat, El Niño and vegetation compare the current value with the normal for that month and get a level: low, medium or high.</li>
 <li><b>Estimate season risk.</b> For each crop, from planting to harvest, the climate of each month is compared with what the crop tolerates. If sea temperature signals El Niño, rain risk from January to April goes up.</li>
 <li><b>Score the rotations: climate, soil health and water.</b><span class="nuevo">NEW</span> The climate score starts at 100 and loses points for water needs versus deficit,
@@ -147,7 +148,7 @@ the crop and soil catalog through fixed rules, with no AI.</p>
 <tr><td>MODIS Terra NDVI (MOD13Q1 V061, 250 m)</td><td>250m_16_days_NDVI</td><td>Vegetation indicator: crop vigor versus the normal for the same 16-day period; low vigor or bare soil signals stress and soil-cover needs.</td></tr>
 <tr><td>MUR SST v4.1 (NASA JPL, PO.DAAC, via NOAA ERDDAP)</td><td>analysed_sst, sstAnom over Niño 1+2</td><td>El Niño indicator: raises rain risk from January to April, triggers "prepare drainage" and dates the 2017 alert.</td></tr></table>
 <p>Partner space agencies: we do not use partner agency data. NOAA ERDDAP is only the access channel for MUR SST, a NASA JPL product.
-Local soil information comes from the farmer (soil type and salinity), with a soil type suggested by SoilGrids 2.0 (ISRIC, CC-BY 4.0), always labelled as
+Local soil information comes from the farmer (soil type and salinity), with a soil type, organic carbon and infiltration suggested by SoilGrids 2.0 (ISRIC, CC-BY 4.0), always labelled as
 not NASA data. Crop traits (water use, temperature range, family, root depth, salt tolerance) come from the team's catalog, built from FAO-56, FAO Irrigation and
 Drainage Paper 29 and Peruvian agricultural sources listed in References.</p>
 <h2>How we use the data, step by step</h2>
