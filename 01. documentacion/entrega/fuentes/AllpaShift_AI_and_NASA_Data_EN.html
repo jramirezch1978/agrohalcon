@@ -42,8 +42,9 @@ the crop and soil catalog through fixed rules, with no AI.</p>
 <tr><td>MODIS Terra NDVI (MOD13Q1 V061, 250 m)</td><td>250m_16_days_NDVI</td><td>Vegetation indicator: crop vigor versus the normal for the same 16-day period; low vigor or bare soil signals stress and soil-cover needs.</td></tr>
 <tr><td>MUR SST v4.1 (NASA JPL, PO.DAAC, via NOAA ERDDAP)</td><td>analysed_sst, sstAnom over Niño 1+2</td><td>El Niño indicator: raises rain risk from January to April, triggers "prepare drainage" and dates the 2017 alert.</td></tr></table>
 <p>Partner space agencies: we do not use partner agency data. NOAA ERDDAP is only the access channel for MUR SST, a NASA JPL product.
-Local soil information (texture, salinity zones) and crop traits (water use, temperature range, nitrogen fixation) come from the team's
-catalog, built from FAO and Peruvian agricultural sources listed in References.</p>
+Local soil information comes from the farmer (soil type and salinity), with a soil type suggested by SoilGrids 2.0 (ISRIC, CC-BY 4.0), always labelled as
+not NASA data. Crop traits (water use, temperature range, family, root depth, salt tolerance) come from the team's catalog, built from FAO-56, FAO Irrigation and
+Drainage Paper 29 and Peruvian agricultural sources listed in References.</p>
 <h2>How we use the data, step by step</h2>
 <ol>
 <li>The farmer picks a plot and priorities; the app sends them to the AllpaShift API.</li>

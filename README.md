@@ -1,6 +1,8 @@
 <div align="center">
 
-<img src="01.%20documentacion/img/allpashift_banner_app.png" alt="AllpaShift — With NASA satellite data" width="760">
+<img src="01.%20documentacion/img/allpashift_portada.jpg" alt="AllpaShift — Plant for the climate that's coming, with NASA satellite data" width="820">
+
+<sub>Cover image generated with SI (ChatGPT) and marked as such.</sub>
 
 ### Plant for the climate ahead — with NASA satellite data
 
@@ -90,6 +92,19 @@ What the farmer sees:
 | 💻 **Source code** | https://github.com/jramirezch1978/allpashift |
 | 🎬 **Demo video** | https://www.youtube.com/watch?v=3UVyc3Y5eFw |
 | 🌐 **Live app** (team server) | http://2.29.101.199 |
+| 📱 **Android app** (APK 1.0.0, signed) | [allpashift-1.0.0.apk](05.%20mobile/release/android/allpashift-1.0.0.apk) |
+| 🍎 **iOS project** (Xcode) | [allpashift-ios-xcode.zip](05.%20mobile/release/ios/allpashift-ios-xcode.zip) |
+
+### 📄 Submission documents
+
+| Document | What it covers | Link |
+|---|---|---|
+| 🌱 **High-Level Summary** | What AllpaShift is, why it matters and how it answers the challenge | [AllpaShift_Summary.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Summary.pdf) |
+| 🎬 **Project Demo** (7 slides) | The problem, NASA data, the solution, how it works, the app and the 2017 validation | [AllpaShift_Demo_EN.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Demo_EN.pdf) |
+| ⚙️ **Project Details** | How it works step by step, soil health and farmer priorities, tools and goals | [AllpaShift_Project_Details_EN.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Project_Details_EN.pdf) |
+| 🛰️ **Use of AI and NASA Data** | The six NASA datasets, how each is used, and where SI was used | [AllpaShift_AI_and_NASA_Data_EN.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_AI_and_NASA_Data_EN.pdf) |
+| 📚 **References** | Data, papers, software and licenses | [AllpaShift_References_EN.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_References_EN.pdf) |
+| 📱 **Mobile app guide** | How to install the Android APK and build the iOS app | [05. mobile/README.md](05.%20mobile/README.md) |
 
 ---
 

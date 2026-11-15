@@ -12,7 +12,8 @@ function idiomaInicial(): Idioma {
   } catch {
     /* almacenamiento no disponible */
   }
-  return navigator.language?.toLowerCase().startsWith('es') ? 'es' : 'en'
+  // Por defecto en inglés (entrega a la NASA); el usuario puede cambiar a español y se recuerda
+  return 'en'
 }
 
 export const i18n = createI18n({

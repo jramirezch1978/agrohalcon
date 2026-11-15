@@ -348,6 +348,7 @@ export default {
     },
   },
   revision: {
+    resta: 'Resta {p} puntos',
     titulo: 'Antes de decidir',
     ventajas: 'Ventajas',
     riesgos: 'Riesgos y sacrificios',

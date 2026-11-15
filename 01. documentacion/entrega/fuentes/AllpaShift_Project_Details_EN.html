@@ -37,16 +37,18 @@ td:first-child { font-weight: 600; width: 27%; }
 the database if the result is fresh, or asks the calculation service, which reads NASA data and applies fixed rules → the app shows what to do and why.</div>
 <ol>
 <li><b>Pick the plot.</b> The farmer taps a point on the map or uses the phone's GPS (native permission on Android and iOS). It works at any coordinate on Earth.</li>
-<li><b>Set priorities.</b><span class="nuevo">NEW</span> The farmer chooses what matters most: save water, protect the soil, income or lower risk. This changes how rotations are ranked.</li>
+<li><b>Set the priority.</b><span class="nuevo">NEW</span> The farmer chooses what matters most: take less risk, save water or care for the soil. This changes the weights of the final score and the recommended rotation, and the app says why.</li>
 <li><b>Get the data.</b> Rainfall, temperature and climatology from NASA POWER for any point. In the Piura pilot area it adds GPM IMERG
 satellite rainfall, SMAP soil moisture and MODIS NDVI vegetation; on the northern coast, MUR SST sea temperature.</li>
-<li><b>Know the local soil.</b><span class="nuevo">NEW</span> Each pilot zone carries its soil conditions (texture and known salinity, e.g. Bajo Piura and Sechura),
-combined with SMAP moisture, so crops that do not tolerate those conditions lose points.</li>
+<li><b>Know the local soil.</b><span class="nuevo">NEW</span> The farmer marks the soil type (sandy, loam, clay) and salinity of the plot. The app suggests the soil type
+from SoilGrids (ISRIC, sand/silt/clay at 0–30 cm) and labels it as such, never as NASA data. SMAP adds the current soil moisture.</li>
 <li><b>Compute the indicators.</b> Rainfall, soil moisture, heat, El Niño and vegetation compare the current value with the normal for that month and get a level: low, medium or high.</li>
 <li><b>Estimate season risk.</b> For each crop, from planting to harvest, the climate of each month is compared with what the crop tolerates. If sea temperature signals El Niño, rain risk from January to April goes up.</li>
-<li><b>Score the rotations for climate and soil health.</b><span class="nuevo">NEW</span> Each rotation starts at 100 points. It loses points for water needs versus deficit,
-months outside the temperature range, high-risk months and planting out of season; and now also for monoculture and two water-hungry crops in a row,
-while nitrogen-fixing legumes (e.g. zarandaja, bean) earn points. Every change is recorded with its reason and source.</li>
+<li><b>Score the rotations: climate, soil health and water.</b><span class="nuevo">NEW</span> The climate score starts at 100 and loses points for water needs versus deficit,
+months outside the temperature range, high-risk months and planting out of season. The soil-health score rewards nitrogen-fixing legumes (e.g. cowpea, lablab),
+alternating root depths and soil cover, and penalizes monoculture, two crops of the same family, two water-hungry crops in a row, and salt-sensitive crops on
+saline or sandy soil (crop traits from FAO-56 and FAO Irrigation and Drainage Paper 29). The final score weights climate, soil and water by the farmer's priority.
+For each rotation the app lists benefits, risks and trade-offs, what we don't know, and what to check with a local expert.</li>
 <li><b>Decide and explain.</b> Priority rules choose the action for this fortnight. The app shows the result with its NASA dataset, and an AI assistant explains it in plain words. The AI does no calculations.</li>
 </ol>
 <h3>Validation with the 2017 El Niño</h3>
@@ -64,13 +66,14 @@ It does not replace a soil laboratory test. Thresholds and soil-health weights a
 <tr><td>NASA data access</td><td>NASA POWER API; NASA Earthdata (CMR and OPeNDAP) for GPM IMERG and SMAP; ORNL DAAC MODIS web service for NDVI; MUR SST v4.1 (NASA JPL, PO.DAAC) through NOAA CoastWatch ERDDAP.</td></tr>
 <tr><td>AI assistant</td><td>Groq as the platform, with the open model gpt-oss-20b (Apache 2.0). It only writes explanations from results that are already calculated.</td></tr>
 <tr><td>Deployment</td><td>Docker and Nginx on a cloud server.</td></tr>
+<tr><td>Soil data</td><td>SoilGrids 2.0 REST API (ISRIC, CC-BY 4.0) to suggest the soil type; the farmer can change it.</td></tr>
 <tr><td>Maps and collaboration</td><td>OpenStreetMap data and place search (ODbL, with attribution). GitHub for code and version control.</td></tr></table>
 <p>All project code is released under the Apache 2.0 license.</p>
 <h2>Goals</h2>
 <ul>
 <li>Help farmers decide what to plant based on data, not just habit.</li>
 <li>Choose rotations that protect and rebuild the soil, not only the next harvest.</li>
-<li>Respect what each farmer values most: water, soil, income or lower risk.</li>
+<li>Respect what each farmer values most: lower risk, saving water or caring for the soil.</li>
 <li>Reduce harvest losses from drought, extreme rain, heat and El Niño, and warn early using sea temperature.</li>
 <li>Make NASA data easy to understand for people without technical training, in any farming region of the world.</li>
 </ul>

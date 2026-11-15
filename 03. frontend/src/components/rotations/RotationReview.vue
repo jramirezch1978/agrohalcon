@@ -24,7 +24,7 @@ const ventajas = computed(() => {
 
 const riesgos = computed(() => {
   const r = props.rotacion
-  const v = (r.descuentos ?? []).filter((d) => d.puntos < 0).map((d) => motivoDescuento(d, props.indicadores))
+  const v = (r.descuentos ?? []).filter((d) => d.puntos < 0).map((d) => `${t('revision.resta', { p: Math.abs(d.puntos) })} ${motivoDescuento(d, props.indicadores)}`)
   v.push(...(r.descuentosSuelo ?? []).filter((d) => d.puntos < 0).map((d) => d.explicacion))
   if (r.usoAgua === 'alto') v.push(t('revision.aguaAlta'))
   return v
