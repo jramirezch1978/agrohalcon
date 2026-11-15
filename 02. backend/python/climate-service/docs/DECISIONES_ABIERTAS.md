@@ -109,6 +109,17 @@ Reglas del equipo: *“Después de aprobar el contrato nadie cambia un campo sin
     Solo cuenta como anticipación si la lluvia extrema realmente ocurrió. ⚠ **El nivel medio de MUR se activa también en años sin inundación** (2018, 2019, 2020, 2021, 2022: falsas alarmas; la base climática de MUR 2003-2014 da +0,4 °C más que la de NOAA 1991-2020),
     por eso solo el nivel **alto** pide drenar (en 2018-2022 nunca llegó a alto). Antes de 2016 se usa el índice mensual de NOAA CPC (no es NASA) y llega con 0-1 semanas (1998). Datos dentro de `app/datos_respaldo/` (MUR, CPC, IMERG de Piura).
 
+29. **Estado real tras las integraciones del 14-nov (ya en `develop`):** Java llama **solo a `calculos`** (Sheila, :8001) para calcular; `climate-service` sigue desplegado pero **ya no está en el flujo de la app**. El asistente con Groq
+    (`openai/gpt-oss-20b`) quedó **en Java** (`AsistenteService`, `GroqClient`; la clave en el contenedor `agro-service`): el punto 27 y `POST /asistente/preguntar` de este servicio quedan como alternativa no usada. `climate-service` hoy aporta el panel técnico,
+    la base de datos de análisis y la referencia de las guardas. Decidir con Jhonny si se retira del `docker-compose.app.yml` o se le da un uso.
+30. **Plan gratuito de Groq (docs de Groq, 14-nov): para `openai/gpt-oss-20b` son 30 solicitudes/min, 1 000/día, 8 000 tokens/min y 200 000 tokens/día, POR CLAVE (no por IP).** Cada pregunta gasta unos 2 600 tokens (estimado sobre la recomendación real de Piura: ~6 700 caracteres de JSON ≈ 2 100 tokens de entrada + ~400 de salida; confirmarlo con `usage.total_tokens` en el primer día): caben ~3 preguntas por minuto y ~70 al día
+    para todos los usuarios juntos; el límite de 10 preguntas por minuto por IP no protege eso. Con el cupo agotado el asistente cae a "respaldo" (sigue funcionando, sin IA). Propuesto en un PR (`feature/groq-cupo-gratuito`): llevar la cuenta del cupo y no llamar a Groq cuando se acabó,
+    respetar `Retry-After` de un 429, guardar 30 min las respuestas repetidas (las preguntas sugeridas se repiten) y rechazar respuestas con números que no están en la recomendación. **Para la demo: probar el asistente antes y no depender de él más de ~3 veces por minuto.**
+31. **Con El Niño en +6,0 °C la app pedía "preparar drenaje" y a la vez mostraba rotaciones de riesgo bajo (80-90 puntos).** `calculos` solo subía un nivel la lluvia de enero-abril. Propuesto en un PR (`feature/rotaciones-el-nino-extremo`): con dato real de MUR SST ≥ +3,0 °C en la costa norte se resta 35 puntos a TODAS las rotaciones
+    (en Piura: 90 → 55, 80 → 45, 70 → 35). Valores en `config/umbrales.yaml` (`el_nino_extremo_c`, `el_nino_extremo_puntos`): supuesto del equipo, los mismos que usa `climate-service`.
+32. **La plataforma completa corre en una PC sin Docker** (`deploy/local/`, propuesto en `feature/levantar-local`): PostgreSQL embebido con el esquema y los seeds del equipo + calculos + agro-service + api-gateway + frontend. Verificado el 14-nov con Java 17 (Temurin portable), 32 pruebas de Java, 105 de `calculos` y `npm run build`.
+    Se encontró que el PostgreSQL de `pgserver` para Windows no trae zonas horarias (la API Java fallaba con `invalid value for parameter "TimeZone"`); el script lo arregla.
+
 ## D. References / documentos de entrega (de `python -m etl.verificar_enlaces`)
 
 - ❌ El enlace de **SENASA** del PDF *References* da **404**. La versión correcta lleva guion: `.../nino-costero-cuantas-hectareas-se-han-perdido-por-efecto-del-evento-climatico/`
