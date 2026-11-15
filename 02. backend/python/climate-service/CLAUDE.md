@@ -57,3 +57,5 @@ Python **3.11** (venv en `.venv`). El 3.14 del sistema no se usa.
 ## Git
 Trabajar en `feature/datos-python` → Pull Request a `develop` → Jhonny pasa a `main`. Commits pequeños en español, p. ej.
 `feat(indicadores): ...`, `fix(rotaciones): ...`, `data(respaldo): ...`. No hacer push a `main`.
+**Regla del repo (14-nov-2026): en commits y PR NO se escribe "🤖 Generated with Claude Code" ni "Co-Authored-By: Claude ...".** Cada quien firma con su propio nombre
+(`git config user.name "Nombre Completo"`). Aplica a cualquier asistente de código que trabaje aquí.
