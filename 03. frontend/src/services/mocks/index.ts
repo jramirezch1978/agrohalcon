@@ -323,7 +323,7 @@ export function mockRecomendacion(
     humedadSuelo: 'm3/m3',
     calor: '°C',
     elNino: idioma === 'es' ? '°C anomalía' : '°C anomaly',
-    vegetacion: 'NDVI',
+    vegetacion: idioma === 'es' ? 'índice de verdor' : 'greenness index',
   }
 
   const indicadores = Object.fromEntries(

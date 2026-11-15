@@ -1,0 +1,124 @@
+{
+ "metadatos": {
+  "producto": {
+   "short_name": "MOD13Q1",
+   "version": "061",
+   "nombre": "MODIS/Terra Vegetation Indices 16-Day L3 Global 250m SIN Grid V061",
+   "variable": "250m_16_days_NDVI",
+   "escala": 0.0001,
+   "doi": "10.5067/MODIS/MOD13Q1.061",
+   "url": "https://lpdaac.usgs.gov/products/mod13q1v061/",
+   "servicio": "ORNL DAAC MODIS Web Service"
+  },
+  "generado": "2026-11-14",
+  "metodo": "NDVI del píxel de 250 m de cada punto; normal = mismo compuesto (día 289) en 2016-2025."
+ },
+ "puntos": [
+  {
+   "id": "piura",
+   "nombre": "Piura (ciudad)",
+   "lat": -5.19,
+   "lon": -80.63
+  },
+  {
+   "id": "bajo_piura",
+   "nombre": "Bajo Piura",
+   "lat": -5.35,
+   "lon": -80.7
+  },
+  {
+   "id": "medio_piura",
+   "nombre": "Medio Piura",
+   "lat": -5.2,
+   "lon": -80.45
+  },
+  {
+   "id": "alto_piura",
+   "nombre": "Alto Piura",
+   "lat": -5.18,
+   "lon": -79.97
+  },
+  {
+   "id": "chulucanas",
+   "nombre": "Chulucanas",
+   "lat": -5.09,
+   "lon": -80.16
+  },
+  {
+   "id": "sullana",
+   "nombre": "Sullana",
+   "lat": -4.9,
+   "lon": -80.69
+  },
+  {
+   "id": "tambogrande",
+   "nombre": "Tambogrande",
+   "lat": -4.93,
+   "lon": -80.34
+  },
+  {
+   "id": "valle_chira",
+   "nombre": "Valle del Chira",
+   "lat": -4.9,
+   "lon": -80.85
+  },
+  {
+   "id": "sechura",
+   "nombre": "Sechura",
+   "lat": -5.56,
+   "lon": -80.82
+  },
+  {
+   "id": "san_lorenzo",
+   "nombre": "San Lorenzo",
+   "lat": -4.72,
+   "lon": -80.25
+  },
+  {
+   "id": "huancabamba",
+   "nombre": "Huancabamba",
+   "lat": -5.24,
+   "lon": -79.45
+  },
+  {
+   "id": "ayabaca",
+   "nombre": "Ayabaca",
+   "lat": -4.64,
+   "lon": -79.71
+  }
+ ],
+ "actual": {
+  "fecha": "2026-10-16",
+  "ndvi": {
+   "piura": 0.0643,
+   "bajo_piura": 0.5385,
+   "medio_piura": 0.1893,
+   "alto_piura": 0.2334,
+   "chulucanas": 0.1548,
+   "sullana": 0.1637,
+   "tambogrande": 0.2049,
+   "valle_chira": 0.7404,
+   "sechura": 0.1017,
+   "san_lorenzo": 0.0299,
+   "huancabamba": 0.1842,
+   "ayabaca": 0.4391
+  }
+ },
+ "normal": {
+  "periodo": "2016-2025",
+  "ndvi": {
+   "piura": 0.0917,
+   "bajo_piura": 0.5141,
+   "medio_piura": 0.2371,
+   "alto_piura": 0.2311,
+   "chulucanas": 0.1682,
+   "sullana": 0.0988,
+   "tambogrande": 0.1476,
+   "valle_chira": 0.6642,
+   "sechura": 0.0857,
+   "san_lorenzo": 0.338,
+   "huancabamba": 0.2152,
+   "ayabaca": 0.45
+  }
+ }
+}

@@ -1,7 +1,7 @@
 // Verificación de honestidad del dato (corre antes de cada build: `npm run test:datos`).
 // Falla si:
 //  1) un archivo de datos de EJEMPLO (src/services/mocks) usa el nombre de un producto real de la NASA;
-//  2) en cualquier parte de src/ aparece SMAP, MODIS o NDVI (no se integran en AllpaShift);
+//  2) (retirada el 14-nov: SMAP y NDVI de MODIS ya se usan de verdad en el servicio de cálculos);
 //  3) se usa la capa propietaria de Esri en el mapa.
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
@@ -31,7 +31,6 @@ const todos = archivos(SRC)
 const mocks = archivos(join(SRC, 'services', 'mocks'))
 
 revisar(mocks, /NASA POWER|GPM IMERG|IMERG|MUR SST|SMAP|MODIS|NDVI/, 'un dato de EJEMPLO no puede llevar el nombre de un producto de la NASA (usa "Ejemplo")')
-revisar(todos, /\bSMAP\b|\bMODIS\b|\bNDVI\b/, 'SMAP, MODIS y NDVI no se usan en AllpaShift: no deben aparecer')
 revisar(todos, /arcgisonline|\bEsri\b/, 'la capa de Esri es propietaria: usa OpenStreetMap o NASA GIBS')
 
 if (errores.length) {
