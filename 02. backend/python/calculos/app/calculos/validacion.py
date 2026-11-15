@@ -98,7 +98,7 @@ def alerta_lluvia(anio: int, lluvia: dict, dic_previo: float | None, lang: str, 
 def anios_disponibles(lat: float, lon: float, hoy: date | None = None) -> dict[str, Any]:
     """Años con datos REALES de lluvia para la coordenada (y en cuáles MUR SST cubre dic.-abr. para la alerta).
 
-    - Piura (< 25 km de un punto): años con los 12 meses de IMERG Final.
+    - Piura (< 25 km de un punto): años con enero-abril de IMERG (Final hasta 2025-09; luego Late sumado por mes).
     - Resto: NASA POWER mensual, de 2001 al año anterior (el mensual de POWER llega hasta el año pasado).
     """
     hoy = hoy or date.today()
@@ -108,8 +108,10 @@ def anios_disponibles(lat: float, lon: float, hoy: date | None = None) -> dict[s
     cercano = punto_cercano(lat, lon)
     if datos and cercano:
         serie = dict(zip(datos["mensual"]["meses"], datos["mensual"]["mm_mes"][cercano[0]["id"]]))
+        # Basta la temporada de lluvias de Piura (enero-abril): es la ventana de la alerta de El Niño.
+        # Así entran 2025 y el año en curso; los meses sin dato quedan vacíos (null), nunca se rellenan.
         anios = [a for a in range(1998, hoy.year + 1)
-                 if all(serie.get(f"{a}-{m:02d}") is not None for m in range(1, 13))]
+                 if all(serie.get(f"{a}-{m:02d}") is not None for m in range(1, 5))]
         fuente = "GPM IMERG"
     if not anios:
         anios, fuente = list(range(2001, hoy.year)), "NASA POWER"

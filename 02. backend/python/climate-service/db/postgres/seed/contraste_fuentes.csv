@@ -1,0 +1,9 @@
+id,par,zona_id,variable,escala,n,periodo_ini,periodo_fin,correlacion,sesgo_medio,rmse,nota
+1,IMERG_vs_POWER,1,lluvia mm/día,mensual,297,2001-01-01,2025-09-01,0.9131,0.1768,0.6465,"A = IMERG Final (satélite, 0,1°) · B = POWER PRECTOTCORR (reanálisis, 0,5°). Sesgo = A - B."
+2,IMERG_vs_POWER,2,lluvia mm/día,mensual,297,2001-01-01,2025-09-01,0.8573,0.252,0.9233,"A = IMERG Final (satélite, 0,1°) · B = POWER PRECTOTCORR (reanálisis, 0,5°). Sesgo = A - B."
+3,IMERG_vs_POWER,3,lluvia mm/día,mensual,297,2001-01-01,2025-09-01,0.9036,0.2253,0.8314,"A = IMERG Final (satélite, 0,1°) · B = POWER PRECTOTCORR (reanálisis, 0,5°). Sesgo = A - B."
+4,IMERG_vs_POWER,4,lluvia mm/día,mensual,297,2001-01-01,2025-09-01,0.8331,0.7376,1.5202,"A = IMERG Final (satélite, 0,1°) · B = POWER PRECTOTCORR (reanálisis, 0,5°). Sesgo = A - B."
+5,IMERG_vs_POWER,5,lluvia mm/día,mensual,297,2001-01-01,2025-09-01,0.8545,0.6252,1.455,"A = IMERG Final (satélite, 0,1°) · B = POWER PRECTOTCORR (reanálisis, 0,5°). Sesgo = A - B."
+6,IMERG_vs_POWER,7,lluvia mm/día,mensual,297,2001-01-01,2025-09-01,0.6929,0.992,1.7594,"A = IMERG Final (satélite, 0,1°) · B = POWER PRECTOTCORR (reanálisis, 0,5°). Sesgo = A - B."
+7,MURnino12_vs_CPCnino12,,anomalía °C,mensual,126,2016-05-01,2026-10-01,0.9869,0.4037,0.4572,"A = MUR SST (NASA, promedio de la caja Niño 1+2) · B = NOAA CPC Niño 1+2. Las anomalías usan bases distintas (MUR 2003-2014, CPC 1991-2020): el sesgo es esperable."
+8,MURnino12_vs_CPCnino12,,temperatura del mar °C,mensual,126,2016-05-01,2026-10-01,0.9933,0.076,0.2928,"A = MUR SST (NASA, promedio de la caja Niño 1+2) · B = NOAA CPC Niño 1+2. Las anomalías usan bases distintas (MUR 2003-2014, CPC 1991-2020): el sesgo es esperable."

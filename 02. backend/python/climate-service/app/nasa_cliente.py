@@ -8,14 +8,21 @@ Las respuestas se guardan en memoria unas horas; la base de datos la maneja Java
 
 from __future__ import annotations
 
+import json
 import time
+from collections.abc import Callable
 from datetime import date, timedelta
-from typing import Any, Callable
+from pathlib import Path
+from typing import Any
 
 import httpx
 
 POWER = "https://power.larc.nasa.gov/api/temporal"
 ERDDAP = "https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41anom1day.json"
+# Respaldo de El Niño si el ERDDAP de NOAA no responde: la serie semanal de MUR SST en la caja Niño 1+2 (datos de Sheila).
+# Vive dentro de app/ para viajar en la imagen de Docker. Se regenera con `python -m etl.respaldo_validacion`.
+RESPALDO_NINO12 = Path(__file__).resolve().parent / "datos_respaldo" / "nino12_historico.json"
+MAX_DIAS_RESPALDO = 21  # más viejo que esto ya no es "el estado actual": mejor no mostrar El Niño que mostrar uno viejo
 MESES = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
 _cache: dict[str, tuple[float, Any]] = {}
 _http = httpx.Client(timeout=httpx.Timeout(40, connect=10), headers={"User-Agent": "AllpaShift/1.0 (NASA Space Apps 2026)"})
@@ -83,6 +90,24 @@ def sst_anomalia(lat: float, lon: float) -> float | None:
         return _en_cache("sst:" + _k(la, lo), 6, carga)
     except Exception:  # noqa: BLE001
         return None
+
+
+def sst_respaldo(lat: float, lon: float, hoy: date | None = None) -> dict[str, Any] | None:
+    """Plan B de El Niño cuando `sst_anomalia` no respondió: última semana de MUR SST en la caja Niño 1+2.
+
+    Devuelve {"anomalia", "sst", "semana", "dias"} o None si el punto no es de la costa del Pacífico, si no hay archivo
+    o si la semana ya tiene más de MAX_DIAS_RESPALDO días. Es el promedio de la caja, no el punto: quien lo use debe avisarlo.
+    """
+    if lon > -78 or lat < -20 or lat > 5:
+        return None
+    try:
+        semana, sst, anomalia = max(json.loads(RESPALDO_NINO12.read_text(encoding="utf-8"))["mur"]["semanas"], key=lambda s: s[0])
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+    fin_semana = date.fromisoformat(semana) + timedelta(days=6)
+    if ((hoy or date.today()) - fin_semana).days > MAX_DIAS_RESPALDO:
+        return None
+    return {"anomalia": float(anomalia), "sst": sst, "semana": semana, "dias": None}
 
 
 def mensual(lat: float, lon: float, anio: int) -> dict[str, list[float | None]]:

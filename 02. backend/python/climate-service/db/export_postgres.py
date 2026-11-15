@@ -23,7 +23,7 @@ from .build import RUTA_DB
 
 SALIDA = Path(__file__).resolve().parent / "postgres"
 # Orden respetando las claves foráneas. cultivo/rotacion NO se exportan: el catálogo real es de Alejandro.
-SEMILLAS = ["region", "fuente_dato", "variable", "zona", "normal_mensual", "indice_climatico", "episodio_calido", "sst_clima", "tendencia", "composite_nino", "observacion", "validacion_quincena", "recomendacion_cache"]
+SEMILLAS = ["region", "fuente_dato", "variable", "zona", "normal_mensual", "indice_climatico", "episodio_calido", "sst_clima", "tendencia", "composite_nino", "contraste_fuentes", "observacion", "validacion_quincena", "recomendacion_cache"]
 GRANDES = {"observacion"}  # se comprimen
 
 
@@ -54,6 +54,9 @@ def exportar_semillas(ruta_db: Path) -> list[str]:
             df = pd.read_sql(text(f"SELECT * FROM {nombre}"), con)
             if nombre == "observacion":
                 df = df.drop(columns=["id"])  # lo asigna la secuencia
+            for c in df.columns:  # un id con NULL llega como float (1.0): PostgreSQL no lo acepta como entero
+                if c.endswith("_id") and str(df[c].dtype) == "float64":
+                    df[c] = df[c].astype("Int64")
             for c in df.columns:
                 if c in {"entrada", "indicadores", "rotaciones", "que_hacer", "advertencias", "payload"}:
                     df[c] = df[c].map(lambda v: v if v is None else (v if isinstance(v, str) else json.dumps(v, ensure_ascii=False)))
@@ -67,7 +70,7 @@ def exportar_semillas(ruta_db: Path) -> list[str]:
             columnas = ", ".join(df.columns)
             comandos.append(f"\\copy {nombre} ({columnas}) FROM 'seed/{nombre}.csv' WITH (FORMAT csv, HEADER true)")
     comandos.append("")
-    for t in ("observacion", "episodio_calido", "validacion_quincena", "recomendacion_cache"):  # tablas con id automático
+    for t in ("observacion", "episodio_calido", "validacion_quincena", "recomendacion_cache", "contraste_fuentes"):  # tablas con id automático
         comandos.append(f"SELECT setval(pg_get_serial_sequence('{t}', 'id'), COALESCE((SELECT MAX(id) FROM {t}), 1));")
     (SALIDA / "02_seed.sql").write_text("\n".join(comandos) + "\n", encoding="utf-8")
     return SEMILLAS

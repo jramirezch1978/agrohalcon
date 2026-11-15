@@ -104,6 +104,7 @@ const BASES: Record<Escenario, Base> = {
       humedadSuelo: { valor: 0.12, normal: 0.2, nivel: 'alto' },
       calor: { valor: 34.0, normal: 31.0, nivel: 'medio' },
       elNino: { valor: 1.2, normal: 0.0, nivel: 'medio' },
+      vegetacion: { valor: 0.42, normal: 0.5, nivel: 'bajo' },
     },
     puntajes: [82, 35, 64],
     descuentos: [
@@ -119,6 +120,7 @@ const BASES: Record<Escenario, Base> = {
       humedadSuelo: { valor: 0.21, normal: 0.2, nivel: 'bajo' },
       calor: { valor: 31.4, normal: 31.0, nivel: 'bajo' },
       elNino: { valor: 0.2, normal: 0.0, nivel: 'bajo' },
+      vegetacion: { valor: 0.55, normal: 0.5, nivel: 'bajo' },
     },
     puntajes: [86, 68, 79],
     descuentos: [
@@ -134,6 +136,7 @@ const BASES: Record<Escenario, Base> = {
       humedadSuelo: { valor: 0.38, normal: 0.2, nivel: 'alto' },
       calor: { valor: 29.5, normal: 31.0, nivel: 'bajo' },
       elNino: { valor: 2.4, normal: 0.0, nivel: 'alto' },
+      vegetacion: { valor: 0.31, normal: 0.5, nivel: 'bajo' },
     },
     puntajes: [41, 74, 33],
     descuentos: [
@@ -149,6 +152,7 @@ const BASES: Record<Escenario, Base> = {
       humedadSuelo: { valor: 0.27, normal: 0.2, nivel: 'medio' },
       calor: { valor: 30.6, normal: 31.0, nivel: 'bajo' },
       elNino: { valor: 0.9, normal: 0.0, nivel: 'medio' },
+      vegetacion: { valor: 0.47, normal: 0.5, nivel: 'bajo' },
     },
     puntajes: [58, 76, 47],
     descuentos: [
@@ -165,6 +169,7 @@ const FUENTES: Record<keyof Indicadores, FuenteNasa> = {
   humedadSuelo: EJEMPLO,
   calor: EJEMPLO,
   elNino: EJEMPLO,
+  vegetacion: EJEMPLO,
 }
 
 /** Textos por escenario. p = % de diferencia; d = déficit de humedad; sst = anomalía del mar. */
@@ -318,6 +323,7 @@ export function mockRecomendacion(
     humedadSuelo: 'm3/m3',
     calor: '°C',
     elNino: idioma === 'es' ? '°C anomalía' : '°C anomaly',
+    vegetacion: idioma === 'es' ? 'índice de verdor' : 'greenness index',
   }
 
   const indicadores = Object.fromEntries(

@@ -25,7 +25,7 @@ public class GroqClient {
 
     private static final Logger log = LoggerFactory.getLogger(GroqClient.class);
     static final double TEMPERATURA = 0.2;
-    static final int MAX_TOKENS = 300;
+    static final int MAX_TOKENS = 1024;  // gpt-oss razona antes de responder: con pocos tokens devolvía texto vacío
 
     private final String apiKey;
     private final String modelo;
@@ -65,6 +65,8 @@ public class GroqClient {
                 "model", modelo,
                 "temperature", TEMPERATURA,
                 "max_tokens", MAX_TOKENS,
+                "reasoning_effort", "low",       // razonamiento corto: respuesta rápida y con texto
+                "include_reasoning", false,      // solo la respuesta final
                 "messages", List.of(
                         Map.of("role", "system", "content", sistema),
                         Map.of("role", "user", "content", usuario)));

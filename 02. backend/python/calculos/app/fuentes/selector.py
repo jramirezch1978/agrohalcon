@@ -12,7 +12,7 @@ from typing import Any
 import pandas as pd
 
 from app.fuentes.piura import punto_cercano
-from app.fuentes.precalculado import imerg_piura
+from app.fuentes.precalculado import imerg_piura, ndvi_piura, smap_piura
 
 FUENTE_IMERG = "GPM IMERG"
 MAX_DIAS_ATRASO = 10        # más viejo que esto: se usa igual, pero marcado "desactualizado" y con aviso (supuesto)
@@ -94,4 +94,50 @@ def lluvia_mensual_imerg(lat: float, lon: float, anio: int) -> dict[str, Any] | 
         "unidad": "mm/mes", "fuente": FUENTE_IMERG, "valores": valores,
         "normal": datos["climatologia"]["mm_mes"][punto["id"]],
         "producto": "GPM_3IMERGM V07 (Final)", "punto": _ref_punto(punto, km),
+    }
+
+
+FUENTE_SMAP = "SMAP"
+FUENTE_NDVI = "MODIS NDVI"
+
+
+def humedad_actual_smap(lat: float, lon: float, hoy: date) -> dict[str, Any] | None:
+    """Humedad del suelo SMAP (m3/m3) de los últimos 30 días y su normal (misma ventana, 2016-año pasado).
+    None si la coordenada no está en Piura, falta el archivo o el dato es viejo: entonces se usa NASA POWER."""
+    cercano = punto_cercano(lat, lon)
+    datos = smap_piura()
+    if cercano is None or datos is None:
+        return None
+    punto, km = cercano
+    act, nor = datos["actual"]["m3m3"].get(punto["id"]), datos["normal"]["m3m3"].get(punto["id"])
+    if act is None or nor is None or datos["actual"]["diasConDato"].get(punto["id"], 0) < 3:
+        return None
+    fin = date.fromisoformat(datos["actual"]["fin"])
+    atraso = (hoy - fin).days
+    if atraso > MAX_DIAS_USO:
+        return None
+    meta = datos["metadatos"]["producto"]
+    return {
+        "valor": float(act), "normal": float(nor), "fuente": FUENTE_SMAP,
+        "parametro": f"soil_moisture ({meta['short_name']} V{meta['version']}, 9 km; normal {datos['normal']['periodo']})",
+        "periodo": {"inicio": datos["actual"]["inicio"], "fin": datos["actual"]["fin"], "dias": 30},
+        "punto": _ref_punto(punto, km), "ultimoDato": datos["actual"]["fin"], "desactualizado": atraso > MAX_DIAS_ATRASO,
+    }
+
+
+def vegetacion_ndvi(lat: float, lon: float) -> dict[str, Any] | None:
+    """NDVI de MODIS (250 m) del último compuesto de 16 días y su normal (mismo compuesto, 2016-año pasado)."""
+    cercano = punto_cercano(lat, lon)
+    datos = ndvi_piura()
+    if cercano is None or datos is None:
+        return None
+    punto, km = cercano
+    act, nor = datos["actual"]["ndvi"].get(punto["id"]), datos["normal"]["ndvi"].get(punto["id"])
+    if act is None or nor is None:
+        return None
+    meta = datos["metadatos"]["producto"]
+    return {
+        "valor": float(act), "normal": float(nor), "fuente": FUENTE_NDVI,
+        "parametro": f"NDVI ({meta['short_name']} V{meta['version']}, 250 m, 16 días; normal {datos['normal']['periodo']})",
+        "fecha": datos["actual"]["fecha"], "punto": _ref_punto(punto, km),
     }

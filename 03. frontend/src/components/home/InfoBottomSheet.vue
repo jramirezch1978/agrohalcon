@@ -17,6 +17,8 @@ const RESOLUCION: Record<string, string> = {
   'GPM IMERG': '~10 km (0.1°)',
   'NASA POWER': '~50 km (0.5°)',
   'MUR SST': 'Niño 1+2 (0°-10° S, 90°-80° O)',
+  SMAP: '~9 km (EASE-Grid 2.0)',
+  'MODIS NDVI': '250 m (compuesto de 16 días)',
 }
 const e = computed(() => (props.indicador ? escala(props.indicador) : { actual: 0, normal: 0 }))
 </script>

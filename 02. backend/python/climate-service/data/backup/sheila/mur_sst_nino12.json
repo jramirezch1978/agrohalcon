@@ -1,0 +1,3322 @@
+{
+ "metadatos": {
+  "producto": "MUR SST (Multi-scale Ultra-high Resolution SST Analysis), GHRSST L4",
+  "version": "v4.1 (fv04.1)",
+  "proveedor": "NASA JPL PO.DAAC; accedido vía ERDDAP de NOAA CoastWatch (West Coast Node)",
+  "datasets": {
+   "sst": {
+    "id": "jplMURSST41",
+    "variable": "analysed_sst",
+    "url": "https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41.html"
+   },
+   "anomalia": {
+    "id": "jplMURSST41anom1day",
+    "variable": "sstAnom",
+    "url": "https://coastwatch.pfeg.noaa.gov/erddap/griddap/jplMURSST41anom1day.html",
+    "climatologia_base": "JPL MUR 2003-2014 (anomalía calculada por NOAA ERD)"
+   }
+  },
+  "doi_producto": "10.5067/GHGMR-4FJ04",
+  "zona": {
+   "nombre": "Niño 1+2",
+   "lat": [
+    -10.0,
+    0.0
+   ],
+   "lon": [
+    -90.0,
+    -80.0
+   ]
+  },
+  "resolucion_usada": "0.25° (cada 25 celdas de la rejilla de 0.01°)",
+  "metodo": "Promedio diario de la caja ponderado por cos(lat), solo océano; luego promedio por semana ISO (lunes a domingo). Semanas con menos de 4 días válidos se omiten.",
+  "unidades": {
+   "sst": "°C",
+   "anomalia": "°C"
+  },
+  "periodo": {
+   "inicio": "2016-05-30",
+   "fin": "2026-11-09"
+  },
+  "ultimo_dia_con_datos": "2026-11-12",
+  "descargado": "2026-11-14T16:11:19+00:00"
+ },
+ "semanas": [
+  {
+   "semana": "2016-05-30",
+   "sst": 23.715,
+   "anomalia": 0.481,
+   "dias": 5
+  },
+  {
+   "semana": "2016-06-06",
+   "sst": 23.64,
+   "anomalia": 0.657,
+   "dias": 7
+  },
+  {
+   "semana": "2016-06-13",
+   "sst": 23.472,
+   "anomalia": 0.719,
+   "dias": 7
+  },
+  {
+   "semana": "2016-06-20",
+   "sst": 22.905,
+   "anomalia": 0.562,
+   "dias": 7
+  },
+  {
+   "semana": "2016-06-27",
+   "sst": 22.473,
+   "anomalia": 0.327,
+   "dias": 7
+  },
+  {
+   "semana": "2016-07-04",
+   "sst": 22.3,
+   "anomalia": 0.438,
+   "dias": 7
+  },
+  {
+   "semana": "2016-07-11",
+   "sst": 22.072,
+   "anomalia": 0.454,
+   "dias": 7
+  },
+  {
+   "semana": "2016-07-18",
+   "sst": 22.015,
+   "anomalia": 0.562,
+   "dias": 7
+  },
+  {
+   "semana": "2016-07-25",
+   "sst": 21.52,
+   "anomalia": 0.424,
+   "dias": 7
+  },
+  {
+   "semana": "2016-08-01",
+   "sst": 21.413,
+   "anomalia": 0.539,
+   "dias": 7
+  },
+  {
+   "semana": "2016-08-08",
+   "sst": 20.919,
+   "anomalia": 0.162,
+   "dias": 7
+  },
+  {
+   "semana": "2016-08-15",
+   "sst": 21.036,
+   "anomalia": 0.273,
+   "dias": 7
+  },
+  {
+   "semana": "2016-08-22",
+   "sst": 20.851,
+   "anomalia": 0.494,
+   "dias": 7
+  },
+  {
+   "semana": "2016-08-29",
+   "sst": 20.798,
+   "anomalia": 0.361,
+   "dias": 7
+  },
+  {
+   "semana": "2016-09-05",
+   "sst": 20.926,
+   "anomalia": 0.672,
+   "dias": 7
+  },
+  {
+   "semana": "2016-09-12",
+   "sst": 20.863,
+   "anomalia": 0.652,
+   "dias": 7
+  },
+  {
+   "semana": "2016-09-19",
+   "sst": 21.181,
+   "anomalia": 0.839,
+   "dias": 7
+  },
+  {
+   "semana": "2016-09-26",
+   "sst": 21.147,
+   "anomalia": 0.949,
+   "dias": 7
+  },
+  {
+   "semana": "2016-10-03",
+   "sst": 21.118,
+   "anomalia": 0.762,
+   "dias": 7
+  },
+  {
+   "semana": "2016-10-10",
+   "sst": 21.553,
+   "anomalia": 1.172,
+   "dias": 7
+  },
+  {
+   "semana": "2016-10-17",
+   "sst": 20.792,
+   "anomalia": -0.007,
+   "dias": 7
+  },
+  {
+   "semana": "2016-10-24",
+   "sst": 21.027,
+   "anomalia": 0.012,
+   "dias": 7
+  },
+  {
+   "semana": "2016-10-31",
+   "sst": 21.062,
+   "anomalia": 0.002,
+   "dias": 7
+  },
+  {
+   "semana": "2016-11-07",
+   "sst": 21.49,
+   "anomalia": 0.166,
+   "dias": 7
+  },
+  {
+   "semana": "2016-11-14",
+   "sst": 21.394,
+   "anomalia": -0.09,
+   "dias": 7
+  },
+  {
+   "semana": "2016-11-21",
+   "sst": 21.956,
+   "anomalia": 0.318,
+   "dias": 7
+  },
+  {
+   "semana": "2016-11-28",
+   "sst": 21.947,
+   "anomalia": 0.196,
+   "dias": 7
+  },
+  {
+   "semana": "2016-12-05",
+   "sst": 22.593,
+   "anomalia": 0.595,
+   "dias": 7
+  },
+  {
+   "semana": "2016-12-12",
+   "sst": 23.064,
+   "anomalia": 0.619,
+   "dias": 7
+  },
+  {
+   "semana": "2016-12-19",
+   "sst": 23.154,
+   "anomalia": 0.261,
+   "dias": 7
+  },
+  {
+   "semana": "2016-12-26",
+   "sst": 23.552,
+   "anomalia": 0.385,
+   "dias": 7
+  },
+  {
+   "semana": "2017-01-02",
+   "sst": 24.299,
+   "anomalia": 0.668,
+   "dias": 7
+  },
+  {
+   "semana": "2017-01-09",
+   "sst": 25.413,
+   "anomalia": 1.281,
+   "dias": 7
+  },
+  {
+   "semana": "2017-01-16",
+   "sst": 26.441,
+   "anomalia": 1.849,
+   "dias": 7
+  },
+  {
+   "semana": "2017-01-23",
+   "sst": 27.282,
+   "anomalia": 2.378,
+   "dias": 7
+  },
+  {
+   "semana": "2017-01-30",
+   "sst": 27.645,
+   "anomalia": 2.505,
+   "dias": 7
+  },
+  {
+   "semana": "2017-02-06",
+   "sst": 27.55,
+   "anomalia": 1.83,
+   "dias": 7
+  },
+  {
+   "semana": "2017-02-13",
+   "sst": 27.804,
+   "anomalia": 1.637,
+   "dias": 7
+  },
+  {
+   "semana": "2017-02-20",
+   "sst": 28.423,
+   "anomalia": 2.198,
+   "dias": 7
+  },
+  {
+   "semana": "2017-02-27",
+   "sst": 29.06,
+   "anomalia": 2.861,
+   "dias": 7
+  },
+  {
+   "semana": "2017-03-06",
+   "sst": 28.677,
+   "anomalia": 2.395,
+   "dias": 7
+  },
+  {
+   "semana": "2017-03-13",
+   "sst": 28.932,
+   "anomalia": 2.573,
+   "dias": 7
+  },
+  {
+   "semana": "2017-03-20",
+   "sst": 28.256,
+   "anomalia": 2.09,
+   "dias": 7
+  },
+  {
+   "semana": "2017-03-27",
+   "sst": 28.292,
+   "anomalia": 2.398,
+   "dias": 7
+  },
+  {
+   "semana": "2017-04-03",
+   "sst": 27.296,
+   "anomalia": 1.711,
+   "dias": 7
+  },
+  {
+   "semana": "2017-04-10",
+   "sst": 26.824,
+   "anomalia": 1.476,
+   "dias": 7
+  },
+  {
+   "semana": "2017-04-17",
+   "sst": 26.737,
+   "anomalia": 1.565,
+   "dias": 7
+  },
+  {
+   "semana": "2017-04-24",
+   "sst": 26.029,
+   "anomalia": 1.101,
+   "dias": 7
+  },
+  {
+   "semana": "2017-05-01",
+   "sst": 25.662,
+   "anomalia": 0.996,
+   "dias": 7
+  },
+  {
+   "semana": "2017-05-08",
+   "sst": 25.591,
+   "anomalia": 1.365,
+   "dias": 7
+  },
+  {
+   "semana": "2017-05-15",
+   "sst": 25.139,
+   "anomalia": 1.314,
+   "dias": 7
+  },
+  {
+   "semana": "2017-05-22",
+   "sst": 24.053,
+   "anomalia": 0.49,
+   "dias": 7
+  },
+  {
+   "semana": "2017-05-29",
+   "sst": 23.608,
+   "anomalia": 0.248,
+   "dias": 7
+  },
+  {
+   "semana": "2017-06-05",
+   "sst": 23.22,
+   "anomalia": 0.167,
+   "dias": 7
+  },
+  {
+   "semana": "2017-06-12",
+   "sst": 23.197,
+   "anomalia": 0.358,
+   "dias": 7
+  },
+  {
+   "semana": "2017-06-19",
+   "sst": 23.062,
+   "anomalia": 0.617,
+   "dias": 7
+  },
+  {
+   "semana": "2017-06-26",
+   "sst": 22.494,
+   "anomalia": 0.305,
+   "dias": 7
+  },
+  {
+   "semana": "2017-07-03",
+   "sst": 21.983,
+   "anomalia": 0.013,
+   "dias": 7
+  },
+  {
+   "semana": "2017-07-10",
+   "sst": 22.027,
+   "anomalia": 0.363,
+   "dias": 7
+  },
+  {
+   "semana": "2017-07-17",
+   "sst": 21.369,
+   "anomalia": -0.167,
+   "dias": 7
+  },
+  {
+   "semana": "2017-07-24",
+   "sst": 21.278,
+   "anomalia": 0.118,
+   "dias": 7
+  },
+  {
+   "semana": "2017-07-31",
+   "sst": 21.306,
+   "anomalia": 0.347,
+   "dias": 7
+  },
+  {
+   "semana": "2017-08-07",
+   "sst": 20.542,
+   "anomalia": -0.198,
+   "dias": 7
+  },
+  {
+   "semana": "2017-08-14",
+   "sst": 20.304,
+   "anomalia": -0.499,
+   "dias": 7
+  },
+  {
+   "semana": "2017-08-21",
+   "sst": 20.345,
+   "anomalia": -0.118,
+   "dias": 7
+  },
+  {
+   "semana": "2017-08-28",
+   "sst": 20.374,
+   "anomalia": -0.016,
+   "dias": 7
+  },
+  {
+   "semana": "2017-09-04",
+   "sst": 20.305,
+   "anomalia": -0.045,
+   "dias": 7
+  },
+  {
+   "semana": "2017-09-11",
+   "sst": 19.646,
+   "anomalia": -0.513,
+   "dias": 7
+  },
+  {
+   "semana": "2017-09-18",
+   "sst": 19.459,
+   "anomalia": -0.888,
+   "dias": 7
+  },
+  {
+   "semana": "2017-09-25",
+   "sst": 19.96,
+   "anomalia": -0.257,
+   "dias": 7
+  },
+  {
+   "semana": "2017-10-02",
+   "sst": 19.895,
+   "anomalia": -0.423,
+   "dias": 7
+  },
+  {
+   "semana": "2017-10-09",
+   "sst": 19.847,
+   "anomalia": -0.505,
+   "dias": 7
+  },
+  {
+   "semana": "2017-10-16",
+   "sst": 19.67,
+   "anomalia": -0.969,
+   "dias": 7
+  },
+  {
+   "semana": "2017-10-23",
+   "sst": 20.188,
+   "anomalia": -0.832,
+   "dias": 7
+  },
+  {
+   "semana": "2017-10-30",
+   "sst": 20.449,
+   "anomalia": -0.562,
+   "dias": 7
+  },
+  {
+   "semana": "2017-11-06",
+   "sst": 20.508,
+   "anomalia": -0.772,
+   "dias": 7
+  },
+  {
+   "semana": "2017-11-13",
+   "sst": 20.8,
+   "anomalia": -0.615,
+   "dias": 7
+  },
+  {
+   "semana": "2017-11-20",
+   "sst": 20.853,
+   "anomalia": -0.759,
+   "dias": 7
+  },
+  {
+   "semana": "2017-11-27",
+   "sst": 21.116,
+   "anomalia": -0.596,
+   "dias": 7
+  },
+  {
+   "semana": "2017-12-04",
+   "sst": 21.186,
+   "anomalia": -0.724,
+   "dias": 7
+  },
+  {
+   "semana": "2017-12-11",
+   "sst": 21.612,
+   "anomalia": -0.679,
+   "dias": 7
+  },
+  {
+   "semana": "2017-12-18",
+   "sst": 21.89,
+   "anomalia": -0.915,
+   "dias": 7
+  },
+  {
+   "semana": "2017-12-25",
+   "sst": 22.585,
+   "anomalia": -0.492,
+   "dias": 7
+  },
+  {
+   "semana": "2018-01-01",
+   "sst": 23.211,
+   "anomalia": -0.33,
+   "dias": 7
+  },
+  {
+   "semana": "2018-01-08",
+   "sst": 23.554,
+   "anomalia": -0.539,
+   "dias": 7
+  },
+  {
+   "semana": "2018-01-15",
+   "sst": 24.41,
+   "anomalia": -0.101,
+   "dias": 7
+  },
+  {
+   "semana": "2018-01-22",
+   "sst": 24.694,
+   "anomalia": -0.189,
+   "dias": 7
+  },
+  {
+   "semana": "2018-01-29",
+   "sst": 24.688,
+   "anomalia": -0.395,
+   "dias": 7
+  },
+  {
+   "semana": "2018-02-05",
+   "sst": 25.393,
+   "anomalia": -0.227,
+   "dias": 7
+  },
+  {
+   "semana": "2018-02-12",
+   "sst": 26.098,
+   "anomalia": -0.011,
+   "dias": 7
+  },
+  {
+   "semana": "2018-02-19",
+   "sst": 26.684,
+   "anomalia": 0.461,
+   "dias": 7
+  },
+  {
+   "semana": "2018-02-26",
+   "sst": 26.885,
+   "anomalia": 0.678,
+   "dias": 7
+  },
+  {
+   "semana": "2018-03-05",
+   "sst": 26.224,
+   "anomalia": -0.046,
+   "dias": 7
+  },
+  {
+   "semana": "2018-03-12",
+   "sst": 25.881,
+   "anomalia": -0.48,
+   "dias": 7
+  },
+  {
+   "semana": "2018-03-19",
+   "sst": 25.532,
+   "anomalia": -0.672,
+   "dias": 7
+  },
+  {
+   "semana": "2018-03-26",
+   "sst": 25.234,
+   "anomalia": -0.694,
+   "dias": 7
+  },
+  {
+   "semana": "2018-04-02",
+   "sst": 25.119,
+   "anomalia": -0.534,
+   "dias": 7
+  },
+  {
+   "semana": "2018-04-09",
+   "sst": 24.914,
+   "anomalia": -0.453,
+   "dias": 7
+  },
+  {
+   "semana": "2018-04-16",
+   "sst": 24.666,
+   "anomalia": -0.538,
+   "dias": 7
+  },
+  {
+   "semana": "2018-04-23",
+   "sst": 24.807,
+   "anomalia": -0.157,
+   "dias": 7
+  },
+  {
+   "semana": "2018-04-30",
+   "sst": 24.598,
+   "anomalia": -0.113,
+   "dias": 7
+  },
+  {
+   "semana": "2018-05-07",
+   "sst": 24.261,
+   "anomalia": -0.033,
+   "dias": 7
+  },
+  {
+   "semana": "2018-05-14",
+   "sst": 23.934,
+   "anomalia": 0.069,
+   "dias": 7
+  },
+  {
+   "semana": "2018-05-21",
+   "sst": 23.645,
+   "anomalia": 0.048,
+   "dias": 7
+  },
+  {
+   "semana": "2018-05-28",
+   "sst": 23.189,
+   "anomalia": -0.21,
+   "dias": 7
+  },
+  {
+   "semana": "2018-06-04",
+   "sst": 22.502,
+   "anomalia": -0.594,
+   "dias": 7
+  },
+  {
+   "semana": "2018-06-11",
+   "sst": 22.157,
+   "anomalia": -0.712,
+   "dias": 7
+  },
+  {
+   "semana": "2018-06-18",
+   "sst": 22.085,
+   "anomalia": -0.421,
+   "dias": 7
+  },
+  {
+   "semana": "2018-06-25",
+   "sst": 22.033,
+   "anomalia": -0.178,
+   "dias": 7
+  },
+  {
+   "semana": "2018-07-02",
+   "sst": 21.932,
+   "anomalia": -0.092,
+   "dias": 7
+  },
+  {
+   "semana": "2018-07-09",
+   "sst": 21.702,
+   "anomalia": 0.011,
+   "dias": 7
+  },
+  {
+   "semana": "2018-07-16",
+   "sst": 21.476,
+   "anomalia": -0.082,
+   "dias": 7
+  },
+  {
+   "semana": "2018-07-23",
+   "sst": 21.188,
+   "anomalia": -0.025,
+   "dias": 7
+  },
+  {
+   "semana": "2018-07-30",
+   "sst": 21.38,
+   "anomalia": 0.382,
+   "dias": 7
+  },
+  {
+   "semana": "2018-08-06",
+   "sst": 21.117,
+   "anomalia": 0.369,
+   "dias": 7
+  },
+  {
+   "semana": "2018-08-13",
+   "sst": 21.04,
+   "anomalia": 0.236,
+   "dias": 7
+  },
+  {
+   "semana": "2018-08-20",
+   "sst": 20.725,
+   "anomalia": 0.199,
+   "dias": 7
+  },
+  {
+   "semana": "2018-08-27",
+   "sst": 20.581,
+   "anomalia": 0.217,
+   "dias": 7
+  },
+  {
+   "semana": "2018-09-03",
+   "sst": 20.75,
+   "anomalia": 0.358,
+   "dias": 7
+  },
+  {
+   "semana": "2018-09-10",
+   "sst": 20.588,
+   "anomalia": 0.44,
+   "dias": 7
+  },
+  {
+   "semana": "2018-09-17",
+   "sst": 20.367,
+   "anomalia": 0.026,
+   "dias": 7
+  },
+  {
+   "semana": "2018-09-24",
+   "sst": 20.945,
+   "anomalia": 0.704,
+   "dias": 7
+  },
+  {
+   "semana": "2018-10-01",
+   "sst": 21.259,
+   "anomalia": 0.976,
+   "dias": 7
+  },
+  {
+   "semana": "2018-10-08",
+   "sst": 21.534,
+   "anomalia": 1.184,
+   "dias": 7
+  },
+  {
+   "semana": "2018-10-15",
+   "sst": 21.547,
+   "anomalia": 0.982,
+   "dias": 7
+  },
+  {
+   "semana": "2018-10-22",
+   "sst": 21.426,
+   "anomalia": 0.422,
+   "dias": 7
+  },
+  {
+   "semana": "2018-10-29",
+   "sst": 21.885,
+   "anomalia": 0.884,
+   "dias": 7
+  },
+  {
+   "semana": "2018-11-05",
+   "sst": 22.279,
+   "anomalia": 1.034,
+   "dias": 7
+  },
+  {
+   "semana": "2018-11-12",
+   "sst": 22.306,
+   "anomalia": 0.916,
+   "dias": 7
+  },
+  {
+   "semana": "2018-11-19",
+   "sst": 22.571,
+   "anomalia": 0.975,
+   "dias": 7
+  },
+  {
+   "semana": "2018-11-26",
+   "sst": 22.953,
+   "anomalia": 1.258,
+   "dias": 7
+  },
+  {
+   "semana": "2018-12-03",
+   "sst": 23.226,
+   "anomalia": 1.359,
+   "dias": 7
+  },
+  {
+   "semana": "2018-12-10",
+   "sst": 23.583,
+   "anomalia": 1.359,
+   "dias": 7
+  },
+  {
+   "semana": "2018-12-17",
+   "sst": 23.892,
+   "anomalia": 1.148,
+   "dias": 7
+  },
+  {
+   "semana": "2018-12-24",
+   "sst": 24.097,
+   "anomalia": 1.061,
+   "dias": 7
+  },
+  {
+   "semana": "2018-12-31",
+   "sst": 24.149,
+   "anomalia": 0.699,
+   "dias": 7
+  },
+  {
+   "semana": "2019-01-07",
+   "sst": 24.939,
+   "anomalia": 0.896,
+   "dias": 7
+  },
+  {
+   "semana": "2019-01-14",
+   "sst": 25.113,
+   "anomalia": 0.679,
+   "dias": 7
+  },
+  {
+   "semana": "2019-01-21",
+   "sst": 25.535,
+   "anomalia": 0.68,
+   "dias": 7
+  },
+  {
+   "semana": "2019-01-28",
+   "sst": 26.078,
+   "anomalia": 1.035,
+   "dias": 7
+  },
+  {
+   "semana": "2019-02-04",
+   "sst": 26.541,
+   "anomalia": 0.993,
+   "dias": 7
+  },
+  {
+   "semana": "2019-02-11",
+   "sst": 26.622,
+   "anomalia": 0.548,
+   "dias": 7
+  },
+  {
+   "semana": "2019-02-18",
+   "sst": 27.264,
+   "anomalia": 1.042,
+   "dias": 7
+  },
+  {
+   "semana": "2019-02-25",
+   "sst": 27.521,
+   "anomalia": 1.308,
+   "dias": 7
+  },
+  {
+   "semana": "2019-03-04",
+   "sst": 27.175,
+   "anomalia": 0.919,
+   "dias": 7
+  },
+  {
+   "semana": "2019-03-11",
+   "sst": 26.964,
+   "anomalia": 0.613,
+   "dias": 7
+  },
+  {
+   "semana": "2019-03-18",
+   "sst": 26.919,
+   "anomalia": 0.686,
+   "dias": 7
+  },
+  {
+   "semana": "2019-03-25",
+   "sst": 26.416,
+   "anomalia": 0.456,
+   "dias": 7
+  },
+  {
+   "semana": "2019-04-01",
+   "sst": 26.462,
+   "anomalia": 0.766,
+   "dias": 7
+  },
+  {
+   "semana": "2019-04-08",
+   "sst": 26.443,
+   "anomalia": 1.052,
+   "dias": 7
+  },
+  {
+   "semana": "2019-04-15",
+   "sst": 26.037,
+   "anomalia": 0.805,
+   "dias": 7
+  },
+  {
+   "semana": "2019-04-22",
+   "sst": 25.859,
+   "anomalia": 0.861,
+   "dias": 7
+  },
+  {
+   "semana": "2019-04-29",
+   "sst": 25.453,
+   "anomalia": 0.699,
+   "dias": 7
+  },
+  {
+   "semana": "2019-05-06",
+   "sst": 25.18,
+   "anomalia": 0.816,
+   "dias": 7
+  },
+  {
+   "semana": "2019-05-13",
+   "sst": 24.799,
+   "anomalia": 0.885,
+   "dias": 7
+  },
+  {
+   "semana": "2019-05-20",
+   "sst": 24.382,
+   "anomalia": 0.751,
+   "dias": 7
+  },
+  {
+   "semana": "2019-05-27",
+   "sst": 23.885,
+   "anomalia": 0.449,
+   "dias": 7
+  },
+  {
+   "semana": "2019-06-03",
+   "sst": 23.678,
+   "anomalia": 0.538,
+   "dias": 7
+  },
+  {
+   "semana": "2019-06-10",
+   "sst": 23.565,
+   "anomalia": 0.667,
+   "dias": 7
+  },
+  {
+   "semana": "2019-06-17",
+   "sst": 22.899,
+   "anomalia": 0.329,
+   "dias": 7
+  },
+  {
+   "semana": "2019-06-24",
+   "sst": 22.539,
+   "anomalia": 0.306,
+   "dias": 7
+  },
+  {
+   "semana": "2019-07-01",
+   "sst": 22.272,
+   "anomalia": 0.2,
+   "dias": 7
+  },
+  {
+   "semana": "2019-07-08",
+   "sst": 21.949,
+   "anomalia": 0.238,
+   "dias": 7
+  },
+  {
+   "semana": "2019-07-15",
+   "sst": 21.397,
+   "anomalia": -0.178,
+   "dias": 7
+  },
+  {
+   "semana": "2019-07-22",
+   "sst": 20.687,
+   "anomalia": -0.568,
+   "dias": 7
+  },
+  {
+   "semana": "2019-07-29",
+   "sst": 20.469,
+   "anomalia": -0.561,
+   "dias": 7
+  },
+  {
+   "semana": "2019-08-05",
+   "sst": 20.327,
+   "anomalia": -0.505,
+   "dias": 7
+  },
+  {
+   "semana": "2019-08-12",
+   "sst": 20.235,
+   "anomalia": -0.559,
+   "dias": 7
+  },
+  {
+   "semana": "2019-08-19",
+   "sst": 20.397,
+   "anomalia": -0.198,
+   "dias": 7
+  },
+  {
+   "semana": "2019-08-26",
+   "sst": 20.202,
+   "anomalia": -0.141,
+   "dias": 7
+  },
+  {
+   "semana": "2019-09-02",
+   "sst": 20.177,
+   "anomalia": -0.247,
+   "dias": 7
+  },
+  {
+   "semana": "2019-09-09",
+   "sst": 19.485,
+   "anomalia": -0.668,
+   "dias": 7
+  },
+  {
+   "semana": "2019-09-16",
+   "sst": 19.683,
+   "anomalia": -0.635,
+   "dias": 7
+  },
+  {
+   "semana": "2019-09-23",
+   "sst": 20.376,
+   "anomalia": 0.104,
+   "dias": 7
+  },
+  {
+   "semana": "2019-09-30",
+   "sst": 20.228,
+   "anomalia": -0.022,
+   "dias": 7
+  },
+  {
+   "semana": "2019-10-07",
+   "sst": 20.224,
+   "anomalia": -0.129,
+   "dias": 7
+  },
+  {
+   "semana": "2019-10-14",
+   "sst": 20.84,
+   "anomalia": 0.341,
+   "dias": 7
+  },
+  {
+   "semana": "2019-10-21",
+   "sst": 20.481,
+   "anomalia": -0.38,
+   "dias": 7
+  },
+  {
+   "semana": "2019-10-28",
+   "sst": 20.946,
+   "anomalia": -0.011,
+   "dias": 7
+  },
+  {
+   "semana": "2019-11-04",
+   "sst": 21.107,
+   "anomalia": -0.097,
+   "dias": 7
+  },
+  {
+   "semana": "2019-11-11",
+   "sst": 21.503,
+   "anomalia": 0.133,
+   "dias": 7
+  },
+  {
+   "semana": "2019-11-18",
+   "sst": 21.988,
+   "anomalia": 0.412,
+   "dias": 7
+  },
+  {
+   "semana": "2019-11-25",
+   "sst": 22.145,
+   "anomalia": 0.466,
+   "dias": 7
+  },
+  {
+   "semana": "2019-12-02",
+   "sst": 22.664,
+   "anomalia": 0.838,
+   "dias": 7
+  },
+  {
+   "semana": "2019-12-09",
+   "sst": 23.091,
+   "anomalia": 0.928,
+   "dias": 7
+  },
+  {
+   "semana": "2019-12-16",
+   "sst": 23.295,
+   "anomalia": 0.621,
+   "dias": 7
+  },
+  {
+   "semana": "2019-12-23",
+   "sst": 23.475,
+   "anomalia": 0.479,
+   "dias": 7
+  },
+  {
+   "semana": "2019-12-30",
+   "sst": 24.019,
+   "anomalia": 0.632,
+   "dias": 7
+  },
+  {
+   "semana": "2020-01-06",
+   "sst": 24.434,
+   "anomalia": 0.428,
+   "dias": 7
+  },
+  {
+   "semana": "2020-01-13",
+   "sst": 24.354,
+   "anomalia": -0.046,
+   "dias": 7
+  },
+  {
+   "semana": "2020-01-20",
+   "sst": 25.318,
+   "anomalia": 0.499,
+   "dias": 7
+  },
+  {
+   "semana": "2020-01-27",
+   "sst": 25.78,
+   "anomalia": 0.767,
+   "dias": 7
+  },
+  {
+   "semana": "2020-02-03",
+   "sst": 26.027,
+   "anomalia": 0.57,
+   "dias": 7
+  },
+  {
+   "semana": "2020-02-10",
+   "sst": 25.948,
+   "anomalia": -0.061,
+   "dias": 7
+  },
+  {
+   "semana": "2020-02-17",
+   "sst": 26.165,
+   "anomalia": -0.056,
+   "dias": 7
+  },
+  {
+   "semana": "2020-02-24",
+   "sst": 27.034,
+   "anomalia": 0.816,
+   "dias": 7
+  },
+  {
+   "semana": "2020-03-02",
+   "sst": 27.073,
+   "anomalia": 0.832,
+   "dias": 7
+  },
+  {
+   "semana": "2020-03-09",
+   "sst": 27.048,
+   "anomalia": 0.709,
+   "dias": 7
+  },
+  {
+   "semana": "2020-03-16",
+   "sst": 27.242,
+   "anomalia": 0.98,
+   "dias": 7
+  },
+  {
+   "semana": "2020-03-23",
+   "sst": 27.071,
+   "anomalia": 1.07,
+   "dias": 7
+  },
+  {
+   "semana": "2020-03-30",
+   "sst": 26.606,
+   "anomalia": 0.857,
+   "dias": 7
+  },
+  {
+   "semana": "2020-04-06",
+   "sst": 26.171,
+   "anomalia": 0.757,
+   "dias": 7
+  },
+  {
+   "semana": "2020-04-13",
+   "sst": 25.891,
+   "anomalia": 0.628,
+   "dias": 7
+  },
+  {
+   "semana": "2020-04-20",
+   "sst": 25.699,
+   "anomalia": 0.671,
+   "dias": 7
+  },
+  {
+   "semana": "2020-04-27",
+   "sst": 25.053,
+   "anomalia": 0.26,
+   "dias": 7
+  },
+  {
+   "semana": "2020-05-04",
+   "sst": 24.896,
+   "anomalia": 0.464,
+   "dias": 7
+  },
+  {
+   "semana": "2020-05-11",
+   "sst": 24.724,
+   "anomalia": 0.754,
+   "dias": 7
+  },
+  {
+   "semana": "2020-05-18",
+   "sst": 24.131,
+   "anomalia": 0.465,
+   "dias": 7
+  },
+  {
+   "semana": "2020-05-25",
+   "sst": 23.633,
+   "anomalia": 0.179,
+   "dias": 7
+  },
+  {
+   "semana": "2020-06-01",
+   "sst": 23.209,
+   "anomalia": 0.021,
+   "dias": 7
+  },
+  {
+   "semana": "2020-06-08",
+   "sst": 22.49,
+   "anomalia": -0.435,
+   "dias": 7
+  },
+  {
+   "semana": "2020-06-15",
+   "sst": 22.079,
+   "anomalia": -0.559,
+   "dias": 7
+  },
+  {
+   "semana": "2020-06-22",
+   "sst": 21.763,
+   "anomalia": -0.498,
+   "dias": 7
+  },
+  {
+   "semana": "2020-06-29",
+   "sst": 21.63,
+   "anomalia": -0.477,
+   "dias": 7
+  },
+  {
+   "semana": "2020-07-06",
+   "sst": 21.046,
+   "anomalia": -0.716,
+   "dias": 7
+  },
+  {
+   "semana": "2020-07-13",
+   "sst": 20.993,
+   "anomalia": -0.596,
+   "dias": 7
+  },
+  {
+   "semana": "2020-07-20",
+   "sst": 20.369,
+   "anomalia": -0.957,
+   "dias": 7
+  },
+  {
+   "semana": "2020-07-27",
+   "sst": 20.276,
+   "anomalia": -0.777,
+   "dias": 7
+  },
+  {
+   "semana": "2020-08-03",
+   "sst": 19.779,
+   "anomalia": -0.982,
+   "dias": 7
+  },
+  {
+   "semana": "2020-08-10",
+   "sst": 19.922,
+   "anomalia": -0.783,
+   "dias": 7
+  },
+  {
+   "semana": "2020-08-17",
+   "sst": 19.768,
+   "anomalia": -0.841,
+   "dias": 7
+  },
+  {
+   "semana": "2020-08-24",
+   "sst": 19.767,
+   "anomalia": -0.571,
+   "dias": 7
+  },
+  {
+   "semana": "2020-08-31",
+   "sst": 19.522,
+   "anomalia": -0.921,
+   "dias": 7
+  },
+  {
+   "semana": "2020-09-07",
+   "sst": 19.579,
+   "anomalia": -0.596,
+   "dias": 7
+  },
+  {
+   "semana": "2020-09-14",
+   "sst": 19.926,
+   "anomalia": -0.358,
+   "dias": 7
+  },
+  {
+   "semana": "2020-09-21",
+   "sst": 20.026,
+   "anomalia": -0.275,
+   "dias": 7
+  },
+  {
+   "semana": "2020-09-28",
+   "sst": 19.816,
+   "anomalia": -0.409,
+   "dias": 7
+  },
+  {
+   "semana": "2020-10-05",
+   "sst": 19.846,
+   "anomalia": -0.507,
+   "dias": 7
+  },
+  {
+   "semana": "2020-10-12",
+   "sst": 20.518,
+   "anomalia": 0.101,
+   "dias": 5
+  },
+  {
+   "semana": "2020-10-19",
+   "sst": 20.406,
+   "anomalia": -0.521,
+   "dias": 7
+  },
+  {
+   "semana": "2020-10-26",
+   "sst": 20.551,
+   "anomalia": -0.456,
+   "dias": 7
+  },
+  {
+   "semana": "2020-11-02",
+   "sst": 20.77,
+   "anomalia": -0.381,
+   "dias": 7
+  },
+  {
+   "semana": "2020-11-09",
+   "sst": 21.254,
+   "anomalia": -0.102,
+   "dias": 7
+  },
+  {
+   "semana": "2020-11-16",
+   "sst": 21.065,
+   "anomalia": -0.484,
+   "dias": 7
+  },
+  {
+   "semana": "2020-11-23",
+   "sst": 21.054,
+   "anomalia": -0.61,
+   "dias": 7
+  },
+  {
+   "semana": "2020-11-30",
+   "sst": 21.704,
+   "anomalia": -0.089,
+   "dias": 7
+  },
+  {
+   "semana": "2020-12-07",
+   "sst": 22.123,
+   "anomalia": 0.015,
+   "dias": 7
+  },
+  {
+   "semana": "2020-12-14",
+   "sst": 22.101,
+   "anomalia": -0.497,
+   "dias": 7
+  },
+  {
+   "semana": "2020-12-21",
+   "sst": 22.252,
+   "anomalia": -0.709,
+   "dias": 7
+  },
+  {
+   "semana": "2020-12-28",
+   "sst": 22.572,
+   "anomalia": -0.696,
+   "dias": 7
+  },
+  {
+   "semana": "2021-01-04",
+   "sst": 23.632,
+   "anomalia": -0.187,
+   "dias": 7
+  },
+  {
+   "semana": "2021-01-11",
+   "sst": 23.911,
+   "anomalia": -0.322,
+   "dias": 7
+  },
+  {
+   "semana": "2021-01-18",
+   "sst": 24.255,
+   "anomalia": -0.467,
+   "dias": 7
+  },
+  {
+   "semana": "2021-01-25",
+   "sst": 25.146,
+   "anomalia": 0.189,
+   "dias": 7
+  },
+  {
+   "semana": "2021-02-01",
+   "sst": 25.319,
+   "anomalia": 0.032,
+   "dias": 7
+  },
+  {
+   "semana": "2021-02-08",
+   "sst": 25.702,
+   "anomalia": -0.163,
+   "dias": 7
+  },
+  {
+   "semana": "2021-02-15",
+   "sst": 26.048,
+   "anomalia": -0.169,
+   "dias": 5
+  },
+  {
+   "semana": "2021-02-22",
+   "sst": 25.597,
+   "anomalia": -0.629,
+   "dias": 7
+  },
+  {
+   "semana": "2021-03-01",
+   "sst": 26.629,
+   "anomalia": 0.416,
+   "dias": 7
+  },
+  {
+   "semana": "2021-03-08",
+   "sst": 27.194,
+   "anomalia": 0.89,
+   "dias": 7
+  },
+  {
+   "semana": "2021-03-15",
+   "sst": 27.108,
+   "anomalia": 0.775,
+   "dias": 7
+  },
+  {
+   "semana": "2021-03-22",
+   "sst": 26.057,
+   "anomalia": -0.033,
+   "dias": 7
+  },
+  {
+   "semana": "2021-03-29",
+   "sst": 25.267,
+   "anomalia": -0.564,
+   "dias": 7
+  },
+  {
+   "semana": "2021-04-05",
+   "sst": 25.147,
+   "anomalia": -0.336,
+   "dias": 7
+  },
+  {
+   "semana": "2021-04-12",
+   "sst": 24.58,
+   "anomalia": -0.729,
+   "dias": 7
+  },
+  {
+   "semana": "2021-04-19",
+   "sst": 24.523,
+   "anomalia": -0.583,
+   "dias": 7
+  },
+  {
+   "semana": "2021-04-26",
+   "sst": 24.351,
+   "anomalia": -0.504,
+   "dias": 7
+  },
+  {
+   "semana": "2021-05-03",
+   "sst": 24.403,
+   "anomalia": -0.16,
+   "dias": 7
+  },
+  {
+   "semana": "2021-05-10",
+   "sst": 23.827,
+   "anomalia": -0.266,
+   "dias": 7
+  },
+  {
+   "semana": "2021-05-17",
+   "sst": 23.649,
+   "anomalia": -0.094,
+   "dias": 7
+  },
+  {
+   "semana": "2021-05-24",
+   "sst": 23.509,
+   "anomalia": 0.001,
+   "dias": 7
+  },
+  {
+   "semana": "2021-05-31",
+   "sst": 23.306,
+   "anomalia": 0.03,
+   "dias": 7
+  },
+  {
+   "semana": "2021-06-07",
+   "sst": 23.578,
+   "anomalia": 0.594,
+   "dias": 7
+  },
+  {
+   "semana": "2021-06-14",
+   "sst": 23.391,
+   "anomalia": 0.638,
+   "dias": 7
+  },
+  {
+   "semana": "2021-06-21",
+   "sst": 23.116,
+   "anomalia": 0.773,
+   "dias": 7
+  },
+  {
+   "semana": "2021-06-28",
+   "sst": 22.882,
+   "anomalia": 0.736,
+   "dias": 7
+  },
+  {
+   "semana": "2021-07-05",
+   "sst": 22.496,
+   "anomalia": 0.634,
+   "dias": 7
+  },
+  {
+   "semana": "2021-07-12",
+   "sst": 22.387,
+   "anomalia": 0.769,
+   "dias": 7
+  },
+  {
+   "semana": "2021-07-19",
+   "sst": 22.236,
+   "anomalia": 0.782,
+   "dias": 7
+  },
+  {
+   "semana": "2021-07-26",
+   "sst": 21.957,
+   "anomalia": 0.862,
+   "dias": 7
+  },
+  {
+   "semana": "2021-08-02",
+   "sst": 21.86,
+   "anomalia": 0.987,
+   "dias": 7
+  },
+  {
+   "semana": "2021-08-09",
+   "sst": 21.264,
+   "anomalia": 0.506,
+   "dias": 7
+  },
+  {
+   "semana": "2021-08-16",
+   "sst": 21.405,
+   "anomalia": 0.642,
+   "dias": 7
+  },
+  {
+   "semana": "2021-08-23",
+   "sst": 20.706,
+   "anomalia": 0.349,
+   "dias": 7
+  },
+  {
+   "semana": "2021-08-30",
+   "sst": 20.99,
+   "anomalia": 0.553,
+   "dias": 7
+  },
+  {
+   "semana": "2021-09-06",
+   "sst": 20.718,
+   "anomalia": 0.464,
+   "dias": 7
+  },
+  {
+   "semana": "2021-09-13",
+   "sst": 20.845,
+   "anomalia": 0.634,
+   "dias": 7
+  },
+  {
+   "semana": "2021-09-20",
+   "sst": 20.637,
+   "anomalia": 0.295,
+   "dias": 7
+  },
+  {
+   "semana": "2021-09-27",
+   "sst": 20.739,
+   "anomalia": 0.54,
+   "dias": 7
+  },
+  {
+   "semana": "2021-10-04",
+   "sst": 20.311,
+   "anomalia": -0.045,
+   "dias": 7
+  },
+  {
+   "semana": "2021-10-11",
+   "sst": 20.271,
+   "anomalia": -0.11,
+   "dias": 7
+  },
+  {
+   "semana": "2021-10-18",
+   "sst": 20.404,
+   "anomalia": -0.395,
+   "dias": 7
+  },
+  {
+   "semana": "2021-10-25",
+   "sst": 20.739,
+   "anomalia": -0.278,
+   "dias": 7
+  },
+  {
+   "semana": "2021-11-01",
+   "sst": 20.914,
+   "anomalia": -0.146,
+   "dias": 7
+  },
+  {
+   "semana": "2021-11-08",
+   "sst": 20.765,
+   "anomalia": -0.559,
+   "dias": 7
+  },
+  {
+   "semana": "2021-11-15",
+   "sst": 20.518,
+   "anomalia": -0.966,
+   "dias": 7
+  },
+  {
+   "semana": "2021-11-22",
+   "sst": 20.98,
+   "anomalia": -0.657,
+   "dias": 7
+  },
+  {
+   "semana": "2021-11-29",
+   "sst": 21.04,
+   "anomalia": -0.711,
+   "dias": 7
+  },
+  {
+   "semana": "2021-12-06",
+   "sst": 21.135,
+   "anomalia": -0.842,
+   "dias": 7
+  },
+  {
+   "semana": "2021-12-13",
+   "sst": 21.321,
+   "anomalia": -1.124,
+   "dias": 7
+  },
+  {
+   "semana": "2021-12-20",
+   "sst": 21.952,
+   "anomalia": -0.941,
+   "dias": 7
+  },
+  {
+   "semana": "2021-12-27",
+   "sst": 22.266,
+   "anomalia": -0.916,
+   "dias": 7
+  },
+  {
+   "semana": "2022-01-03",
+   "sst": 23.003,
+   "anomalia": -0.721,
+   "dias": 7
+  },
+  {
+   "semana": "2022-01-10",
+   "sst": 23.627,
+   "anomalia": -0.554,
+   "dias": 7
+  },
+  {
+   "semana": "2022-01-17",
+   "sst": 23.673,
+   "anomalia": -0.99,
+   "dias": 7
+  },
+  {
+   "semana": "2022-01-24",
+   "sst": 24.025,
+   "anomalia": -0.903,
+   "dias": 7
+  },
+  {
+   "semana": "2022-01-31",
+   "sst": 24.356,
+   "anomalia": -0.866,
+   "dias": 7
+  },
+  {
+   "semana": "2022-02-07",
+   "sst": 24.501,
+   "anomalia": -1.34,
+   "dias": 7
+  },
+  {
+   "semana": "2022-02-14",
+   "sst": 24.702,
+   "anomalia": -1.518,
+   "dias": 7
+  },
+  {
+   "semana": "2022-02-21",
+   "sst": 25.318,
+   "anomalia": -0.984,
+   "dias": 7
+  },
+  {
+   "semana": "2022-02-28",
+   "sst": 25.839,
+   "anomalia": -0.365,
+   "dias": 7
+  },
+  {
+   "semana": "2022-03-07",
+   "sst": 26.689,
+   "anomalia": 0.383,
+   "dias": 7
+  },
+  {
+   "semana": "2022-03-14",
+   "sst": 27.061,
+   "anomalia": 0.671,
+   "dias": 4
+  },
+  {
+   "semana": "2022-03-21",
+   "sst": 26.451,
+   "anomalia": 0.323,
+   "dias": 7
+  },
+  {
+   "semana": "2022-03-28",
+   "sst": 26.036,
+   "anomalia": 0.172,
+   "dias": 7
+  },
+  {
+   "semana": "2022-04-04",
+   "sst": 25.457,
+   "anomalia": -0.071,
+   "dias": 7
+  },
+  {
+   "semana": "2022-04-11",
+   "sst": 24.282,
+   "anomalia": -1.049,
+   "dias": 7
+  },
+  {
+   "semana": "2022-04-18",
+   "sst": 23.497,
+   "anomalia": -1.645,
+   "dias": 7
+  },
+  {
+   "semana": "2022-04-25",
+   "sst": 23.672,
+   "anomalia": -1.217,
+   "dias": 7
+  },
+  {
+   "semana": "2022-05-02",
+   "sst": 23.157,
+   "anomalia": -1.461,
+   "dias": 7
+  },
+  {
+   "semana": "2022-05-09",
+   "sst": 22.895,
+   "anomalia": -1.261,
+   "dias": 7
+  },
+  {
+   "semana": "2022-05-16",
+   "sst": 23.121,
+   "anomalia": -0.666,
+   "dias": 7
+  },
+  {
+   "semana": "2022-05-23",
+   "sst": 22.672,
+   "anomalia": -0.859,
+   "dias": 7
+  },
+  {
+   "semana": "2022-05-30",
+   "sst": 22.069,
+   "anomalia": -1.25,
+   "dias": 7
+  },
+  {
+   "semana": "2022-06-06",
+   "sst": 21.836,
+   "anomalia": -1.178,
+   "dias": 7
+  },
+  {
+   "semana": "2022-06-13",
+   "sst": 21.413,
+   "anomalia": -1.388,
+   "dias": 7
+  },
+  {
+   "semana": "2022-06-20",
+   "sst": 21.052,
+   "anomalia": -1.338,
+   "dias": 7
+  },
+  {
+   "semana": "2022-06-27",
+   "sst": 21.339,
+   "anomalia": -0.83,
+   "dias": 7
+  },
+  {
+   "semana": "2022-07-04",
+   "sst": 21.327,
+   "anomalia": -0.589,
+   "dias": 7
+  },
+  {
+   "semana": "2022-07-11",
+   "sst": 20.93,
+   "anomalia": -0.708,
+   "dias": 7
+  },
+  {
+   "semana": "2022-07-18",
+   "sst": 20.871,
+   "anomalia": -0.633,
+   "dias": 7
+  },
+  {
+   "semana": "2022-07-25",
+   "sst": 20.949,
+   "anomalia": -0.175,
+   "dias": 7
+  },
+  {
+   "semana": "2022-08-01",
+   "sst": 20.775,
+   "anomalia": -0.141,
+   "dias": 7
+  },
+  {
+   "semana": "2022-08-08",
+   "sst": 20.702,
+   "anomalia": -0.044,
+   "dias": 7
+  },
+  {
+   "semana": "2022-08-15",
+   "sst": 20.247,
+   "anomalia": -0.543,
+   "dias": 7
+  },
+  {
+   "semana": "2022-08-22",
+   "sst": 20.333,
+   "anomalia": -0.069,
+   "dias": 7
+  },
+  {
+   "semana": "2022-08-29",
+   "sst": 20.352,
+   "anomalia": -0.065,
+   "dias": 7
+  },
+  {
+   "semana": "2022-09-05",
+   "sst": 20.09,
+   "anomalia": -0.212,
+   "dias": 7
+  },
+  {
+   "semana": "2022-09-12",
+   "sst": 19.271,
+   "anomalia": -0.911,
+   "dias": 7
+  },
+  {
+   "semana": "2022-09-19",
+   "sst": 19.679,
+   "anomalia": -0.67,
+   "dias": 7
+  },
+  {
+   "semana": "2022-09-26",
+   "sst": 19.06,
+   "anomalia": -1.143,
+   "dias": 7
+  },
+  {
+   "semana": "2022-10-03",
+   "sst": 19.191,
+   "anomalia": -1.15,
+   "dias": 7
+  },
+  {
+   "semana": "2022-10-10",
+   "sst": 19.241,
+   "anomalia": -1.121,
+   "dias": 7
+  },
+  {
+   "semana": "2022-10-17",
+   "sst": 19.478,
+   "anomalia": -1.24,
+   "dias": 7
+  },
+  {
+   "semana": "2022-10-24",
+   "sst": 19.566,
+   "anomalia": -1.452,
+   "dias": 7
+  },
+  {
+   "semana": "2022-10-31",
+   "sst": 19.698,
+   "anomalia": -1.334,
+   "dias": 7
+  },
+  {
+   "semana": "2022-11-07",
+   "sst": 20.18,
+   "anomalia": -1.113,
+   "dias": 6
+  },
+  {
+   "semana": "2022-11-14",
+   "sst": 20.488,
+   "anomalia": -0.96,
+   "dias": 7
+  },
+  {
+   "semana": "2022-11-21",
+   "sst": 20.229,
+   "anomalia": -1.398,
+   "dias": 7
+  },
+  {
+   "semana": "2022-11-28",
+   "sst": 21.437,
+   "anomalia": -0.295,
+   "dias": 7
+  },
+  {
+   "semana": "2022-12-05",
+   "sst": 21.777,
+   "anomalia": -0.175,
+   "dias": 7
+  },
+  {
+   "semana": "2022-12-12",
+   "sst": 22.146,
+   "anomalia": -0.219,
+   "dias": 7
+  },
+  {
+   "semana": "2022-12-19",
+   "sst": 22.794,
+   "anomalia": -0.06,
+   "dias": 7
+  },
+  {
+   "semana": "2022-12-26",
+   "sst": 23.021,
+   "anomalia": -0.106,
+   "dias": 7
+  },
+  {
+   "semana": "2023-01-02",
+   "sst": 23.226,
+   "anomalia": -0.406,
+   "dias": 7
+  },
+  {
+   "semana": "2023-01-09",
+   "sst": 24.156,
+   "anomalia": 0.024,
+   "dias": 7
+  },
+  {
+   "semana": "2023-01-16",
+   "sst": 24.509,
+   "anomalia": -0.083,
+   "dias": 7
+  },
+  {
+   "semana": "2023-01-23",
+   "sst": 25.175,
+   "anomalia": 0.271,
+   "dias": 7
+  },
+  {
+   "semana": "2023-01-30",
+   "sst": 26.088,
+   "anomalia": 0.948,
+   "dias": 7
+  },
+  {
+   "semana": "2023-02-06",
+   "sst": 26.739,
+   "anomalia": 1.019,
+   "dias": 7
+  },
+  {
+   "semana": "2023-02-13",
+   "sst": 27.274,
+   "anomalia": 1.107,
+   "dias": 7
+  },
+  {
+   "semana": "2023-02-20",
+   "sst": 27.189,
+   "anomalia": 0.964,
+   "dias": 7
+  },
+  {
+   "semana": "2023-02-27",
+   "sst": 27.114,
+   "anomalia": 0.913,
+   "dias": 7
+  },
+  {
+   "semana": "2023-03-06",
+   "sst": 27.39,
+   "anomalia": 1.108,
+   "dias": 7
+  },
+  {
+   "semana": "2023-03-13",
+   "sst": 28.098,
+   "anomalia": 1.735,
+   "dias": 7
+  },
+  {
+   "semana": "2023-03-20",
+   "sst": 28.446,
+   "anomalia": 2.281,
+   "dias": 7
+  },
+  {
+   "semana": "2023-03-27",
+   "sst": 28.478,
+   "anomalia": 2.584,
+   "dias": 7
+  },
+  {
+   "semana": "2023-04-03",
+   "sst": 28.572,
+   "anomalia": 2.988,
+   "dias": 7
+  },
+  {
+   "semana": "2023-04-10",
+   "sst": 28.621,
+   "anomalia": 3.272,
+   "dias": 7
+  },
+  {
+   "semana": "2023-04-17",
+   "sst": 27.978,
+   "anomalia": 2.788,
+   "dias": 6
+  },
+  {
+   "semana": "2023-04-24",
+   "sst": 27.773,
+   "anomalia": 2.845,
+   "dias": 7
+  },
+  {
+   "semana": "2023-05-01",
+   "sst": 27.565,
+   "anomalia": 2.898,
+   "dias": 7
+  },
+  {
+   "semana": "2023-05-08",
+   "sst": 27.026,
+   "anomalia": 2.801,
+   "dias": 7
+  },
+  {
+   "semana": "2023-05-15",
+   "sst": 26.617,
+   "anomalia": 2.791,
+   "dias": 7
+  },
+  {
+   "semana": "2023-05-22",
+   "sst": 26.257,
+   "anomalia": 2.694,
+   "dias": 7
+  },
+  {
+   "semana": "2023-05-29",
+   "sst": 26.233,
+   "anomalia": 2.873,
+   "dias": 7
+  },
+  {
+   "semana": "2023-06-05",
+   "sst": 26.218,
+   "anomalia": 3.165,
+   "dias": 7
+  },
+  {
+   "semana": "2023-06-12",
+   "sst": 25.894,
+   "anomalia": 3.055,
+   "dias": 7
+  },
+  {
+   "semana": "2023-06-19",
+   "sst": 25.691,
+   "anomalia": 3.246,
+   "dias": 7
+  },
+  {
+   "semana": "2023-06-26",
+   "sst": 25.512,
+   "anomalia": 3.323,
+   "dias": 7
+  },
+  {
+   "semana": "2023-07-03",
+   "sst": 25.518,
+   "anomalia": 3.548,
+   "dias": 7
+  },
+  {
+   "semana": "2023-07-10",
+   "sst": 25.408,
+   "anomalia": 3.744,
+   "dias": 7
+  },
+  {
+   "semana": "2023-07-17",
+   "sst": 25.282,
+   "anomalia": 3.747,
+   "dias": 7
+  },
+  {
+   "semana": "2023-07-24",
+   "sst": 24.764,
+   "anomalia": 3.6,
+   "dias": 7
+  },
+  {
+   "semana": "2023-07-31",
+   "sst": 24.756,
+   "anomalia": 3.797,
+   "dias": 7
+  },
+  {
+   "semana": "2023-08-07",
+   "sst": 24.502,
+   "anomalia": 3.762,
+   "dias": 7
+  },
+  {
+   "semana": "2023-08-14",
+   "sst": 24.404,
+   "anomalia": 3.601,
+   "dias": 7
+  },
+  {
+   "semana": "2023-08-21",
+   "sst": 24.322,
+   "anomalia": 3.861,
+   "dias": 7
+  },
+  {
+   "semana": "2023-08-28",
+   "sst": 24.219,
+   "anomalia": 3.829,
+   "dias": 7
+  },
+  {
+   "semana": "2023-09-04",
+   "sst": 23.645,
+   "anomalia": 3.295,
+   "dias": 7
+  },
+  {
+   "semana": "2023-09-11",
+   "sst": 23.441,
+   "anomalia": 3.282,
+   "dias": 7
+  },
+  {
+   "semana": "2023-09-18",
+   "sst": 23.567,
+   "anomalia": 3.218,
+   "dias": 7
+  },
+  {
+   "semana": "2023-09-25",
+   "sst": 23.448,
+   "anomalia": 3.231,
+   "dias": 7
+  },
+  {
+   "semana": "2023-10-02",
+   "sst": 23.342,
+   "anomalia": 3.027,
+   "dias": 7
+  },
+  {
+   "semana": "2023-10-09",
+   "sst": 23.518,
+   "anomalia": 3.165,
+   "dias": 7
+  },
+  {
+   "semana": "2023-10-16",
+   "sst": 23.781,
+   "anomalia": 3.142,
+   "dias": 7
+  },
+  {
+   "semana": "2023-10-23",
+   "sst": 23.896,
+   "anomalia": 2.876,
+   "dias": 7
+  },
+  {
+   "semana": "2023-10-30",
+   "sst": 23.988,
+   "anomalia": 2.977,
+   "dias": 7
+  },
+  {
+   "semana": "2023-11-06",
+   "sst": 23.908,
+   "anomalia": 2.628,
+   "dias": 7
+  },
+  {
+   "semana": "2023-11-13",
+   "sst": 23.682,
+   "anomalia": 2.266,
+   "dias": 7
+  },
+  {
+   "semana": "2023-11-20",
+   "sst": 24.128,
+   "anomalia": 2.508,
+   "dias": 7
+  },
+  {
+   "semana": "2023-11-27",
+   "sst": 23.886,
+   "anomalia": 2.173,
+   "dias": 7
+  },
+  {
+   "semana": "2023-12-04",
+   "sst": 23.678,
+   "anomalia": 1.793,
+   "dias": 6
+  },
+  {
+   "semana": "2023-12-11",
+   "sst": 24.011,
+   "anomalia": 1.717,
+   "dias": 7
+  },
+  {
+   "semana": "2023-12-18",
+   "sst": 24.135,
+   "anomalia": 1.334,
+   "dias": 7
+  },
+  {
+   "semana": "2023-12-25",
+   "sst": 24.548,
+   "anomalia": 1.471,
+   "dias": 7
+  },
+  {
+   "semana": "2024-01-01",
+   "sst": 24.983,
+   "anomalia": 1.444,
+   "dias": 7
+  },
+  {
+   "semana": "2024-01-08",
+   "sst": 25.119,
+   "anomalia": 1.031,
+   "dias": 7
+  },
+  {
+   "semana": "2024-01-15",
+   "sst": 25.39,
+   "anomalia": 0.877,
+   "dias": 7
+  },
+  {
+   "semana": "2024-01-22",
+   "sst": 25.786,
+   "anomalia": 0.902,
+   "dias": 7
+  },
+  {
+   "semana": "2024-01-29",
+   "sst": 26.382,
+   "anomalia": 1.298,
+   "dias": 7
+  },
+  {
+   "semana": "2024-02-05",
+   "sst": 27.104,
+   "anomalia": 1.467,
+   "dias": 7
+  },
+  {
+   "semana": "2024-02-12",
+   "sst": 27.397,
+   "anomalia": 1.255,
+   "dias": 7
+  },
+  {
+   "semana": "2024-02-19",
+   "sst": 27.55,
+   "anomalia": 1.326,
+   "dias": 7
+  },
+  {
+   "semana": "2024-02-26",
+   "sst": 27.557,
+   "anomalia": 1.35,
+   "dias": 7
+  },
+  {
+   "semana": "2024-03-04",
+   "sst": 27.836,
+   "anomalia": 1.567,
+   "dias": 7
+  },
+  {
+   "semana": "2024-03-11",
+   "sst": 27.377,
+   "anomalia": 1.019,
+   "dias": 7
+  },
+  {
+   "semana": "2024-03-18",
+   "sst": 26.869,
+   "anomalia": 0.669,
+   "dias": 7
+  },
+  {
+   "semana": "2024-03-25",
+   "sst": 26.408,
+   "anomalia": 0.484,
+   "dias": 7
+  },
+  {
+   "semana": "2024-04-01",
+   "sst": 26.221,
+   "anomalia": 0.579,
+   "dias": 7
+  },
+  {
+   "semana": "2024-04-08",
+   "sst": 25.813,
+   "anomalia": 0.446,
+   "dias": 7
+  },
+  {
+   "semana": "2024-04-15",
+   "sst": 25.215,
+   "anomalia": 0.011,
+   "dias": 7
+  },
+  {
+   "semana": "2024-04-22",
+   "sst": 25.522,
+   "anomalia": 0.557,
+   "dias": 7
+  },
+  {
+   "semana": "2024-04-29",
+   "sst": 25.322,
+   "anomalia": 0.609,
+   "dias": 7
+  },
+  {
+   "semana": "2024-05-06",
+   "sst": 24.28,
+   "anomalia": -0.015,
+   "dias": 7
+  },
+  {
+   "semana": "2024-05-13",
+   "sst": 23.859,
+   "anomalia": -0.007,
+   "dias": 7
+  },
+  {
+   "semana": "2024-05-20",
+   "sst": 23.316,
+   "anomalia": -0.281,
+   "dias": 7
+  },
+  {
+   "semana": "2024-05-27",
+   "sst": 23.151,
+   "anomalia": -0.249,
+   "dias": 7
+  },
+  {
+   "semana": "2024-06-03",
+   "sst": 22.92,
+   "anomalia": -0.175,
+   "dias": 7
+  },
+  {
+   "semana": "2024-06-10",
+   "sst": 22.826,
+   "anomalia": -0.043,
+   "dias": 7
+  },
+  {
+   "semana": "2024-06-17",
+   "sst": 22.084,
+   "anomalia": -0.422,
+   "dias": 7
+  },
+  {
+   "semana": "2024-06-24",
+   "sst": 22.076,
+   "anomalia": -0.133,
+   "dias": 7
+  },
+  {
+   "semana": "2024-07-01",
+   "sst": 22.455,
+   "anomalia": 0.431,
+   "dias": 7
+  },
+  {
+   "semana": "2024-07-08",
+   "sst": 22.027,
+   "anomalia": 0.336,
+   "dias": 7
+  },
+  {
+   "semana": "2024-07-15",
+   "sst": 21.177,
+   "anomalia": -0.381,
+   "dias": 7
+  },
+  {
+   "semana": "2024-07-22",
+   "sst": 20.755,
+   "anomalia": -0.458,
+   "dias": 7
+  },
+  {
+   "semana": "2024-07-29",
+   "sst": 21.005,
+   "anomalia": 0.006,
+   "dias": 7
+  },
+  {
+   "semana": "2024-08-05",
+   "sst": 20.87,
+   "anomalia": 0.124,
+   "dias": 7
+  },
+  {
+   "semana": "2024-08-12",
+   "sst": 20.929,
+   "anomalia": 0.125,
+   "dias": 7
+  },
+  {
+   "semana": "2024-08-19",
+   "sst": 20.768,
+   "anomalia": 0.242,
+   "dias": 7
+  },
+  {
+   "semana": "2024-08-26",
+   "sst": 20.474,
+   "anomalia": 0.168,
+   "dias": 7
+  },
+  {
+   "semana": "2024-09-02",
+   "sst": 20.094,
+   "anomalia": -0.298,
+   "dias": 7
+  },
+  {
+   "semana": "2024-09-09",
+   "sst": 20.368,
+   "anomalia": 0.22,
+   "dias": 7
+  },
+  {
+   "semana": "2024-09-16",
+   "sst": 20.082,
+   "anomalia": -0.259,
+   "dias": 7
+  },
+  {
+   "semana": "2024-09-23",
+   "sst": 19.912,
+   "anomalia": -0.416,
+   "dias": 7
+  },
+  {
+   "semana": "2024-09-30",
+   "sst": 20.215,
+   "anomalia": -0.068,
+   "dias": 7
+  },
+  {
+   "semana": "2024-10-07",
+   "sst": 20.243,
+   "anomalia": -0.108,
+   "dias": 7
+  },
+  {
+   "semana": "2024-10-14",
+   "sst": 20.838,
+   "anomalia": 0.272,
+   "dias": 7
+  },
+  {
+   "semana": "2024-10-21",
+   "sst": 21.115,
+   "anomalia": 0.111,
+   "dias": 7
+  },
+  {
+   "semana": "2024-10-28",
+   "sst": 20.994,
+   "anomalia": -0.007,
+   "dias": 7
+  },
+  {
+   "semana": "2024-11-04",
+   "sst": 21.495,
+   "anomalia": 0.249,
+   "dias": 7
+  },
+  {
+   "semana": "2024-11-11",
+   "sst": 21.97,
+   "anomalia": 0.581,
+   "dias": 7
+  },
+  {
+   "semana": "2024-11-18",
+   "sst": 22.571,
+   "anomalia": 0.975,
+   "dias": 7
+  },
+  {
+   "semana": "2024-11-25",
+   "sst": 22.23,
+   "anomalia": 0.536,
+   "dias": 7
+  },
+  {
+   "semana": "2024-12-02",
+   "sst": 22.452,
+   "anomalia": 0.586,
+   "dias": 7
+  },
+  {
+   "semana": "2024-12-09",
+   "sst": 22.594,
+   "anomalia": 0.371,
+   "dias": 7
+  },
+  {
+   "semana": "2024-12-16",
+   "sst": 22.825,
+   "anomalia": 0.08,
+   "dias": 7
+  },
+  {
+   "semana": "2024-12-23",
+   "sst": 23.406,
+   "anomalia": 0.371,
+   "dias": 7
+  },
+  {
+   "semana": "2024-12-30",
+   "sst": 23.985,
+   "anomalia": 0.611,
+   "dias": 7
+  },
+  {
+   "semana": "2025-01-06",
+   "sst": 24.243,
+   "anomalia": 0.257,
+   "dias": 7
+  },
+  {
+   "semana": "2025-01-13",
+   "sst": 24.637,
+   "anomalia": 0.279,
+   "dias": 7
+  },
+  {
+   "semana": "2025-01-20",
+   "sst": 24.741,
+   "anomalia": -0.078,
+   "dias": 7
+  },
+  {
+   "semana": "2025-01-27",
+   "sst": 24.949,
+   "anomalia": -0.065,
+   "dias": 7
+  },
+  {
+   "semana": "2025-02-03",
+   "sst": 25.862,
+   "anomalia": 0.405,
+   "dias": 7
+  },
+  {
+   "semana": "2025-02-10",
+   "sst": 26.962,
+   "anomalia": 0.952,
+   "dias": 7
+  },
+  {
+   "semana": "2025-02-17",
+   "sst": 27.333,
+   "anomalia": 1.112,
+   "dias": 7
+  },
+  {
+   "semana": "2025-02-24",
+   "sst": 27.93,
+   "anomalia": 1.712,
+   "dias": 7
+  },
+  {
+   "semana": "2025-03-03",
+   "sst": 28.303,
+   "anomalia": 2.062,
+   "dias": 7
+  },
+  {
+   "semana": "2025-03-10",
+   "sst": 28.122,
+   "anomalia": 1.784,
+   "dias": 7
+  },
+  {
+   "semana": "2025-03-17",
+   "sst": 27.651,
+   "anomalia": 1.385,
+   "dias": 7
+  },
+  {
+   "semana": "2025-03-24",
+   "sst": 27.547,
+   "anomalia": 1.545,
+   "dias": 7
+  },
+  {
+   "semana": "2025-03-31",
+   "sst": 27.674,
+   "anomalia": 1.925,
+   "dias": 7
+  },
+  {
+   "semana": "2025-04-07",
+   "sst": 27.102,
+   "anomalia": 1.687,
+   "dias": 7
+  },
+  {
+   "semana": "2025-04-14",
+   "sst": 26.125,
+   "anomalia": 0.862,
+   "dias": 7
+  },
+  {
+   "semana": "2025-04-21",
+   "sst": 25.357,
+   "anomalia": 0.328,
+   "dias": 7
+  },
+  {
+   "semana": "2025-04-28",
+   "sst": 25.311,
+   "anomalia": 0.518,
+   "dias": 7
+  },
+  {
+   "semana": "2025-05-05",
+   "sst": 25.023,
+   "anomalia": 0.599,
+   "dias": 7
+  },
+  {
+   "semana": "2025-05-12",
+   "sst": 24.875,
+   "anomalia": 0.905,
+   "dias": 7
+  },
+  {
+   "semana": "2025-05-19",
+   "sst": 24.865,
+   "anomalia": 1.199,
+   "dias": 7
+  },
+  {
+   "semana": "2025-05-26",
+   "sst": 24.417,
+   "anomalia": 0.955,
+   "dias": 7
+  },
+  {
+   "semana": "2025-06-02",
+   "sst": 24.178,
+   "anomalia": 0.99,
+   "dias": 7
+  },
+  {
+   "semana": "2025-06-09",
+   "sst": 23.879,
+   "anomalia": 0.954,
+   "dias": 7
+  },
+  {
+   "semana": "2025-06-16",
+   "sst": 23.303,
+   "anomalia": 0.665,
+   "dias": 7
+  },
+  {
+   "semana": "2025-06-23",
+   "sst": 22.91,
+   "anomalia": 0.649,
+   "dias": 7
+  },
+  {
+   "semana": "2025-06-30",
+   "sst": 22.875,
+   "anomalia": 0.767,
+   "dias": 7
+  },
+  {
+   "semana": "2025-07-07",
+   "sst": 22.602,
+   "anomalia": 0.84,
+   "dias": 7
+  },
+  {
+   "semana": "2025-07-14",
+   "sst": 22.254,
+   "anomalia": 0.665,
+   "dias": 7
+  },
+  {
+   "semana": "2025-07-21",
+   "sst": 21.8,
+   "anomalia": 0.473,
+   "dias": 7
+  },
+  {
+   "semana": "2025-07-28",
+   "sst": 21.705,
+   "anomalia": 0.652,
+   "dias": 7
+  },
+  {
+   "semana": "2025-08-04",
+   "sst": 21.763,
+   "anomalia": 0.96,
+   "dias": 7
+  },
+  {
+   "semana": "2025-08-11",
+   "sst": 21.629,
+   "anomalia": 0.85,
+   "dias": 7
+  },
+  {
+   "semana": "2025-08-18",
+   "sst": 21.122,
+   "anomalia": 0.461,
+   "dias": 7
+  },
+  {
+   "semana": "2025-08-25",
+   "sst": 20.376,
+   "anomalia": 0.046,
+   "dias": 7
+  },
+  {
+   "semana": "2025-09-01",
+   "sst": 20.096,
+   "anomalia": -0.347,
+   "dias": 7
+  },
+  {
+   "semana": "2025-09-08",
+   "sst": 20.292,
+   "anomalia": 0.116,
+   "dias": 7
+  },
+  {
+   "semana": "2025-09-15",
+   "sst": 20.602,
+   "anomalia": 0.318,
+   "dias": 7
+  },
+  {
+   "semana": "2025-09-22",
+   "sst": 20.63,
+   "anomalia": 0.327,
+   "dias": 7
+  },
+  {
+   "semana": "2025-09-29",
+   "sst": 20.648,
+   "anomalia": 0.422,
+   "dias": 7
+  },
+  {
+   "semana": "2025-10-06",
+   "sst": 20.715,
+   "anomalia": 0.362,
+   "dias": 7
+  },
+  {
+   "semana": "2025-10-13",
+   "sst": 20.831,
+   "anomalia": 0.382,
+   "dias": 7
+  },
+  {
+   "semana": "2025-10-20",
+   "sst": 21.266,
+   "anomalia": 0.339,
+   "dias": 7
+  },
+  {
+   "semana": "2025-10-27",
+   "sst": 21.31,
+   "anomalia": 0.303,
+   "dias": 7
+  },
+  {
+   "semana": "2025-11-03",
+   "sst": 21.121,
+   "anomalia": -0.03,
+   "dias": 7
+  },
+  {
+   "semana": "2025-11-10",
+   "sst": 21.064,
+   "anomalia": -0.292,
+   "dias": 7
+  },
+  {
+   "semana": "2025-11-17",
+   "sst": 21.466,
+   "anomalia": -0.084,
+   "dias": 7
+  },
+  {
+   "semana": "2025-11-24",
+   "sst": 21.8,
+   "anomalia": 0.136,
+   "dias": 7
+  },
+  {
+   "semana": "2025-12-01",
+   "sst": 22.097,
+   "anomalia": 0.304,
+   "dias": 7
+  },
+  {
+   "semana": "2025-12-08",
+   "sst": 22.244,
+   "anomalia": 0.136,
+   "dias": 7
+  },
+  {
+   "semana": "2025-12-15",
+   "sst": 22.438,
+   "anomalia": -0.161,
+   "dias": 7
+  },
+  {
+   "semana": "2025-12-22",
+   "sst": 22.747,
+   "anomalia": -0.213,
+   "dias": 7
+  },
+  {
+   "semana": "2025-12-29",
+   "sst": 22.905,
+   "anomalia": -0.397,
+   "dias": 7
+  },
+  {
+   "semana": "2026-01-05",
+   "sst": 23.821,
+   "anomalia": -0.09,
+   "dias": 7
+  },
+  {
+   "semana": "2026-01-12",
+   "sst": 24.647,
+   "anomalia": 0.359,
+   "dias": 7
+  },
+  {
+   "semana": "2026-01-19",
+   "sst": 25.003,
+   "anomalia": 0.227,
+   "dias": 7
+  },
+  {
+   "semana": "2026-01-26",
+   "sst": 25.576,
+   "anomalia": 0.591,
+   "dias": 7
+  },
+  {
+   "semana": "2026-02-02",
+   "sst": 26.169,
+   "anomalia": 0.798,
+   "dias": 7
+  },
+  {
+   "semana": "2026-02-09",
+   "sst": 26.889,
+   "anomalia": 0.951,
+   "dias": 7
+  },
+  {
+   "semana": "2026-02-16",
+   "sst": 27.56,
+   "anomalia": 1.34,
+   "dias": 7
+  },
+  {
+   "semana": "2026-02-23",
+   "sst": 27.811,
+   "anomalia": 1.588,
+   "dias": 7
+  },
+  {
+   "semana": "2026-03-02",
+   "sst": 27.863,
+   "anomalia": 1.637,
+   "dias": 7
+  },
+  {
+   "semana": "2026-03-09",
+   "sst": 27.892,
+   "anomalia": 1.57,
+   "dias": 7
+  },
+  {
+   "semana": "2026-03-16",
+   "sst": 28.022,
+   "anomalia": 1.723,
+   "dias": 7
+  },
+  {
+   "semana": "2026-03-23",
+   "sst": 27.788,
+   "anomalia": 1.74,
+   "dias": 7
+  },
+  {
+   "semana": "2026-03-30",
+   "sst": 27.443,
+   "anomalia": 1.65,
+   "dias": 7
+  },
+  {
+   "semana": "2026-04-06",
+   "sst": 27.348,
+   "anomalia": 1.902,
+   "dias": 7
+  },
+  {
+   "semana": "2026-04-13",
+   "sst": 27.273,
+   "anomalia": 1.987,
+   "dias": 7
+  },
+  {
+   "semana": "2026-04-20",
+   "sst": 27.071,
+   "anomalia": 2.005,
+   "dias": 7
+  },
+  {
+   "semana": "2026-04-27",
+   "sst": 26.326,
+   "anomalia": 1.501,
+   "dias": 7
+  },
+  {
+   "semana": "2026-05-04",
+   "sst": 26.411,
+   "anomalia": 1.911,
+   "dias": 7
+  },
+  {
+   "semana": "2026-05-11",
+   "sst": 26.547,
+   "anomalia": 2.515,
+   "dias": 7
+  },
+  {
+   "semana": "2026-05-18",
+   "sst": 26.348,
+   "anomalia": 2.646,
+   "dias": 7
+  },
+  {
+   "semana": "2026-05-25",
+   "sst": 26.245,
+   "anomalia": 2.761,
+   "dias": 7
+  },
+  {
+   "semana": "2026-06-01",
+   "sst": 26.291,
+   "anomalia": 3.057,
+   "dias": 7
+  },
+  {
+   "semana": "2026-06-08",
+   "sst": 26.278,
+   "anomalia": 3.325,
+   "dias": 7
+  },
+  {
+   "semana": "2026-06-15",
+   "sst": 26.247,
+   "anomalia": 3.549,
+   "dias": 7
+  },
+  {
+   "semana": "2026-06-22",
+   "sst": 25.85,
+   "anomalia": 3.552,
+   "dias": 7
+  },
+  {
+   "semana": "2026-06-29",
+   "sst": 25.726,
+   "anomalia": 3.596,
+   "dias": 7
+  },
+  {
+   "semana": "2026-07-06",
+   "sst": 25.637,
+   "anomalia": 3.829,
+   "dias": 7
+  },
+  {
+   "semana": "2026-07-13",
+   "sst": 25.674,
+   "anomalia": 4.07,
+   "dias": 7
+  },
+  {
+   "semana": "2026-07-20",
+   "sst": 25.522,
+   "anomalia": 4.132,
+   "dias": 7
+  },
+  {
+   "semana": "2026-07-27",
+   "sst": 25.545,
+   "anomalia": 4.471,
+   "dias": 7
+  },
+  {
+   "semana": "2026-08-03",
+   "sst": 25.209,
+   "anomalia": 4.371,
+   "dias": 7
+  },
+  {
+   "semana": "2026-08-10",
+   "sst": 25.331,
+   "anomalia": 4.565,
+   "dias": 7
+  },
+  {
+   "semana": "2026-08-17",
+   "sst": 24.881,
+   "anomalia": 4.161,
+   "dias": 7
+  },
+  {
+   "semana": "2026-08-24",
+   "sst": 25.06,
+   "anomalia": 4.729,
+   "dias": 7
+  },
+  {
+   "semana": "2026-08-31",
+   "sst": 25.298,
+   "anomalia": 4.851,
+   "dias": 7
+  },
+  {
+   "semana": "2026-09-07",
+   "sst": 25.562,
+   "anomalia": 5.35,
+   "dias": 7
+  },
+  {
+   "semana": "2026-09-14",
+   "sst": 25.574,
+   "anomalia": 5.329,
+   "dias": 7
+  },
+  {
+   "semana": "2026-09-21",
+   "sst": 25.742,
+   "anomalia": 5.415,
+   "dias": 7
+  },
+  {
+   "semana": "2026-09-28",
+   "sst": 26.099,
+   "anomalia": 5.891,
+   "dias": 7
+  },
+  {
+   "semana": "2026-10-05",
+   "sst": 26.22,
+   "anomalia": 5.863,
+   "dias": 7
+  },
+  {
+   "semana": "2026-10-12",
+   "sst": 26.39,
+   "anomalia": 5.982,
+   "dias": 7
+  },
+  {
+   "semana": "2026-10-19",
+   "sst": 26.512,
+   "anomalia": 5.64,
+   "dias": 7
+  },
+  {
+   "semana": "2026-10-26",
+   "sst": 26.806,
+   "anomalia": 5.78,
+   "dias": 7
+  },
+  {
+   "semana": "2026-11-02",
+   "sst": 27.151,
+   "anomalia": 6.051,
+   "dias": 7
+  },
+  {
+   "semana": "2026-11-09",
+   "sst": 27.342,
+   "anomalia": 6.004,
+   "dias": 4
+  }
+ ]
+}
