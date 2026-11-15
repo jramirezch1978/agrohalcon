@@ -79,6 +79,9 @@ What the farmer sees:
 
 **[▶ Watch on YouTube](https://www.youtube.com/watch?v=3UVyc3Y5eFw)** · English subtitles available
 
+**Slides (7, English):** [AllpaShift_Demo_EN.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Demo_EN.pdf) · [AllpaShift_Demo_EN.pptx](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Demo_EN.pptx)
+<sub>Problem and challenge · NASA data · Solution · How it works · Demo with real screenshots · Impact (2017 validation)</sub>
+
 </div>
 
 ---
@@ -92,7 +95,7 @@ What the farmer sees:
 | 💻 **Source code** | https://github.com/jramirezch1978/allpashift |
 | 🎬 **Demo video** | https://www.youtube.com/watch?v=3UVyc3Y5eFw |
 | 🌐 **Live app** (team server) | http://2.29.101.199 |
-| 📱 **Android app** (APK 1.0.0, signed) | [allpashift-1.0.0.apk](05.%20mobile/release/android/allpashift-1.0.0.apk) |
+| 📱 **Android app** (APK 1.0.0, signed, release) | [allpashift-1.0.0.apk](05.%20mobile/release/android/allpashift-1.0.0.apk) |
 | 🍎 **iOS project** (Xcode) | [allpashift-ios-xcode.zip](05.%20mobile/release/ios/allpashift-ios-xcode.zip) |
 
 ### 📄 Submission documents
@@ -100,7 +103,7 @@ What the farmer sees:
 | Document | What it covers | Link |
 |---|---|---|
 | 🌱 **High-Level Summary** | What AllpaShift is, why it matters and how it answers the challenge | [AllpaShift_Summary.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Summary.pdf) |
-| 🎬 **Project Demo** (7 slides) | The problem, NASA data, the solution, how it works, the app and the 2017 validation | [AllpaShift_Demo_EN.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Demo_EN.pdf) |
+| 🎬 **Project Demo** (7 slides) | The problem, NASA data, the solution, how it works, real app screenshots and the 2017 validation | [PDF](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Demo_EN.pdf) · [PPTX](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Demo_EN.pptx) |
 | ⚙️ **Project Details** | How it works step by step, soil health and farmer priorities, tools and goals | [AllpaShift_Project_Details_EN.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Project_Details_EN.pdf) |
 | 🛰️ **Use of AI and NASA Data** | The six NASA datasets, how each is used, and where SI was used | [AllpaShift_AI_and_NASA_Data_EN.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_AI_and_NASA_Data_EN.pdf) |
 | 📚 **References** | Data, papers, software and licenses | [AllpaShift_References_EN.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_References_EN.pdf) |
