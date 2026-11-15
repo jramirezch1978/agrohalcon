@@ -107,7 +107,7 @@ TEXTOS["es"].update({
     "v_accion_lluvia": "Prepara drenajes: la lluvia ya está muy por encima de lo normal",
     "v_motivo_lluvia": "La lluvia de {mes} fue {veces:.1f} veces lo normal.",
     "v_nota_lluvia": "Alerta calculada solo con lluvia; con MUR SST sería más anticipada",
-    "v_resumen": "En {mes} llovió {veces:.1f} veces lo normal ({fuente}). AgroShift habría alertado el {fecha}, "
+    "v_resumen": "En {mes} llovió {veces:.1f} veces lo normal ({fuente}). AllpaShift habría alertado el {fecha}, "
                  "{semanas} semanas antes.",
     "v_resumen_sin_alerta": "Lluvia máxima en {mes} ({veces:.1f} veces lo normal, {fuente}). Con las reglas actuales "
                             "no se habría disparado una alerta entre diciembre y abril.",
@@ -158,7 +158,7 @@ TEXTOS["en"].update({
     "v_accion_lluvia": "Prepare drainage: rainfall is already far above normal",
     "v_motivo_lluvia": "Rainfall in {mes} was {veces:.1f} times normal.",
     "v_nota_lluvia": "Alert computed with rainfall only; with MUR SST it would come earlier",
-    "v_resumen": "In {mes} it rained {veces:.1f} times the normal amount ({fuente}). AgroShift would have warned on "
+    "v_resumen": "In {mes} it rained {veces:.1f} times the normal amount ({fuente}). AllpaShift would have warned on "
                  "{fecha}, {semanas} weeks earlier.",
     "v_resumen_sin_alerta": "Peak rainfall in {mes} ({veces:.1f} times normal, {fuente}). With the current rules no "
                             "alert would have fired between December and April.",
