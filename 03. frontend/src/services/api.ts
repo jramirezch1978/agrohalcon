@@ -11,8 +11,9 @@ import type {
   Recomendacion,
   RespuestaAsistente,
   Validacion,
+  SueloPropuesto,
 } from '@/types/api'
-import { aniosValidacion, detalleLluvia, calcularMapa, calcularRecomendacion, calcularValidacion, CALCULOS_URL, soloConDato } from './calculos'
+import { aniosValidacion, detalleLluvia, calcularMapa, calcularRecomendacion, calcularValidacion, CALCULOS_URL, soloConDato, sueloPython } from './calculos'
 import { mockAniosValidacion, mockCultivos, mockMapa, mockRecomendacion, mockValidacion } from './mocks'
 import { responderConPlantillas } from './asistentePlantillas'
 import { climatologiaPower } from './nasaPower'
@@ -94,19 +95,34 @@ export const api = {
         throw aApiError(e)
       }
     }
-    const { tipoCultivo, mesSiembra, cultivo } = opciones
+    const { tipoCultivo, mesSiembra, cultivo, prioridad, tipoSuelo, salinidad, fuenteSuelo } = opciones
+    const temporal = tipoCultivo !== 'permanente'
     const params = {
       lat,
       lon,
       lang: idioma,
       tipoCultivo,
-      mesSiembra: tipoCultivo === 'permanente' ? undefined : mesSiembra,
-      cultivo: tipoCultivo === 'permanente' ? cultivo : undefined,
+      mesSiembra: temporal ? mesSiembra : undefined,
+      cultivo: temporal ? undefined : cultivo,
+      ...(temporal ? { prioridad, tipoSuelo, salinidad, fuenteSuelo } : {}),
     }
     const r = await http.get<Recomendacion>('/api/recomendacion', { params })
     marcarOrigenJava('recomendacion', r.headers)
     // Igual que en modo Python: un indicador sin dato real (valor null) no se muestra
     return { ...r.data, indicadores: soloConDato(r.data.indicadores as never) }
+  },
+
+  /** Tipo de suelo PROPUESTO por SoilGrids (ISRIC, no NASA). Sin servicio o sin dato → tipoSuelo null. */
+  async getSuelo(lat: number, lon: number): Promise<SueloPropuesto> {
+    const sinDato: SueloPropuesto = { tipoSuelo: null, arena: null, limo: null, arcilla: null, fuente: 'sin dato' }
+    if (MODO === 'ejemplo') return sinDato
+    try {
+      if (MODO === 'python') return await sueloPython(lat, lon)
+      const { data } = await http.get<SueloPropuesto>('/api/suelo', { params: { lat, lon }, timeout: 65000 })
+      return data
+    } catch {
+      return sinDato
+    }
   },
 
   /** Recomendación de EJEMPLO (todas las fuentes dicen "Ejemplo"). */

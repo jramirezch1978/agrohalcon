@@ -59,7 +59,7 @@ class AsistenteTest {
     void preparar() {
         recos = mock(RecomendacionService.class);
         groq = mock(GroqClient.class);
-        when(recos.recomendacion(any(Double.class), any(Double.class), anyString(), any(), any(), any()))
+        when(recos.recomendacion(any(Double.class), any(Double.class), anyString(), any(), any(), any(), any()))
                 .thenReturn(new Respuesta(REC, false));
         when(groq.habilitado()).thenReturn(true);
         servicio = new AsistenteService(recos, groq, new JsonUtil(JsonMapper.builder().build()), 1); // timeout 1 s en pruebas
@@ -251,7 +251,7 @@ class AsistenteTest {
     // 8
     @Test
     void pythonCaidoYSinCacheDa503() throws Exception {
-        when(recos.recomendacion(any(Double.class), any(Double.class), anyString(), any(), any(), any()))
+        when(recos.recomendacion(any(Double.class), any(Double.class), anyString(), any(), any(), any(), any()))
                 .thenThrow(new CalculosNoDisponibleException("Connection refused", null));
         mvc.perform(post("/api/asistente").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"lat\":33.3,\"lon\":44.4,\"pregunta\":\"¿Qué siembro?\",\"idioma\":\"es\"}")
@@ -273,5 +273,36 @@ class AsistenteTest {
         assertThat(AsistenteService.validar("El relieve de SRTM muestra zonas bajas.", reducido)).isEqualTo("menciona_fuente_ajena");
         // La palabra inglesa "power" no es la fuente NASA POWER
         assertThat(AsistenteService.fuenteAjena("Water has the power to help.", java.util.Set.of())).isNull();
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void puedeExplicarLaSaludDelSueloSinInventarNumeros() {
+        Map<String, Object> rec = Map.of("indicadores", Map.of(), "queHacer", Map.of("tipo", "sembrar", "fuente", "NASA POWER"),
+                "rotaciones", List.of(Map.of("nombre", "Arroz - Frijol", "puntaje", 90, "riesgoClimatico", 90, "saludSuelo", 100,
+                        "descuentosSuelo", List.of(Map.of("regla", "leguminosa", "puntos", 15, "fuente", "catálogo de cultivos",
+                                "explicacion", "Frijol es leguminosa: fija nitrógeno del aire en el suelo.")))));
+        Map<String, Object> reducido = AsistenteService.reducir(rec);
+        Map<String, Object> rot = ((List<Map<String, Object>>) reducido.get("rotaciones")).get(0);
+        assertThat(rot).containsEntry("saludSuelo", 100).containsEntry("riesgoClimatico", 90).containsKey("descuentosSuelo");
+        assertThat(AsistenteService.validar("Cuida el suelo con 100 puntos: el frijol suma 15 porque fija nitrógeno.", reducido)).isNull();
+        assertThat(AsistenteService.validar("El frijol suma 25 puntos al suelo.", reducido)).isEqualTo("numero_no_respaldado");
+    }
+
+    @Test
+    void respaldoSobreElSueloUsaElPuntajeDeSueloYNoLaQuincena() {
+        Map<String, Object> rec = Map.of("indicadores", Map.of(), "queHacer", Map.of("accion", "Siembra", "motivo", "m", "fuente", "NASA POWER"),
+                "rotaciones", List.of(
+                        Map.of("nombre", "Arroz - Frijol caupí", "puntaje", 72, "saludSuelo", 100, "motivoRecomendada", "Te la recomendamos porque elegiste cuidar el suelo.",
+                                "descuentosSuelo", List.of(Map.of("regla", "leguminosa", "puntos", 15, "explicacion", "Frijol caupí es leguminosa: fija nitrógeno."))),
+                        Map.of("nombre", "Arroz - Arroz", "puntaje", 30, "saludSuelo", 30,
+                                "descuentosSuelo", List.of(Map.of("regla", "monocultivo", "puntos", -30, "explicacion", "Repetir arroz agota el suelo.")))));
+        var reducido = AsistenteService.reducir(rec);
+        var r = AsistenteService.respaldo(reducido, "¿Por qué esta rotación cuida mi suelo?", "es");
+        assertThat(r.respuesta()).contains("Arroz - Frijol caupí", "100 de 100", "nitrógeno");
+        assertThat(r.fuentes()).containsExactly("catálogo de cultivos");
+        assertThat(AsistenteService.respaldo(reducido, "¿Por qué Arroz - Arroz cansa el suelo?", "es").respuesta()).contains("Repetir arroz");
+        assertThat(AsistenteService.respaldo(reducido, "¿Por qué me la recomiendas?", "es").respuesta()).contains("cuidar el suelo");
+        assertThat(AsistenteService.respaldo(reducido, "¿Qué hago hoy?", "es").respuesta()).startsWith("Siembra");
     }
 }

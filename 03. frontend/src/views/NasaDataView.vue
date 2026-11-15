@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import HonestyNote from '@/components/campaign/HonestyNote.vue'
 import AboutApp from '@/components/datasets/AboutApp.vue'
+import ChallengeSection from '@/components/datasets/ChallengeSection.vue'
 import DatasetCard from '@/components/datasets/DatasetCard.vue'
 import HelpFaq from '@/components/datasets/HelpFaq.vue'
 import HowItWorks from '@/components/datasets/HowItWorks.vue'
@@ -10,10 +11,11 @@ import { NASA_DATASETS } from '@/data/nasaDatasets'
 </script>
 
 <template>
-  <!-- Ayuda: ¿Qué es? → Cómo funciona → Preguntas frecuentes → Los satélites (detalles técnicos plegados) -->
+  <!-- Ayuda: El reto de la NASA → ¿Qué es? → Cómo funciona → Preguntas frecuentes → Los satélites (detalles técnicos plegados) -->
   <section>
     <PageHeader :titulo="$t('datos.titulo')" :subtitulo="$t('datos.subtitulo')" />
-    <AboutApp class="stagger mb-6" style="--i: 1" />
+    <ChallengeSection class="stagger mb-6" style="--i: 1" />
+    <AboutApp class="stagger mb-6" style="--i: 2" />
     <HowItWorks class="stagger mb-6" style="--i: 2" />
     <HelpFaq class="stagger mb-8" style="--i: 3" />
     <SectionTitle :titulo="$t('datos.satelitesTitulo')" class="mb-4" />

@@ -3,13 +3,29 @@ import { computed, ref, watch } from 'vue'
 import { i18n, type Idioma } from '@/i18n'
 import { api, ApiError, MODO } from '@/services/api'
 import { useOrigenStore } from '@/stores/origen'
-import type { ClaveIndicador, CultivoPermanente, MesISO, NivelRiesgo, OpcionesRecomendacion, Recomendacion, TipoCultivo } from '@/types/api'
+import type {
+  ClaveIndicador,
+  CultivoPermanente,
+  FuenteSuelo,
+  MesISO,
+  NivelRiesgo,
+  OpcionesRecomendacion,
+  Prioridad,
+  Recomendacion,
+  Salinidad,
+  TipoCultivo,
+  TipoSuelo,
+} from '@/types/api'
 import { ErrorUbicacion, nombreDeLugar, obtenerUbicacion, type Coordenadas, type MotivoUbicacion } from '@/services/ubicacion'
 
 export interface Parcela {
   lat: number
   lon: number
   nombre?: string
+  /** Suelo de la parcela (opcional). Al elegir otra parcela se borra: es de ese lugar. */
+  tipoSuelo?: TipoSuelo
+  salinidad?: Salinidad
+  fuenteSuelo?: FuenteSuelo
 }
 
 export type Tema = 'claro' | 'oscuro'
@@ -23,6 +39,7 @@ const CLAVES = {
   tema: 'allpashift:tema',
   onboarding: 'allpashift:onboardingVisto',
   cultivo: 'allpashift:miCultivo',
+  prioridad: 'allpashift:prioridad',
 }
 
 /** Mes "AAAA-MM" a n meses de hoy */
@@ -137,12 +154,31 @@ export const useAppStore = defineStore('app', () => {
   const tipoCultivo = computed(() => miCultivo.value.tipo)
   const mesSiembra = computed(() => mesDesdeHoy(miCultivo.value.mesSiembraOffset))
 
+  // --- Prioridad del agricultor (qué le importa más) ---
+  const prioridad = ref<Prioridad | null>(leer<Prioridad>(CLAVES.prioridad))
+  watch(prioridad, (p) => guardar(CLAVES.prioridad, p))
+
+  /** Suelo de la parcela: lo elige el agricultor (o acepta la propuesta de SoilGrids) */
+  function elegirSuelo(cambio: { tipoSuelo?: TipoSuelo; salinidad?: Salinidad; fuenteSuelo?: FuenteSuelo }) {
+    if (!parcela.value) return
+    const p = { ...parcela.value, ...cambio }
+    if (cambio.tipoSuelo && !cambio.fuenteSuelo) p.fuenteSuelo = 'agricultor'
+    parcela.value = p
+  }
+
   /** Parámetros para /api/recomendacion y /api/asistente */
-  const opcionesCultivo = computed<OpcionesRecomendacion>(() =>
-    miCultivo.value.tipo === 'permanente'
-      ? { tipoCultivo: 'permanente', cultivo: miCultivo.value.permanente }
-      : { tipoCultivo: 'temporal', mesSiembra: mesSiembra.value },
-  )
+  const opcionesCultivo = computed<OpcionesRecomendacion>(() => {
+    if (miCultivo.value.tipo === 'permanente') return { tipoCultivo: 'permanente', cultivo: miCultivo.value.permanente }
+    const p = parcela.value
+    const o: OpcionesRecomendacion = { tipoCultivo: 'temporal', mesSiembra: mesSiembra.value }
+    if (prioridad.value) o.prioridad = prioridad.value
+    if (p?.tipoSuelo) {
+      o.tipoSuelo = p.tipoSuelo
+      o.fuenteSuelo = p.fuenteSuelo ?? 'agricultor'
+    }
+    if (p?.salinidad) o.salinidad = p.salinidad
+    return o
+  })
 
   // --- Última recomendación (también cache offline) ---
   const recomendacion = ref<Recomendacion | null>(leer<Recomendacion>(CLAVES.recomendacion))
@@ -233,6 +269,8 @@ export const useAppStore = defineStore('app', () => {
     miCultivo,
     tipoCultivo,
     mesSiembra,
+    prioridad,
+    elegirSuelo,
     opcionesCultivo,
     cargando,
     recomendacionEsDeParcela,

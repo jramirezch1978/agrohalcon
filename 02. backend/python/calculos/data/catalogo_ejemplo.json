@@ -3,26 +3,31 @@
   "cultivos": [
     {
       "id": "arroz", "nombre": {"es": "Arroz", "en": "Rice"}, "tipo": "temporal", "tradicional": true,
+      "familia": "Poaceae", "leguminosa": false, "cobertura": false, "profundidad_raiz": "superficial", "tolerancia_salinidad": "baja",
       "duracion_meses": 5, "temp_min": 18, "temp_max": 35, "agua": "alto", "usoAgua": "alto",
       "meses_siembra": [12, 1, 2]
     },
     {
       "id": "maiz", "nombre": {"es": "Maíz", "en": "Maize"}, "tipo": "temporal",
+      "familia": "Poaceae", "leguminosa": false, "cobertura": false, "profundidad_raiz": "media", "tolerancia_salinidad": "media",
       "duracion_meses": 4, "temp_min": 12, "temp_max": 35, "agua": "medio", "usoAgua": "medio",
       "meses_siembra": [1, 2, 7, 8, 9]
     },
     {
       "id": "frijol", "nombre": {"es": "Frijol", "en": "Bean"}, "tipo": "temporal",
+      "familia": "Fabaceae", "leguminosa": true, "cobertura": true, "profundidad_raiz": "media", "tolerancia_salinidad": "baja",
       "duracion_meses": 3, "temp_min": 15, "temp_max": 35, "agua": "bajo", "usoAgua": "bajo",
       "meses_siembra": [4, 5, 6, 7, 8]
     },
     {
       "id": "algodon", "nombre": {"es": "Algodón", "en": "Cotton"}, "tipo": "temporal",
+      "familia": "Malvaceae", "leguminosa": false, "cobertura": false, "profundidad_raiz": "profunda", "tolerancia_salinidad": "alta",
       "duracion_meses": 6, "temp_min": 15, "temp_max": 38, "agua": "medio", "usoAgua": "medio",
       "meses_siembra": [1, 2, 3]
     },
     {
       "id": "mango", "nombre": {"es": "Mango", "en": "Mango"}, "tipo": "permanente",
+      "familia": "Anacardiaceae", "profundidad_raiz": "profunda",
       "temp_min": 10, "temp_max": 40, "agua": "medio", "usoAgua": "medio",
       "etapas": [
         {"id": "cosecha", "nombre": {"es": "cosecha", "en": "harvest"}, "meses": [1, 2, 3]},
@@ -41,6 +46,7 @@
     },
     {
       "id": "limon", "nombre": {"es": "Limón", "en": "Lime"}, "tipo": "permanente",
+      "familia": "Rutaceae", "profundidad_raiz": "profunda", "tolerancia_salinidad": "baja",
       "temp_min": 13, "temp_max": 38, "agua": "medio", "usoAgua": "medio",
       "etapas": [
         {"id": "floracion", "nombre": {"es": "floración", "en": "flowering"}, "meses": [11, 12, 1]},
@@ -56,6 +62,7 @@
     },
     {
       "id": "banano", "nombre": {"es": "Banano", "en": "Banana"}, "tipo": "permanente",
+      "familia": "Musaceae", "profundidad_raiz": "superficial",
       "temp_min": 15, "temp_max": 35, "agua": "alto", "usoAgua": "alto",
       "etapas": [
         {"id": "produccion", "nombre": {"es": "producción", "en": "production"}, "meses": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}

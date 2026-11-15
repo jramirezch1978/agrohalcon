@@ -33,17 +33,30 @@
 
 ## 🌱 High-Level Summary
 
-**AllpaShift tells a farmer what to do in the next two weeks, what to plant and when, based on the climate risk that NASA satellites show for their valley.**
+**AllpaShift helps a farmer choose crop rotations that protect their soil and adapt to a changing climate: it combines NASA Earth observations with the farmer's own soil and priorities, and tells them what to do in the next two weeks, what to plant and when.**
 *Allpa* means "land" in Quechua; *Shift* is the change the Field Shift challenge asks for.
 
 **Why it matters.** In northern Peru, a single coastal El Niño can ruin a whole season: in **March 2017** the Piura region received about **5 times its normal rainfall** (GPM IMERG) and the Piura River overflowed. The warning signs were in the ocean weeks earlier, but they never reached the farmer in a form they could act on.
 
-**How it answers the challenge.** AllpaShift turns NASA Earth observation data into one clear action and a season outlook:
+**How it answers the challenge.** Field Shift asks for *"a decision support tool that uses NASA Earth observations, along with local soil information, crop characteristics, and farmer priorities, to help farmers explore rotation strategies that could strengthen soil health and adapt their fields to changing conditions."* AllpaShift covers every part of it:
+
+| The challenge asks for… | AllpaShift |
+|---|---|
+| **NASA Earth observations** | NASA POWER, GPM IMERG, SMAP, MODIS NDVI and MUR SST, with the dataset shown next to every value |
+| **Local soil information** | Soil moisture from SMAP; soil type (sandy, loam, clay) and salinity entered by the farmer, with a suggested soil type from SoilGrids (ISRIC) that they can change |
+| **Crop characteristics** | 37 crops: temperature range, water use, planting months, botanical family, root depth and salt tolerance |
+| **Farmer priorities** | *"What matters most to you?"*: take less risk, save water or care for the soil. The recommended rotation changes with the answer |
+| **Explore rotation strategies** | Three rotations compared side by side, always including the traditional one (e.g. rice–rice) |
+| **Strengthen soil health** | A **soil score** for every rotation: legumes and alternating root depths add points; repeating the same crop or family, or thirsty crops on salty or sandy soil, take points off |
+| **Adapt to changing conditions** | A **climate score** from NASA data: drought, extreme rain, heat and the coastal El Niño signal, month by month |
+
+What the farmer sees:
 
 | | Feature | What the farmer sees |
 |:-:|---|---|
 | ✅ | **What should I do now?** | One action for the next two weeks (plant, wait, irrigate, protect from heat, prepare drainage) and the NASA data point behind it |
-| 🌾 | **What should I plant?** | Three crop rotations scored 0–100, always including the traditional one (e.g. rice–rice) for comparison, with every point deducted shown and explained |
+| 🌾 | **What should I plant?** | Three crop rotations, each with a **climate score**, a **soil score** and a **final score** (0–100) weighted by what the farmer chose; every point added or deducted is shown and explained |
+| 🧑‍🌾 | **Your soil and your priority** | The farmer marks their soil type and salinity (SoilGrids suggests the type) and what matters most to them; the app explains *"We recommend it because you chose to care for the soil"* |
 | 📅 | **Season outlook** | Month-by-month risk from planting to harvest: 🟢 low · 🟡 medium · 🔴 high |
 | 🌳 | **Perennial crops** | Mango, lime and banana get a 12-month plan by growth stage instead of rotations |
 | 🗺️ | **Valley map** | Risk level for the valleys of Piura, and any place in the world |
@@ -86,10 +99,10 @@
 
 ### How it works
 
-1. The farmer picks their plot on the map (or shares their location).
+1. The farmer picks their plot on the map (or shares their location), and can add their soil type, salinity and what matters most to them.
 2. The app asks the **Java API**. If a fresh result is already in **PostgreSQL**, it answers from there.
 3. If not, the Java API asks the **calculation service (Python)**, sending the crop catalog stored in the database (37 crops, 18 valleys, calendars and rotations).
-4. The calculation service reads **NASA data** (NASA POWER, GPM IMERG, SMAP, MODIS and MUR SST) and computes indicators, the season outlook, rotation scores and this fortnight's action.
+4. The calculation service reads **NASA data** (NASA POWER, GPM IMERG, SMAP, MODIS and MUR SST) and computes indicators, the season outlook, the climate and soil score of each rotation, the final score for the farmer's priority and this fortnight's action.
 5. The Java API stores the result and answers the app. An **assistant** explains it in plain words.
 
 ```mermaid
@@ -102,14 +115,35 @@ flowchart LR
     F -->|indicators · rotations · action| D
     F --> G[(🛰️ NASA POWER · GPM IMERG<br/>SMAP · MODIS NDVI<br/>MUR SST)]
     D --> H[🤖 Assistant<br/>only explains]
+    F -.->|suggested soil type| S[(🟫 SoilGrids · ISRIC<br/>not NASA data)]
 ```
 
 ### Design rules
 
-- **Rule-based, explainable calculations.** Every risk level, score and action comes from fixed, documented rules and thresholds (`02. backend/python/calculos/config/umbrales.yaml`). Assumptions made by the team are marked as such.
+- **Rule-based, explainable calculations.** Every risk level, score and action comes from fixed, documented rules and thresholds (`02. backend/python/calculos/config/umbrales.yaml`). Assumptions made by the team, such as the soil points and the priority weights, are marked as such.
 - **AI never decides.** The assistant only explains the result that was already calculated.
-- **Data honesty.** Every value shows the dataset it really comes from. Missing data is shown as "no data", never filled in. If the app ever shows sample data, a fixed banner says *"Sample data – not real NASA data"*.
+- **Data honesty.** Every value shows the dataset it really comes from. Soil type and salinity are labelled *"SoilGrids (ISRIC)"* or *"data you gave"*, never as NASA data. Missing data is shown as "no data", never filled in. If the app ever shows sample data, a fixed banner says *"Sample data – not real NASA data"*.
 - **Works when the network is weak.** The Java API answers from the database first, and the app keeps the last recommendation for offline use.
+
+### How a rotation is scored
+
+Each rotation gets three scores from 0 to 100, all from fixed rules in `config/umbrales.yaml` (no AI):
+
+| Score | Starts at | Rules (points) | Source |
+|---|---|---|---|
+| 🌦️ **Climate** | 100 | High-water crop with soil moisture or rain in deficit (−20/−40) · months outside the crop's temperature range (−10 each, max −30) · high-risk months in the season (−10 each) · planting out of season (−15) · extraordinary El Niño on the northern coast (−35) | NASA data |
+| 🌱 **Soil** | 70 | Same crop twice (−30) · same botanical family (−15) · includes a legume, which fixes nitrogen (+15) · different root depths (+10) · cover crop (+5) · high-water crop on salty soil (−10/−20) · salt-sensitive crop on salty soil (−10/−20) · high-water crop on sandy soil (−10) | Crop catalog and the farmer's soil |
+| 💧 **Water** | — | Low use 100 · medium 60 · high 20 | Crop catalog |
+
+**Final score** = weighted mix according to the farmer's priority:
+
+| Priority | Climate | Soil | Water |
+|---|:-:|:-:|:-:|
+| Take less risk (default) | 60 % | 25 % | 15 % |
+| Care for the soil | 35 % | 50 % | 15 % |
+| Save water | 35 % | 15 % | 50 % |
+
+Example with real data (Piura, planting in December 2026): rice–cowpea scores 100 for soil and rice–rice 40; the recommended rotation is rice–cowpea when the farmer chooses *take less risk*, and cowpea–lablab bean when they choose *save water*. If a value is missing (for example a crop with no salt-tolerance data), that rule is simply not applied.
 
 ### Indicators
 
@@ -140,6 +174,8 @@ flowchart LR
 ### Goals
 
 - Give smallholder farmers **one clear action** they can take this fortnight.
+- Help them **explore rotations that rebuild the soil** (legumes, alternating roots) instead of repeating the same crop.
+- Let them **decide by what matters to them**: less risk, less water or healthier soil.
 - Make climate risk **visible before planting**, not after the loss.
 - Show that NASA open data can be turned into **simple, trustworthy advice** that explains itself.
 
@@ -162,14 +198,14 @@ flowchart LR
 
 Outside the Piura valleys, rainfall and soil moisture come from NASA POWER, and the app says so. The team also explored VIIRS NDVI, SRTM and HLS in the `climate-service` folder; **they are not used by the current app.**
 
-**Partner and other open data:** NOAA CoastWatch ERDDAP (MUR SST access), NOAA CPC weekly Niño indices (cross-check), OpenStreetMap (map and place search), INDECI (summary of the 2017 impacts in Piura).
+**Partner and other open data:** NOAA CoastWatch ERDDAP (MUR SST access), NOAA CPC weekly Niño indices (cross-check), **SoilGrids 2.0 by ISRIC** (sand, silt and clay at 0–30 cm to *suggest* the soil type; CC-BY 4.0; the farmer can change it), FAO-56 and FAO Irrigation and Drainage Paper 29 (root depth and salt tolerance of the crop catalog), OpenStreetMap (map and place search), INDECI (summary of the 2017 impacts in Piura).
 
 ### Use of AI
 
 | | |
 |---|---|
 | **In the app** | The assistant uses **Groq** with the model **`openai/gpt-oss-20b`** (Apache 2.0 license). |
-| **What it does** | Explains, in up to four sentences and in English or Spanish, the recommendation that AllpaShift already calculated, naming the NASA source of each value. |
+| **What it does** | Explains, in up to four sentences and in English or Spanish, the recommendation that AllpaShift already calculated (including the soil score and why a rotation fits the farmer's priority), naming the source of each value. |
 | **What it does not do** | It does not calculate, does not invent numbers, crops, dates or sources, does not change the recommendation and does not decide what to plant. |
 | **Safeguards** | It only cites sources present in the calculated result. Empty or too-long answers are discarded. If the AI fails or takes more than 8 s, the app shows the calculated recommendation instead. The API key lives only on the server. |
 | **During development** | AI coding assistants (Claude Code, by Anthropic) helped draft code, tests and documentation. All output was reviewed, run and verified by the team against the real data. |
@@ -193,6 +229,9 @@ Outside the Piura valleys, rainfall and soil moisture come from NASA POWER, and 
 - NOAA Climate Prediction Center. *Weekly Niño indices (OISST v2.1)*. https://www.cpc.ncep.noaa.gov/data/indices/wksst9120.for
 - OpenStreetMap contributors. Map data and Nominatim search, ODbL. https://www.openstreetmap.org/copyright
 - INDECI (Instituto Nacional de Defensa Civil, Peru). Reports on the 2017 coastal El Niño.
+- Poggio, L., et al. (2021). *SoilGrids 2.0: producing soil information for the globe with quantified spatial uncertainty*. SOIL 7, 217–240. doi:10.5194/soil-7-217-2021. ISRIC REST API, CC-BY 4.0. https://rest.isric.org
+- Allen, R. G., Pereira, L. S., Raes, D., Smith, M. (1998). *Crop evapotranspiration (FAO Irrigation and Drainage Paper 56)*, Table 22: maximum root depth. FAO, Rome.
+- Ayers, R. S., Westcot, D. W. (1985). *Water quality for agriculture (FAO Irrigation and Drainage Paper 29 Rev. 1)*, Table 4: crop salt tolerance. FAO, Rome.
 - Crop catalog of northern Peru (crops, valleys, calendars and rotations): team database, `04. base de datos`.
 
 **Software (all open source)**
@@ -212,7 +251,7 @@ Outside the Piura valleys, rainfall and soil moisture come from NASA POWER, and 
 | `02. backend/python/calculos` | Calculation service (8001): indicators, season risk, rotations, map and the 2017 replay; download scripts for IMERG, SMAP, MODIS NDVI and MUR SST |
 | `02. backend/python/climate-service` | Data exploration service (8000) |
 | `03. frontend` | Vue 3 app and Android build (Capacitor) |
-| `04. base de datos` | PostgreSQL schema and seed: 37 crops, 18 valleys |
+| `04. base de datos` | PostgreSQL schema and seed: 37 crops, 18 valleys; `seed/03-salud-suelo.sql` adds family, root depth and salt tolerance |
 | `05. mobile` | Mobile releases |
 | `deploy/vps` | `docker-compose` for the server |
 

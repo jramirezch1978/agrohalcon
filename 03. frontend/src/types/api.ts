@@ -43,6 +43,14 @@ export interface Descuento {
   fuente: FuenteDato
 }
 
+/** Regla de salud del suelo que sumó o restó puntos (catálogo de cultivos o dato del agricultor; nunca NASA) */
+export interface DescuentoSuelo {
+  regla: string
+  puntos: number // positivo suma, negativo resta
+  explicacion: string
+  fuente: string
+}
+
 export interface Rotacion {
   id: number
   nombre: string
@@ -55,6 +63,42 @@ export interface Rotacion {
   descuentos?: Descuento[]
   /** Opcional: riesgo de la campaña mes a mes, de la siembra a la cosecha */
   ciclo?: CicloCultivo
+  /** Opcional: puntaje por clima (0-100, datos NASA) */
+  riesgoClimatico?: number
+  /** Opcional: puntaje de cuidado del suelo (0-100, catálogo de cultivos) */
+  saludSuelo?: number
+  descuentosSuelo?: DescuentoSuelo[]
+  /** Opcional: puntaje por uso de agua (0-100) */
+  puntajeAgua?: number
+  /** Opcional (solo la recomendada): por qué se recomienda según la prioridad elegida */
+  motivoRecomendada?: string
+}
+
+/** Lo que el agricultor elige: qué le importa más y el suelo de su parcela (todo opcional) */
+export type Prioridad = 'ahorrar_agua' | 'arriesgar_menos' | 'cuidar_suelo'
+export type TipoSuelo = 'arenoso' | 'franco' | 'arcilloso'
+export type Salinidad = 'no' | 'leve' | 'alta'
+/** De dónde salió el tipo de suelo: propuesto por SoilGrids (ISRIC) o elegido por el agricultor. Nunca NASA. */
+export type FuenteSuelo = 'soilgrids' | 'agricultor'
+
+/** Perfil con que se calculó la recomendación (lo devuelve el servidor) */
+export interface PerfilRecomendacion {
+  prioridad: Prioridad
+  pesos: { clima: number; suelo: number; agua: number }
+  tipoSuelo?: TipoSuelo | null
+  salinidad?: Salinidad | null
+  fuenteSuelo?: FuenteSuelo | null
+}
+
+/** Tipo de suelo propuesto por SoilGrids (GET /api/suelo). tipoSuelo null = sin dato */
+export interface SueloPropuesto {
+  tipoSuelo: TipoSuelo | null
+  arena: number | null
+  limo: number | null
+  arcilla: number | null
+  fuente: string
+  licencia?: string
+  motivo?: string
 }
 
 /** Riesgo de un mes de la campaña (clima histórico NASA POWER + señal de El Niño) */
@@ -111,6 +155,8 @@ export interface Recomendacion {
   queHacer: QueHacer
   /** Opcional: solo para cultivos permanentes */
   plan?: PlanPermanente
+  /** Opcional: prioridad y suelo con que se calcularon las rotaciones */
+  perfil?: PerfilRecomendacion
 }
 
 /** Parámetros opcionales de /api/recomendacion */
@@ -120,6 +166,11 @@ export interface OpcionesRecomendacion {
   mesSiembra?: MesISO
   /** Solo permanente */
   cultivo?: CultivoPermanente
+  /** Solo temporal: prioridad y suelo del agricultor */
+  prioridad?: Prioridad
+  tipoSuelo?: TipoSuelo
+  salinidad?: Salinidad
+  fuenteSuelo?: FuenteSuelo
 }
 
 export interface ZonaRiesgo {
@@ -227,6 +278,10 @@ export interface PreguntaAsistente {
   tipoCultivo?: TipoCultivo
   mesSiembra?: MesISO
   cultivo?: CultivoPermanente
+  prioridad?: Prioridad
+  tipoSuelo?: TipoSuelo
+  salinidad?: Salinidad
+  fuenteSuelo?: FuenteSuelo
 }
 
 /** Respuesta del asistente: plantillas sobre resultados ya calculados (sin IA). */

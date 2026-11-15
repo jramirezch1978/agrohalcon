@@ -87,6 +87,7 @@ call :run_sql "00-schema.sql" || goto :fail
 echo.
 echo ========== PASO 2/2: SEED ==========
 call :run_sql "seed\01-catalogo-norte.sql" || goto :fail
+call :run_sql "seed\03-salud-suelo.sql" || goto :fail
 call :run_sql "99-resumen.sql" || goto :fail
 goto :done
 
@@ -98,6 +99,7 @@ goto :done
 :route_seed
 call :check_container || goto :fail
 call :run_sql "seed\01-catalogo-norte.sql" || goto :fail
+call :run_sql "seed\03-salud-suelo.sql" || goto :fail
 call :run_sql "99-resumen.sql" || goto :fail
 goto :done
 

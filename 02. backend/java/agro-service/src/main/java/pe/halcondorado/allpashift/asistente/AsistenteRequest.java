@@ -29,7 +29,17 @@ public record AsistenteRequest(
 
         @Pattern(regexp = "\\d{4}-(0[1-9]|1[0-2])", message = "mesSiembra debe ser AAAA-MM") String mesSiembra,
 
-        @Pattern(regexp = "[a-z_]{2,40}", message = "cultivo no válido") String cultivo) {
+        @Pattern(regexp = "[a-z_]{2,40}", message = "cultivo no válido") String cultivo,
+
+        // Opcionales: la misma prioridad y suelo con que la app pidió la recomendación (para explicar la misma)
+        @Pattern(regexp = "ahorrar_agua|arriesgar_menos|cuidar_suelo", message = "prioridad no válida") String prioridad,
+        @Pattern(regexp = "arenoso|franco|arcilloso", message = "tipoSuelo no válido") String tipoSuelo,
+        @Pattern(regexp = "no|leve|alta", message = "salinidad no válida") String salinidad,
+        @Pattern(regexp = "soilgrids|agricultor", message = "fuenteSuelo no válida") String fuenteSuelo) {
+
+    public AsistenteRequest(Double lat, Double lon, String pregunta, String idioma, String tipoCultivo, String mesSiembra, String cultivo) {
+        this(lat, lon, pregunta, idioma, tipoCultivo, mesSiembra, cultivo, null, null, null, null);
+    }
 
     public String idiomaOEs() {
         return idioma == null ? "es" : idioma;

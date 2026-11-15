@@ -65,6 +65,12 @@ public class CalculosClient {
     }
 
     /** GET /salud */
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> suelo(double lat, double lon) {
+        return llamar(() -> calculos.get().uri(u -> u.path("/suelo").queryParam("lat", lat).queryParam("lon", lon).build())
+                .retrieve().body(Map.class));
+    }
+
     public Map<String, Object> salud() {
         return llamar(() -> calculos.get().uri("/salud").retrieve().body(Map.class));
     }

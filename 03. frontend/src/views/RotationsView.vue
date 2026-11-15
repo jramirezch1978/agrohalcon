@@ -6,6 +6,8 @@ import CropTypeSelector from '@/components/campaign/CropTypeSelector.vue'
 import HonestyNote from '@/components/campaign/HonestyNote.vue'
 import PerennialPlan from '@/components/campaign/PerennialPlan.vue'
 import PlantingMonthSelector from '@/components/campaign/PlantingMonthSelector.vue'
+import PrioritySelector from '@/components/campaign/PrioritySelector.vue'
+import SoilSelector from '@/components/campaign/SoilSelector.vue'
 import RotationCard from '@/components/rotations/RotationCard.vue'
 import RotationSheet from '@/components/rotations/RotationSheet.vue'
 import RotationsChart from '@/components/rotations/RotationsChart.vue'
@@ -58,9 +60,10 @@ function preguntarPor(r: Rotacion) {
 
 // El botón flotante sugiere preguntar por la rotación recomendada
 watch(
-  [rotaciones, () => store.idioma],
+  [rotaciones, () => store.idioma, () => store.prioridad],
   ([rs]) => {
-    chat.sugerenciaPantalla = rs[0] ? t('rotaciones.preguntaRecomendada', { nombre: nombreRotacion(rs[0].nombre) }) : null
+    const clave = store.prioridad === 'cuidar_suelo' && rs[0]?.saludSuelo != null ? 'rotaciones.preguntaSuelo' : 'rotaciones.preguntaRecomendada'
+    chat.sugerenciaPantalla = rs[0] ? t(clave, { nombre: nombreRotacion(rs[0].nombre) }) : null
   },
   { immediate: true },
 )
@@ -79,6 +82,10 @@ onUnmounted(() => (chat.sugerenciaPantalla = null))
       <div class="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
         <CropTypeSelector />
         <PlantingMonthSelector v-if="!modoPermanente" />
+        <template v-if="!modoPermanente">
+          <PrioritySelector />
+          <SoilSelector />
+        </template>
       </div>
       <HonestyNote class="mt-3" />
     </header>
@@ -120,6 +127,6 @@ onUnmounted(() => (chat.sugerenciaPantalla = null))
       </div>
     </template>
 
-    <RotationSheet :rotacion="abierta" :indicadores="rec?.indicadores" @cerrar="abierta = null" @preguntar="preguntarPor" />
+    <RotationSheet :rotacion="abierta" :indicadores="rec?.indicadores" :perfil="rec?.perfil" @cerrar="abierta = null" @preguntar="preguntarPor" />
   </section>
 </template>

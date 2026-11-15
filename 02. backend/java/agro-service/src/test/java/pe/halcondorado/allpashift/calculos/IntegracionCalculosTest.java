@@ -44,6 +44,24 @@ class IntegracionCalculosTest {
     }
 
     @Test
+    void catalogoEnviaDatosDeSaludDelSueloYOmiteLosQueFaltan() {
+        CatalogoRepository repo = mock(CatalogoRepository.class);
+        var caupi = new CatalogoRepository.Cultivo(7, "Frijol caupi", 18, 35, "baja", List.of(4, 5), List.of(7), 90, true, false,
+                "anual", true, true, "Fabaceae", "media", "alta");
+        var sinDato = new CatalogoRepository.Cultivo(8, "Olluco", 5, 20, "media", List.of(10), List.of(3), 180, false, false,
+                "anual", false, false, "Basellaceae", "superficial", null);
+        when(repo.cultivos(any(), eq(false))).thenReturn(List.of(caupi, sinDato));
+        when(repo.rotaciones(any())).thenReturn(List.of());
+        when(repo.fases()).thenReturn(Map.of());
+
+        var cultivos = new CatalogoCalculos(repo).paraPiso("costa").cultivos();
+        assertThat(cultivos.get(0)).containsEntry("leguminosa", true).containsEntry("cobertura", true)
+                .containsEntry("familia", "Fabaceae").containsEntry("profundidad_raiz", "media")
+                .containsEntry("tolerancia_salinidad", "alta");
+        assertThat(cultivos.get(1)).containsEntry("leguminosa", false).doesNotContainKey("tolerancia_salinidad");
+    }
+
+    @Test
     void aguaDeLaBdAlFormatoDelCalculo() {
         assertThat(CatalogoCalculos.agua("baja")).isEqualTo("bajo");
         assertThat(CatalogoCalculos.agua("media")).isEqualTo("medio");

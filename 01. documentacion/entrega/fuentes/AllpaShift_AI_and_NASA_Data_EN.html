@@ -1,0 +1,70 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>AllpaShift · Use of AI and NASA Data</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700;800&display=swap');
+@page { size: A4; margin: 16mm 18mm 16mm 18mm; }
+* { box-sizing: border-box; }
+body { font-family: Inter, sans-serif; font-size: 10.2pt; line-height: 1.5; color: #1d2421; margin: 0; }
+header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid #1d2421; padding-bottom: 12px; margin-bottom: 18px; }
+.marca { display: flex; align-items: center; gap: 8px; font-family: Poppins; font-weight: 800; font-size: 21pt; color: #0f2a1f; }
+.marca span { color: #2f9d27; }
+.meta { text-align: right; font-size: 8.6pt; color: #4b5560; line-height: 1.55; }
+.meta b { color: #1d2421; }
+h1 { font-family: Poppins; font-weight: 800; font-size: 21pt; margin: 4px 0 2px; color: #1d2421; }
+.sub { color: #5b6470; margin: 0 0 12px; }
+h2 { font-family: Poppins; font-weight: 700; font-size: 13pt; margin: 16px 0 6px; }
+h3 { font-family: Poppins; font-weight: 700; font-size: 11pt; margin: 12px 0 4px; }
+p { margin: 4px 0 6px; }
+.tag { font-family: Poppins; font-weight: 700; font-size: 12pt; color: #2f9d27; margin: 0 0 10px; }
+.caja { border-left: 3px solid #2f9d27; background: #f3f6f2; padding: 7px 14px; margin: 6px 0 10px; }
+ol, ul { margin: 4px 0 8px; padding-left: 22px; }
+li { margin: 2px 0; }
+li::marker { color: #2f9d27; font-weight: 600; }
+.nuevo { display: inline-block; font-size: 7.4pt; font-weight: 600; color: #fff; background: #2f9d27; border-radius: 4px; padding: 0 5px; margin-left: 4px; vertical-align: 1px; }
+table { width: 100%; border-collapse: collapse; margin: 6px 0 8px; font-size: 9pt; }
+th { text-align: left; font-weight: 600; border-bottom: 1.5px solid #1d2421; padding: 5px 6px 5px 0; }
+td { border-bottom: 1px solid #dde2dc; padding: 5px 6px 5px 0; vertical-align: top; }
+td:first-child { font-weight: 600; width: 27%; }
+.refs p { margin: 0 0 6px; font-size: 9pt; }
+.lic td:first-child { width: 30%; } .lic td:nth-child(2) { width: 20%; font-weight: 400; }
+.final { font-family: Poppins; font-weight: 700; color: #2f9d27; margin-top: 10px; }
+.pie { margin-top: 14px; padding-top: 8px; border-top: 1px solid #dde2dc; font-size: 8pt; color: #6b7480; display: flex; justify-content: space-between; }
+.salto { break-before: page; }
+</style></head>
+<body><header><div class="marca"><svg viewBox="0 0 64 64" width="44" height="44"><rect width="64" height="64" rx="18" fill="#0f2a1f"/><ellipse cx="32" cy="34" rx="25" ry="9" fill="none" stroke="#5b85f5" stroke-width="2" transform="rotate(-24 32 34)" opacity=".9"/><path d="M32 50V30" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/><path d="M32 33c0-9 6-15 15-15 0 9-6 15-15 15z" fill="#c2ee5c"/><path d="M32 39c0-7.5-5-12.5-13-12.5 0 8 5 13 13 12.5z" fill="#80cf9c"/><circle cx="52" cy="22" r="3.5" fill="#fff"/></svg><div>Allpa<span>Shift</span></div></div>
+<div class="meta"><b>Team Halcón Dorado</b> · Piura, Peru<br>Challenge: Field Shift: Adapting Farms with NASA Data<br>NASA Space Apps Challenge 2026</div></header>
+<h1>Use of AI and NASA Data</h1><p class="sub">Which NASA data we use, how we use it, and how we use artificial intelligence.</p>
+<h2>NASA data</h2>
+<p>AllpaShift uses six open NASA datasets. Every calculation (indicators, season risk, rotation scores and alerts) comes from these data and
+the crop and soil catalog through fixed rules, with no AI.</p>
+<table><tr><th>Dataset</th><th>Variables</th><th>How it contributes</th></tr>
+<tr><td>NASA POWER (API, Agroclimatology)</td><td>PRECTOTCORR, GWETTOP, T2M_MAX, T2M_MIN; daily data and climatology</td><td>Heat indicator and rainfall/soil moisture at any coordinate. Its climatology defines "normal" and the risk of each month of the season.</td></tr>
+<tr><td>GPM IMERG V07: Final monthly (GPM_3IMERGM), Final daily (GPM_3IMERGDF), Late daily (GPM_3IMERGDL)</td><td>precipitation</td><td>Current satellite rainfall in the Piura pilot, monthly series 2001–2026 for validation, and day-by-day rain of any month.</td></tr>
+<tr><td>SMAP L3 Enhanced (SPL3SMP_E V006, 9 km)</td><td>soil_moisture (AM and PM passes)</td><td>Current soil moisture versus its 2016–2025 normal. Drives the "wait / irrigate" action, water penalties and the local soil picture.</td></tr>
+<tr><td>MODIS Terra NDVI (MOD13Q1 V061, 250 m)</td><td>250m_16_days_NDVI</td><td>Vegetation indicator: crop vigor versus the normal for the same 16-day period; low vigor or bare soil signals stress and soil-cover needs.</td></tr>
+<tr><td>MUR SST v4.1 (NASA JPL, PO.DAAC, via NOAA ERDDAP)</td><td>analysed_sst, sstAnom over Niño 1+2</td><td>El Niño indicator: raises rain risk from January to April, triggers "prepare drainage" and dates the 2017 alert.</td></tr></table>
+<p>Partner space agencies: we do not use partner agency data. NOAA ERDDAP is only the access channel for MUR SST, a NASA JPL product.
+Local soil information (texture, salinity zones) and crop traits (water use, temperature range, nitrogen fixation) come from the team's
+catalog, built from FAO and Peruvian agricultural sources listed in References.</p>
+<h2>How we use the data, step by step</h2>
+<ol>
+<li>The farmer picks a plot and priorities; the app sends them to the AllpaShift API.</li>
+<li>If a fresh result is stored, the API answers from the database (the demo does not depend on NASA servers being up).</li>
+<li>Otherwise the calculation service reads the NASA datasets for that point and compares each value with its normal: low, medium or high.</li>
+<li>The climatology, local soil and crop traits are used to estimate season risk and to score rotations for climate and soil health, ranked by the farmer's priorities.</li>
+<li>The API stores the result and every NASA value used; the app shows each result with the dataset it comes from.</li>
+</ol>
+<p>If a value is not available for a place or date, the app shows "no data" and never replaces it with invented values.</p>
+<h2 class="salto">Use of artificial intelligence</h2>
+<p>We use AI at two points: inside the app, to explain recommendations, and during development, to support the team. AI never calculates the indicators, scores or alerts.</p>
+<table><tr><th>Tool</th><th>Purpose</th><th>How we applied it</th></tr>
+<tr><td>Groq with gpt-oss-20b (Apache 2.0)</td><td>In-app assistant that explains the recommendation in plain words.</td><td>It receives the already-calculated recommendation as JSON plus the farmer's question. It is told not to calculate, not to invent numbers and to cite only the sources in the JSON; numbers in the answer are checked. If it fails, the app shows the calculated reason. The API key stays on the server.</td></tr>
+<tr><td>Claude (Anthropic)</td><td>Writing part of the code (frontend, API, calculation service, mobile) and documentation drafts.</td><td>The team defined the architecture, rules and data. It reviewed, tested and fixed the generated code, and verified it with automated tests.</td></tr>
+<tr><td>ChatGPT (OpenAI)</td><td>Visual support: cover image and AllpaShift icon.</td><td>Visual illustration only; it does not represent real data.</td></tr></table>
+<p>All AI-generated content was reviewed by the team. The ideas, decisions and data in this project belong to Team Halcón Dorado.</p>
+<h2>Links</h2>
+<table class="lic"><tr><td>NASA POWER</td><td colspan="2">https://power.larc.nasa.gov/</td></tr>
+<tr><td>GPM IMERG</td><td colspan="2">https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGM_07/summary · GPM_3IMERGDF_07 · GPM_3IMERGDL_07</td></tr>
+<tr><td>SMAP SPL3SMP_E</td><td colspan="2">https://nsidc.org/data/spl3smp_e/versions/6</td></tr>
+<tr><td>MODIS MOD13Q1</td><td colspan="2">https://lpdaac.usgs.gov/products/mod13q1v061/</td></tr>
+<tr><td>MUR SST v4.1</td><td colspan="2">https://podaac.jpl.nasa.gov/dataset/MUR-JPL-L4-GLOB-v4.1</td></tr></table>
+
+<div class="pie"><span>AllpaShift · Team Halcón Dorado</span><span>NASA Space Apps Challenge 2026</span></div></body></html>
