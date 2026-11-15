@@ -18,5 +18,6 @@ class PeticionCalculo(BaseModel):
     tipoSuelo: Literal["arenoso", "franco", "arcilloso"] | None = None
     salinidad: Literal["no", "leve", "alta"] | None = None
     fuenteSuelo: Literal["soilgrids", "agricultor"] | None = None   # de dónde salió tipoSuelo
+    aguaDisponible: Literal["poca", "normal", "suficiente"] | None = None  # agua de riego que tiene el agricultor
     # Catálogo que envía Java. Se tipa en la fase 2 (rotaciones y campaña).
     catalogo: list[dict[str, Any]] = Field(default_factory=list)

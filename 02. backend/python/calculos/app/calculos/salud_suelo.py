@@ -77,11 +77,23 @@ def descuentos_suelo(cultivos: list[Cultivo], u: dict, lang: str = "es", salinid
                 lang, "s_tolerancia_sal", cultivo=Nombre(peor[1]), tol=texto(lang, f"tol_{peor[1].tolerancia_salinidad}")),
                 fuente=FUENTE_AGRICULTOR))
 
+    # 6b) Meses de suelo desnudo en el año (sin cultivo entre una campaña y la siguiente)
+    desnudo = meses_suelo_desnudo(cultivos)
+    if desnudo is not None and desnudo >= us.get("suelo_desnudo_desde_meses", 99):
+        out.append(_item("suelo_desnudo", us["suelo_desnudo"], texto(lang, "s_desnudo", n=desnudo)))
+
     # 7) Suelo arenoso con cultivo de mucha agua
     if tipo_suelo == "arenoso" and (sed := next((c for c in cultivos if (c.usoAgua or c.agua) == "alto"), None)):
         out.append(_item("arenoso_agua_alta", us["arenoso_agua_alta"], texto(lang, "s_arenoso", cultivo=Nombre(sed)),
                          fuente=FUENTE_SOILGRIDS if fuente_suelo == "soilgrids" else FUENTE_AGRICULTOR))
     return out
+
+
+def meses_suelo_desnudo(cultivos: list[Cultivo]) -> int | None:
+    """Meses del año sin cultivo: 12 menos la duración de la rotación (None si falta la duración)."""
+    if any(not c.duracion_meses for c in cultivos):
+        return None
+    return max(0, 12 - sum(c.duracion_meses for c in cultivos))
 
 
 def puntaje_suelo(cultivos: list[Cultivo], u: dict, lang: str = "es", salinidad: str | None = None,

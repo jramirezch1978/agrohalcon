@@ -3,6 +3,7 @@ import HonestyNote from '@/components/campaign/HonestyNote.vue'
 import AboutApp from '@/components/datasets/AboutApp.vue'
 import ChallengeSection from '@/components/datasets/ChallengeSection.vue'
 import DatasetCard from '@/components/datasets/DatasetCard.vue'
+import GlossaryTerms from '@/components/datasets/GlossaryTerms.vue'
 import HelpFaq from '@/components/datasets/HelpFaq.vue'
 import HowItWorks from '@/components/datasets/HowItWorks.vue'
 import PageHeader from '@/components/ui/PageHeader.vue'
@@ -17,7 +18,8 @@ import { NASA_DATASETS } from '@/data/nasaDatasets'
     <ChallengeSection class="stagger mb-6" style="--i: 1" />
     <AboutApp class="stagger mb-6" style="--i: 2" />
     <HowItWorks class="stagger mb-6" style="--i: 2" />
-    <HelpFaq class="stagger mb-8" style="--i: 3" />
+    <HelpFaq class="stagger mb-6" style="--i: 3" />
+    <GlossaryTerms class="stagger mb-8" style="--i: 3" />
     <SectionTitle :titulo="$t('datos.satelitesTitulo')" class="mb-4" />
     <ul class="grid grid-cols-1 gap-4 md:grid-cols-2">
       <li v-for="(d, i) in NASA_DATASETS" :key="d.id" class="stagger" :style="{ '--i': i + 4 }">

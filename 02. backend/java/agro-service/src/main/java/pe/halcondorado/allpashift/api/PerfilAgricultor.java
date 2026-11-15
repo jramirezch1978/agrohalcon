@@ -12,22 +12,29 @@ import org.springframework.http.HttpStatus;
  * tipoSuelo   arenoso | franco | arcilloso
  * salinidad   no | leve | alta                                 (siempre dato del agricultor)
  * fuenteSuelo soilgrids | agricultor                           (de dónde salió tipoSuelo; nunca es dato NASA)
+ * aguaDisponible poca | normal | suficiente                  (restricción del agricultor: agua de riego que tiene)
  */
-public record PerfilAgricultor(String prioridad, String tipoSuelo, String salinidad, String fuenteSuelo) {
+public record PerfilAgricultor(String prioridad, String tipoSuelo, String salinidad, String fuenteSuelo, String aguaDisponible) {
 
-    public static final PerfilAgricultor VACIO = new PerfilAgricultor(null, null, null, null);
+    public static final PerfilAgricultor VACIO = new PerfilAgricultor(null, null, null, null, null);
 
     static final Set<String> PRIORIDADES = Set.of("ahorrar_agua", "arriesgar_menos", "cuidar_suelo");
     static final Set<String> TIPOS_SUELO = Set.of("arenoso", "franco", "arcilloso");
     static final Set<String> SALINIDADES = Set.of("no", "leve", "alta");
     static final Set<String> FUENTES_SUELO = Set.of("soilgrids", "agricultor");
+    static final Set<String> AGUA = Set.of("poca", "normal", "suficiente");
 
     /** Valida lo que llega por la API: vacío → null; valor desconocido → 400. */
     public static PerfilAgricultor de(String prioridad, String tipoSuelo, String salinidad, String fuenteSuelo) {
+        return de(prioridad, tipoSuelo, salinidad, fuenteSuelo, null);
+    }
+
+    public static PerfilAgricultor de(String prioridad, String tipoSuelo, String salinidad, String fuenteSuelo,
+                                      String aguaDisponible) {
         String tipo = valor("tipoSuelo", tipoSuelo, TIPOS_SUELO);
         String fuente = valor("fuenteSuelo", fuenteSuelo, FUENTES_SUELO);
         return new PerfilAgricultor(valor("prioridad", prioridad, PRIORIDADES), tipo, valor("salinidad", salinidad, SALINIDADES),
-                tipo == null ? null : (fuente == null ? "agricultor" : fuente));
+                tipo == null ? null : (fuente == null ? "agricultor" : fuente), valor("aguaDisponible", aguaDisponible, AGUA));
     }
 
     private static String valor(String nombre, String v, Set<String> permitidos) {
@@ -41,7 +48,8 @@ public record PerfilAgricultor(String prioridad, String tipoSuelo, String salini
     /** Parte de la clave de la consulta guardada en la BD (otro perfil = otra recomendación). */
     public String clave() {
         return String.join(",", Objects.toString(prioridad, "-"), Objects.toString(tipoSuelo, "-"),
-                Objects.toString(salinidad, "-"), Objects.toString(fuenteSuelo, "-"));
+                Objects.toString(salinidad, "-"), Objects.toString(fuenteSuelo, "-"))
+                + (aguaDisponible == null ? "" : ",agua=" + aguaDisponible);
     }
 
     /** Agrega al pedido de Python solo los campos que tienen dato. */
@@ -50,5 +58,6 @@ public record PerfilAgricultor(String prioridad, String tipoSuelo, String salini
         if (tipoSuelo != null) pedido.put("tipoSuelo", tipoSuelo);
         if (salinidad != null) pedido.put("salinidad", salinidad);
         if (fuenteSuelo != null) pedido.put("fuenteSuelo", fuenteSuelo);
+        if (aguaDisponible != null) pedido.put("aguaDisponible", aguaDisponible);
     }
 }

@@ -39,13 +39,14 @@ async def calcular_recomendacion(p: PeticionCalculo, cliente: ClienteNasaPower, 
     mes_siembra = p.mesSiembra or str(pd.Period(hoy, freq="M") + 1)
     rotaciones = generar_rotaciones(catalogo, mes_siembra, clima, indicadores, p.lat, p.lon, p.lang, u,
                                     prioridad=p.prioridad, salinidad=p.salinidad, tipo_suelo=p.tipoSuelo,
-                                    fuente_suelo=p.fuenteSuelo)
+                                    fuente_suelo=p.fuenteSuelo, agua_disponible=p.aguaDisponible)
     mejor = rotaciones[0] if rotaciones else None
     primer = buscar(catalogo, mejor["cultivos"][0]) if mejor else None
     qh = que_hacer(indicadores, p.lat, p.lon, p.lang, hoy, "temporal", mejor_rotacion=mejor, primer_cultivo=primer)
     prioridad = prioridad_o_defecto(p.prioridad, u)
     perfil = {"prioridad": prioridad, "pesos": u["prioridades"]["pesos"][prioridad],
-              "tipoSuelo": p.tipoSuelo, "salinidad": p.salinidad, "fuenteSuelo": p.fuenteSuelo}
+              "tipoSuelo": p.tipoSuelo, "salinidad": p.salinidad, "fuenteSuelo": p.fuenteSuelo,
+              "aguaDisponible": p.aguaDisponible}
     return {**base, "tipoCultivo": "temporal", "mesSiembra": mes_siembra, "rotaciones": rotaciones, "queHacer": qh,
             "perfil": perfil,
             "catalogo": "java" if p.catalogo else "ejemplo"}

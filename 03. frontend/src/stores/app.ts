@@ -11,6 +11,7 @@ import type {
   NivelRiesgo,
   OpcionesRecomendacion,
   Prioridad,
+  AguaDisponible,
   Recomendacion,
   Salinidad,
   TipoCultivo,
@@ -40,6 +41,7 @@ const CLAVES = {
   onboarding: 'allpashift:onboardingVisto',
   cultivo: 'allpashift:miCultivo',
   prioridad: 'allpashift:prioridad',
+  aguaDisponible: 'allpashift:aguaDisponible',
 }
 
 /** Mes "AAAA-MM" a n meses de hoy */
@@ -157,6 +159,9 @@ export const useAppStore = defineStore('app', () => {
   // --- Prioridad del agricultor (qué le importa más) ---
   const prioridad = ref<Prioridad | null>(leer<Prioridad>(CLAVES.prioridad))
   watch(prioridad, (p) => guardar(CLAVES.prioridad, p))
+  /** Restricción del agricultor: agua de riego que tiene (sin elegir = normal) */
+  const aguaDisponible = ref<AguaDisponible | null>(leer<AguaDisponible>(CLAVES.aguaDisponible))
+  watch(aguaDisponible, (a) => guardar(CLAVES.aguaDisponible, a))
 
   /** Suelo de la parcela: lo elige el agricultor (o acepta la propuesta de SoilGrids) */
   function elegirSuelo(cambio: { tipoSuelo?: TipoSuelo; salinidad?: Salinidad; fuenteSuelo?: FuenteSuelo }) {
@@ -172,6 +177,7 @@ export const useAppStore = defineStore('app', () => {
     const p = parcela.value
     const o: OpcionesRecomendacion = { tipoCultivo: 'temporal', mesSiembra: mesSiembra.value }
     if (prioridad.value) o.prioridad = prioridad.value
+    if (aguaDisponible.value) o.aguaDisponible = aguaDisponible.value
     if (p?.tipoSuelo) {
       o.tipoSuelo = p.tipoSuelo
       o.fuenteSuelo = p.fuenteSuelo ?? 'agricultor'
@@ -270,6 +276,7 @@ export const useAppStore = defineStore('app', () => {
     tipoCultivo,
     mesSiembra,
     prioridad,
+    aguaDisponible,
     elegirSuelo,
     opcionesCultivo,
     cargando,

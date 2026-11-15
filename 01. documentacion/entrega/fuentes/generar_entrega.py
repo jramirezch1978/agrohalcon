@@ -70,8 +70,8 @@ what matters most to them, and the app answers in plain language:</p>
 <li><b>What to do now.</b> One action for this fortnight (plant, wait, irrigate or protect), based on current field conditions.</li>
 <li><b>Season risk.</b> Month-by-month risk from planting to harvest against drought, extreme rain, heat and El Niño.</li>
 <li><b>What to change.</b> Crop rotations scored from 0 to 100 by climate risk <i>and</i> by their effect on soil health
-(nitrogen-fixing legumes, no monoculture, water use), using the local soil conditions of the plot and ranked by the farmer's own
-priorities: save water, protect the soil, income or lower risk. For permanent crops such as mango or lemon, it suggests actions for each growth stage.</li>
+(legumes, crop families, root depth, soil cover, no monoculture, salinity), using the soil type and salinity of the plot, and weighted by
+the farmer's own priority: take less risk, save water or care for the soil. For permanent crops such as mango or lemon, it suggests actions for each growth stage.</li>
 <li><b>Why.</b> Every result shows the NASA dataset behind it, and an AI assistant explains it in simple words without doing any of the calculations.</li>
 </ul>
 <p>It works at any coordinate on Earth. Piura, Peru, is our pilot.</p>
@@ -94,16 +94,18 @@ DETAILS = pagina("Project Details", "How AllpaShift works, the tools we used and
 the database if the result is fresh, or asks the calculation service, which reads NASA data and applies fixed rules → the app shows what to do and why.</div>
 <ol>
 <li><b>Pick the plot.</b> The farmer taps a point on the map or uses the phone's GPS (native permission on Android and iOS). It works at any coordinate on Earth.</li>
-<li><b>Set priorities.</b><span class="nuevo">NEW</span> The farmer chooses what matters most: save water, protect the soil, income or lower risk. This changes how rotations are ranked.</li>
+<li><b>Set the priority.</b><span class="nuevo">NEW</span> The farmer chooses what matters most: take less risk, save water or care for the soil. This changes the weights of the final score and the recommended rotation, and the app says why.</li>
 <li><b>Get the data.</b> Rainfall, temperature and climatology from NASA POWER for any point. In the Piura pilot area it adds GPM IMERG
 satellite rainfall, SMAP soil moisture and MODIS NDVI vegetation; on the northern coast, MUR SST sea temperature.</li>
-<li><b>Know the local soil.</b><span class="nuevo">NEW</span> Each pilot zone carries its soil conditions (texture and known salinity, e.g. Bajo Piura and Sechura),
-combined with SMAP moisture, so crops that do not tolerate those conditions lose points.</li>
+<li><b>Know the local soil.</b><span class="nuevo">NEW</span> The farmer marks the soil type (sandy, loam, clay) and salinity of the plot. The app suggests the soil type
+from SoilGrids (ISRIC, sand/silt/clay at 0–30 cm) and labels it as such, never as NASA data. SMAP adds the current soil moisture.</li>
 <li><b>Compute the indicators.</b> Rainfall, soil moisture, heat, El Niño and vegetation compare the current value with the normal for that month and get a level: low, medium or high.</li>
 <li><b>Estimate season risk.</b> For each crop, from planting to harvest, the climate of each month is compared with what the crop tolerates. If sea temperature signals El Niño, rain risk from January to April goes up.</li>
-<li><b>Score the rotations for climate and soil health.</b><span class="nuevo">NEW</span> Each rotation starts at 100 points. It loses points for water needs versus deficit,
-months outside the temperature range, high-risk months and planting out of season; and now also for monoculture and two water-hungry crops in a row,
-while nitrogen-fixing legumes (e.g. zarandaja, bean) earn points. Every change is recorded with its reason and source.</li>
+<li><b>Score the rotations: climate, soil health and water.</b><span class="nuevo">NEW</span> The climate score starts at 100 and loses points for water needs versus deficit,
+months outside the temperature range, high-risk months and planting out of season. The soil-health score rewards nitrogen-fixing legumes (e.g. cowpea, lablab),
+alternating root depths and soil cover, and penalizes monoculture, two crops of the same family, two water-hungry crops in a row, and salt-sensitive crops on
+saline or sandy soil (crop traits from FAO-56 and FAO Irrigation and Drainage Paper 29). The final score weights climate, soil and water by the farmer's priority.
+For each rotation the app lists benefits, risks and trade-offs, what we don't know, and what to check with a local expert.</li>
 <li><b>Decide and explain.</b> Priority rules choose the action for this fortnight. The app shows the result with its NASA dataset, and an AI assistant explains it in plain words. The AI does no calculations.</li>
 </ol>
 <h3>Validation with the 2017 El Niño</h3>
@@ -121,13 +123,14 @@ It does not replace a soil laboratory test. Thresholds and soil-health weights a
 <tr><td>NASA data access</td><td>NASA POWER API; NASA Earthdata (CMR and OPeNDAP) for GPM IMERG and SMAP; ORNL DAAC MODIS web service for NDVI; MUR SST v4.1 (NASA JPL, PO.DAAC) through NOAA CoastWatch ERDDAP.</td></tr>
 <tr><td>AI assistant</td><td>Groq as the platform, with the open model gpt-oss-20b (Apache 2.0). It only writes explanations from results that are already calculated.</td></tr>
 <tr><td>Deployment</td><td>Docker and Nginx on a cloud server.</td></tr>
+<tr><td>Soil data</td><td>SoilGrids 2.0 REST API (ISRIC, CC-BY 4.0) to suggest the soil type; the farmer can change it.</td></tr>
 <tr><td>Maps and collaboration</td><td>OpenStreetMap data and place search (ODbL, with attribution). GitHub for code and version control.</td></tr></table>
 <p>All project code is released under the Apache 2.0 license.</p>
 <h2>Goals</h2>
 <ul>
 <li>Help farmers decide what to plant based on data, not just habit.</li>
 <li>Choose rotations that protect and rebuild the soil, not only the next harvest.</li>
-<li>Respect what each farmer values most: water, soil, income or lower risk.</li>
+<li>Respect what each farmer values most: lower risk, saving water or caring for the soil.</li>
 <li>Reduce harvest losses from drought, extreme rain, heat and El Niño, and warn early using sea temperature.</li>
 <li>Make NASA data easy to understand for people without technical training, in any farming region of the world.</li>
 </ul>
@@ -144,8 +147,9 @@ the crop and soil catalog through fixed rules, with no AI.</p>
 <tr><td>MODIS Terra NDVI (MOD13Q1 V061, 250 m)</td><td>250m_16_days_NDVI</td><td>Vegetation indicator: crop vigor versus the normal for the same 16-day period; low vigor or bare soil signals stress and soil-cover needs.</td></tr>
 <tr><td>MUR SST v4.1 (NASA JPL, PO.DAAC, via NOAA ERDDAP)</td><td>analysed_sst, sstAnom over Niño 1+2</td><td>El Niño indicator: raises rain risk from January to April, triggers "prepare drainage" and dates the 2017 alert.</td></tr></table>
 <p>Partner space agencies: we do not use partner agency data. NOAA ERDDAP is only the access channel for MUR SST, a NASA JPL product.
-Local soil information (texture, salinity zones) and crop traits (water use, temperature range, nitrogen fixation) come from the team's
-catalog, built from FAO and Peruvian agricultural sources listed in References.</p>
+Local soil information comes from the farmer (soil type and salinity), with a soil type suggested by SoilGrids 2.0 (ISRIC, CC-BY 4.0), always labelled as
+not NASA data. Crop traits (water use, temperature range, family, root depth, salt tolerance) come from the team's catalog, built from FAO-56, FAO Irrigation and
+Drainage Paper 29 and Peruvian agricultural sources listed in References.</p>
 <h2>How we use the data, step by step</h2>
 <ol>
 <li>The farmer picks a plot and priorities; the app sends them to the AllpaShift API.</li>
@@ -185,6 +189,10 @@ REFERENCES = pagina("References", "All data, resources and external tools used i
 <p>INDECI, National Civil Defense Institute of Peru. Reports on the damage of the 2017 coastal El Niño in Piura. https://www.gob.pe/indeci</p>
 <p>FAO. ECOCROP, crop temperature and water requirements, and Global Agro-Ecological Zones (GAEZ v4), used as reference for the crop catalog. https://gaez.fao.org/</p>
 <p>DRAP Piura / MIDAGRI, Peru. Regional agricultural statistics: sown area by crop and valley, used for the catalog of zones, crops and common rotations. https://www.gob.pe/midagri</p>
+<p>Poggio, L., et al. (2021). SoilGrids 2.0: producing soil information for the globe with quantified spatial uncertainty. SOIL 7, 217–240. https://doi.org/10.5194/soil-7-217-2021 — ISRIC REST API, CC-BY 4.0, https://rest.isric.org</p>
+<p>Allen, R. G., Pereira, L. S., Raes, D., Smith, M. (1998). Crop evapotranspiration (FAO Irrigation and Drainage Paper 56): root depth and crop coefficients. https://www.fao.org/4/x0490e/x0490e00.htm</p>
+<p>Ayers, R. S., Westcot, D. W. (1985). Water quality for agriculture (FAO Irrigation and Drainage Paper 29): crop salt tolerance. https://www.fao.org/4/t0234e/t0234e00.htm</p>
+<p>NOAA Climate Prediction Center. Weekly Niño indices, used to cross-check MUR SST. https://www.cpc.ncep.noaa.gov/data/indices/</p>
 <p>OpenStreetMap contributors. Map data and place search (Nominatim). ODbL license, with attribution on the map. https://www.openstreetmap.org/copyright</p>
 </div>
 <h2>App software (web and mobile)</h2>
