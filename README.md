@@ -75,7 +75,7 @@ What the farmer sees:
 
 <div align="center">
 
-[![Watch the AllpaShift video](https://img.youtube.com/vi/3UVyc3Y5eFw/hqdefault.jpg)](https://youtu.be/Grg0eaWUsZE)
+[![Watch the AllpaShift video](https://img.youtube.com/vi/Grg0eaWUsZE/hqdefault.jpg)](https://youtu.be/Grg0eaWUsZE)
 
 **[▶ Watch on YouTube](https://youtu.be/Grg0eaWUsZE)** · English subtitles available · <sub>Contains SI-generated scenes (Gemini).</sub>
 
