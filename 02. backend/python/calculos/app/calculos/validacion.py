@@ -197,3 +197,62 @@ async def calcular_validacion(anio: int, lat: float, lon: float, lang: str, clie
         "recomendacionPrevia": recomendacion_previa,
         "resumen": resumen,
     }
+
+
+# ---------- Resumen de todos los años: aciertos y falsas alarmas (no solo 2017) ----------
+
+MESES_EVENTO = (2, 3, 4)   # febrero-abril: la temporada de lluvias fuertes de la costa norte
+
+
+def _lluvia_temporada(lluvia: dict) -> tuple[float | None, float | None]:
+    """(lluvia feb-abr del año, normal feb-abr) en mm; None si falta algún mes o alguno es parcial."""
+    parcial = (lluvia.get("parcial") or {}).get("mes")
+    vals = [lluvia["valores"][m - 1] for m in MESES_EVENTO]
+    nors = [lluvia["normal"][m - 1] for m in MESES_EVENTO]
+    if any(v is None for v in vals + nors) or parcial in MESES_EVENTO:
+        return None, None
+    return round(sum(vals), 1), round(sum(nors), 1)
+
+
+def clasificar(drenaje: bool, evento: bool | None) -> str:
+    if evento is None:
+        return "pendiente"
+    if drenaje:
+        return "acierto" if evento else "falsa_alarma"
+    return "no_avisado" if evento else "correcto"
+
+
+async def resumen_validacion(lat: float, lon: float, lang: str, cliente: ClienteNasaPower,
+                             desde: int = 2016) -> dict[str, Any]:
+    """Una fila por año: ¿hubo alerta de drenaje? ¿hubo evento? → acierto / falsa alarma / no avisado / correcto.
+
+    "Evento" se define con el MISMO dato satelital, para que sea objetivo: lluvia de febrero a abril mayor o igual
+    que `validacion.evento_ratio` veces la normal (config/umbrales.yaml; supuesto del equipo)."""
+    u = umbrales()
+    ratio_evento = float(u.get("validacion", {}).get("evento_ratio", 2.0))
+    filas = []
+    for anio in [a for a in anios_disponibles(lat, lon)["anios"] if a >= desde]:
+        v = await calcular_validacion(anio, lat, lon, lang, cliente)
+        alerta = v.get("alerta") or {}
+        drenaje = alerta.get("alertaDrenaje") or (
+            {"fecha": alerta["fecha"], "valor": alerta.get("valor"), "fuente": alerta.get("fuente")}
+            if alerta.get("nivel") == "alto" else None)
+        lluvia = v["series"]["lluvia"]
+        tot, nor = _lluvia_temporada(lluvia)
+        veces = round(tot / nor, 2) if tot is not None and nor else None
+        evento = None if veces is None else veces >= ratio_evento
+        filas.append({"anio": anio, "alertaDrenaje": drenaje,
+                      "vigilar": alerta.get("fecha") if alerta else None,
+                      "lluviaTemporada": tot, "normalTemporada": nor, "veces": veces, "evento": evento,
+                      "fuenteLluvia": lluvia.get("fuente"), "resultado": clasificar(drenaje is not None, evento)})
+    cuenta = {k: sum(1 for f in filas if f["resultado"] == k)
+              for k in ("acierto", "falsa_alarma", "no_avisado", "correcto", "pendiente")}
+    con_evento = cuenta["acierto"] + cuenta["no_avisado"]
+    con_alerta = cuenta["acierto"] + cuenta["falsa_alarma"]
+    return {
+        "lat": lat, "lon": lon, "filas": filas, "cuenta": cuenta,
+        # Fracción de eventos avisados (POD) y fracción de alertas que fueron falsas (FAR)
+        "deteccion": round(cuenta["acierto"] / con_evento, 2) if con_evento else None,
+        "falsasAlarmas": round(cuenta["falsa_alarma"] / con_alerta, 2) if con_alerta else None,
+        "definicionEvento": texto(lang, "v_def_evento", veces=ratio_evento),
+    }

@@ -16,7 +16,7 @@ const actual = () => store.prioridad ?? 'arriesgar_menos'
 
 <template>
   <section class="superficie p-3 sm:p-4">
-    <p id="titulo-prioridad" class="mb-2 flex items-center gap-1.5 px-1 text-[11px] font-bold tracking-[0.12em] text-stone-500 uppercase dark:text-stone-400">
+    <p id="titulo-prioridad" class="mb-2 flex items-center gap-1.5 px-1 text-xs font-bold tracking-[0.12em] text-stone-500 uppercase dark:text-stone-400">
       <Target class="size-3.5" aria-hidden="true" />{{ $t('prioridad.titulo') }}
     </p>
     <div role="radiogroup" aria-labelledby="titulo-prioridad" class="grid grid-cols-3 gap-2">
@@ -37,7 +37,7 @@ const actual = () => store.prioridad ?? 'arriesgar_menos'
       >
         <component :is="o.icono" class="size-5" aria-hidden="true" />
         <span class="font-display text-sm leading-tight font-bold">{{ $t(`prioridad.${o.id}`) }}</span>
-        <span class="text-[11px] leading-tight opacity-75">{{ $t(`prioridad.ayuda_${o.id}`) }}</span>
+        <span class="text-xs leading-tight opacity-75">{{ $t(`prioridad.ayuda_${o.id}`) }}</span>
       </button>
     </div>
   </section>

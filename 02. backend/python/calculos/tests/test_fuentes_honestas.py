@@ -4,6 +4,7 @@ from datetime import timedelta
 
 import pytest
 
+from app.textos.plantillas import fecha_larga
 from app.fuentes.precalculado import ARCHIVO_IMERG, ARCHIVO_MUR
 from tests.conftest import mur_json
 from tests.test_api_calcular import cliente_api  # noqa: F401  (fixture)
@@ -64,4 +65,4 @@ def test_piura_sin_imerg_reciente_avisa(cliente_api, precalculado_vacio):  # noq
     escribir(precalculado_vacio, imerg_json(fin=viejo))
     api, _ = cliente_api
     ll = api.post("/calcular", json={"lat": -5.19, "lon": -80.63}).json()["indicadores"]["lluvia"]
-    assert ll["fuente"] == "NASA POWER" and viejo.isoformat() in ll["aviso"]
+    assert ll["fuente"] == "NASA POWER" and fecha_larga("es", viejo.isoformat()) in ll["aviso"]

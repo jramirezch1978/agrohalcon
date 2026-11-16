@@ -190,6 +190,19 @@ async def calcular_indicadores(lat: float, lon: float, lang: str, cliente: Clien
             "detalle": texto(lang, "vegetacion_deficit" if anom < 0 else "vegetacion_exceso", abs=abs(anom), valor=ndvi["valor"]),
         }
 
+    # Contraste del dato de MUR SST con el índice semanal de NOAA (no reemplaza al dato NASA; solo dice si concuerda)
+    nino = indicadores["elNino"]
+    if nino.get("valor") is not None and nino.get("semana"):
+        from app.config import ajustes
+        from app.fuentes.cache import CacheDisco
+        from app.fuentes.noaa_nino12 import contraste, serie_noaa
+        c = contraste(nino["valor"], nino["semana"], await serie_noaa(CacheDisco(ajustes().cache_dir / "noaa", 24)), u)
+        if c:
+            nino["contraste"] = c
+            nino["detalle"] += " " + texto(lang, "elnino_contraste_ok" if c["concuerda"] else "elnino_contraste_no",
+                                           signo=signo(c["anomalia"]), valor=abs(c["anomalia"]), semana=c["semana"],
+                                           dif=c["diferencia"])
+
     # Datos NASA usados (Java los graba en nasa.datos_nasa: regla del doc 29, Python no toca la BD)
     datos_nasa = []
     for clave, ind in indicadores.items():

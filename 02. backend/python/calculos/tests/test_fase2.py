@@ -141,7 +141,7 @@ def test_generar_incluye_tradicional_y_ordena(umbrales):
 
 def test_explicacion_en_ingles(umbrales):
     r = evaluar_rotacion([ARROZ, ARROZ], "2027-01", clima(), indicadores(), *NAIROBI, "en", umbrales, tradicional=True)
-    assert r["nombre"] == "Rice - Rice" and "traditional" in r["explicacion"]
+    assert r["nombre"] == "Rice - Rice" and "always planted" in r["explicacion"]
 
 
 # ---------- 3. Qué hacer ----------
@@ -154,7 +154,7 @@ MEJOR = {"nombre": "Arroz - Frijol", "puntaje": 85, "cultivos": ["arroz", "frijo
 def test_prioridad_1_drenaje_gana_a_todo():
     ii = indicadores(humedad=ind("alto", "deficit", anomalia=-50), calor=ind("alto", "exceso", 36, 3.5), nino=NINO_ALTO)
     q = que_hacer(ii, *PIURA, "es", HOY_SIEMBRA, "temporal", MEJOR, ARROZ)
-    assert q["tipo"] == "preparar drenaje" and q["fuente"] == "MUR SST" and "+2.4 °C" in q["motivo"]
+    assert q["tipo"] == "preparar drenaje" and q["fuente"] == "MUR SST" and "2.4 °C más caliente" in q["motivo"]
 
 
 def test_drenaje_solo_en_la_costa_y_con_dato():
@@ -179,7 +179,7 @@ def test_prioridad_3_calor():
 
 def test_prioridad_4_sembrar_o_esperar_al_proximo_mes():
     q = que_hacer(indicadores(), *NAIROBI, "es", HOY_SIEMBRA, "temporal", MEJOR, ARROZ)
-    assert q["tipo"] == "sembrar" and "85/100" in q["accion"]
+    assert q["tipo"] == "sembrar" and "mejor opción" in q["accion"]
     q = que_hacer(indicadores(), *NAIROBI, "es", HOY_NO_SIEMBRA, "temporal", MEJOR, ARROZ)
     assert q["tipo"] == "esperar" and "diciembre" in q["accion"]
     assert proximo_mes_siembra(ARROZ, HOY_NO_SIEMBRA) == 12

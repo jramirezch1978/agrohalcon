@@ -3,7 +3,7 @@ from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.calculos.detalle_lluvia import calcular_detalle
-from app.calculos.validacion import anios_disponibles, calcular_validacion
+from app.calculos.validacion import anios_disponibles, calcular_validacion, resumen_validacion
 from app.dependencias import cliente_power
 from app.fuentes.nasa_power import ClienteNasaPower, NasaPowerError
 
@@ -17,6 +17,20 @@ async def validacion_anios(
 ) -> dict:
     """Años con datos reales para la máquina del tiempo (el frontend solo ofrece estos)."""
     return anios_disponibles(lat, lon)
+
+
+@router.get("/validacion/resumen")
+async def validacion_resumen(
+    lat: float = Query(-5.19, ge=-90, le=90),
+    lon: float = Query(-80.63, ge=-180, le=180),
+    lang: Literal["es", "en"] = "es",
+    cliente: ClienteNasaPower = Depends(cliente_power),
+) -> dict:
+    """Todos los años desde 2016: alerta de drenaje frente a evento real → aciertos, falsas alarmas, no avisados."""
+    try:
+        return await resumen_validacion(lat, lon, lang, cliente)
+    except NasaPowerError as e:
+        raise HTTPException(status_code=502, detail=str(e)) from e
 
 
 @router.get("/validacion")

@@ -4,8 +4,8 @@ from __future__ import annotations
 Lang = str  # "es" | "en"
 
 UNIDADES = {
-    "es": {"lluvia": "mm/día", "humedadSuelo": "fracción 0-1", "calor": "°C", "elNino": "°C anomalía"},
-    "en": {"lluvia": "mm/day", "humedadSuelo": "fraction 0-1", "calor": "°C", "elNino": "°C anomaly"},
+    "es": {"lluvia": "mm/día", "humedadSuelo": "fracción 0-1", "calor": "°C", "elNino": "°C sobre lo normal"},
+    "en": {"lluvia": "mm/day", "humedadSuelo": "fraction 0-1", "calor": "°C", "elNino": "°C above normal"},
 }
 
 TEXTOS: dict[Lang, dict[str, str]] = {
@@ -20,7 +20,7 @@ TEXTOS: dict[Lang, dict[str, str]] = {
         "vegetacion_deficit": "Vegetación {abs:.0f} % menos verde que lo normal para esta época (NDVI {valor:.2f}).",
         "vegetacion_exceso": "Vegetación {abs:.0f} % más verde que lo normal para esta época (NDVI {valor:.2f}).",
         "calor": "Temperatura máxima {signo}{diff:.1f} °C frente a lo normal ({valor:.1f} vs {normal:.1f} °C).",
-        "elnino": "Mar frente a Perú y Ecuador (Niño 1+2): {signo}{valor:.1f} °C frente a lo normal (semana del {semana}).",
+        "elnino": "El mar frente a Perú y Ecuador está {valor:.1f} °C {dir} de lo normal (semana del {semana}).",
         "elnino_sin_datos": "Sin dato de temperatura del mar (falta correr scripts/descargar_mur_sst.py).",
         "aviso_imerg_viejo": "Dato satelital de lluvia atrasado: el último es del {fecha}.",
         "aviso_imerg_sin": "Sin lluvia satelital reciente (último dato GPM IMERG: {fecha}). Se muestra NASA POWER, que es un modelo y puede exagerar la lluvia en Piura.",
@@ -36,7 +36,7 @@ TEXTOS: dict[Lang, dict[str, str]] = {
         "vegetacion_deficit": "Vegetation {abs:.0f}% less green than normal for this time of year (NDVI {valor:.2f}).",
         "vegetacion_exceso": "Vegetation {abs:.0f}% greener than normal for this time of year (NDVI {valor:.2f}).",
         "calor": "Maximum temperature {signo}{diff:.1f} °C vs normal ({valor:.1f} vs {normal:.1f} °C).",
-        "elnino": "Sea off Peru and Ecuador (Niño 1+2) {signo}{valor:.1f} °C vs normal (week of {semana}).",
+        "elnino": "The sea off Peru and Ecuador is {valor:.1f} °C {dir} normal (week of {semana}).",
         "elnino_sin_datos": "No sea surface temperature data (run scripts/descargar_mur_sst.py).",
         "aviso_imerg_viejo": "Satellite rainfall data is behind: the latest is from {fecha}.",
         "aviso_imerg_sin": "No recent satellite rainfall (last GPM IMERG value: {fecha}). Showing NASA POWER, a model that may overstate rain in Piura.",
@@ -44,8 +44,31 @@ TEXTOS: dict[Lang, dict[str, str]] = {
 }
 
 
+def fecha_larga(lang: Lang, iso: str) -> str:
+    """'2026-11-09' → '9 de noviembre' / 'November 9' (el año solo si no es el actual). Lo que un agricultor lee."""
+    from datetime import date
+    try:
+        d = date.fromisoformat(str(iso)[:10])
+    except ValueError:
+        return str(iso)
+    mes = MESES.get(lang, MESES["es"])[d.month - 1]
+    anio = "" if d.year == date.today().year else (f" de {d.year}" if lang == "es" else f", {d.year}")
+    return f"{d.day} de {mes}{anio}" if lang == "es" else f"{mes} {d.day}{anio}"
+
+
 def texto(lang: Lang, clave: str, **kw) -> str:
+    # Las fechas de las frases se leen en palabras ("9 de noviembre"), nunca 2026-11-09
+    for k in ("semana", "fecha"):
+        if isinstance(kw.get(k), str) and len(kw[k]) >= 10 and kw[k][4] == "-":
+            kw[k] = fecha_larga(lang, kw[k])
     return TEXTOS.get(lang, TEXTOS["es"])[clave].format(**kw)
+
+
+def dir_mar(lang: Lang, x: float) -> str:
+    """'más caliente' / 'más frío' (o en inglés 'warmer than' / 'colder than') según el signo de la anomalía."""
+    if lang == "en":
+        return "warmer than" if x >= 0 else "colder than"
+    return "más caliente" if x >= 0 else "más frío"
 
 
 def signo(x: float) -> str:
@@ -70,9 +93,9 @@ TEXTOS["es"].update({
     "c_exceso": "En {mes} llueven normalmente {mm:.0f} mm: {veces:.1f} veces lo que necesita el {cultivo}.",
     "c_deficit": "En {mes} llueven normalmente {mm:.0f} mm de los ~{nec:.0f} que necesita el {cultivo}: depende del riego.",
     "c_ok": "El clima normal de {mes} está dentro de lo que tolera el {cultivo}.",
-    "c_nino": "El Niño costero ({signo}{anom:.1f} °C, MUR SST) sube un nivel el riesgo de lluvias.",
-    "c_exceso_nino": "En {mes} llueven normalmente {mm:.0f} mm, pero El Niño costero ({signo}{anom:.1f} °C, "
-                     "MUR SST) sube el riesgo de lluvias extremas.",
+    "c_nino": "El Niño (el mar está {anom:.1f} °C más caliente) sube el riesgo de lluvias.",
+    "c_exceso_nino": "En {mes} llueven normalmente {mm:.0f} mm, pero con El Niño (el mar está {anom:.1f} °C más "
+                     "caliente) pueden venir lluvias fuertes.",
     "c_sin_nino": "Sin señal de El Niño disponible.",
     # Rotaciones
     "r_ok": "Por el clima no pierde puntos: la campaña le favorece.",
@@ -80,9 +103,24 @@ TEXTOS["es"].update({
     "r_agua": "su alto uso de agua con {ind} en déficit",
     "r_temp": "{n} mes(es) fuera de su rango de temperatura",
     "r_alto": "{n} mes(es) de la campaña con riesgo alto",
+    "r_medio": "{n} mes(es) de la campaña con riesgo medio",
+    # Rotación de siempre: una frase con las causas de los tres puntajes
+    "t_buena": "Buena opción este año, aunque {razones}.",
+    "t_regular": "Regular este año: {razones}.",
+    "t_riesgosa": "Muy riesgosa este año: {razones}.",
+    "t_nino": "viene El Niño (el mar está {anom:.1f} °C más caliente)",
+    "t_agua": "usa mucha agua",
+    "t_repetir": "repetir {cultivo} cansa el suelo y deja sus plagas",
+    "t_epoca": "no es su época de siembra",
+    "v_def_evento": "Evento = lluvia de febrero a abril de {veces:.0f} o más veces la normal (mismo dato satelital).",
+    "esc_sin_efecto": "Con este escenario no cambia ningún mes ni ningún puntaje: aquí casi no llueve en esa época "
+                      "y el riesgo depende del riego, no de la lluvia.",
+    "elnino_hipotetico": "Simulación: el mar {valor:.1f} °C {dir} de lo normal (no es un dato medido).",
+    "elnino_contraste_ok": "Otro centro de medición (NOAA, de EE. UU.) ve lo mismo: {valor:.1f} °C.",
+    "elnino_contraste_no": "Otro centro de medición (NOAA, de EE. UU.) ve un valor distinto ({valor:.1f} °C): confirma con el ENFEN o tu agencia agraria.",
     "r_siembra": "sembrar {cultivo} fuera de sus meses recomendados",
-    "r_nino_extremo": "la señal extraordinaria de El Niño ({signo}{anom:.1f} °C en el mar frente a la costa): lluvias e inundaciones fuera de lo normal",
-    "r_tradicional": " Es la rotación tradicional de la zona, para comparar.",
+    "r_nino_extremo": "El Niño: el mar está {anom:.1f} °C más caliente y pueden venir lluvias e inundaciones",
+    "r_tradicional": " Es lo que se siembra siempre en tu zona: la mostramos para comparar.",
     # Salud del suelo
     "s_monocultivo": "Repetir {cultivo} agota los mismos nutrientes del suelo y mantiene sus plagas.",
     "s_familia": "{a} y {b} son de la misma familia ({familia}): sacan los mismos nutrientes y comparten plagas.",
@@ -102,14 +140,14 @@ TEXTOS["es"].update({
     "ind_lluvia": "la lluvia", "ind_humedadSuelo": "la humedad del suelo",
     # Qué hacer esta quincena
     "q_drenaje": "Prepara los drenajes y no siembres en zonas bajas que se inundan",
-    "q_drenaje_m": "El mar frente a Perú y Ecuador está {signo}{anom:.1f} °C sobre lo normal (semana del {semana}): "
-                   "señal de El Niño costero y de lluvias extremas.",
+    "q_drenaje_m": "El mar frente a Perú y Ecuador está {anom:.1f} °C más caliente de lo normal (semana del {semana}): "
+                   "es El Niño y pueden venir lluvias fuertes.",
     "q_esperar_seco": "Espera para sembrar: el suelo está seco",
     "q_regar": "Riega tu {cultivo}: el suelo está seco",
     "q_seco_m": "{ind} está {abs:.0f} % por debajo de lo normal.",
     "q_proteger": "Protege el cultivo del calor: riega temprano y evita trabajar en las horas de más sol",
     "q_proteger_m": "La temperatura máxima está {signo}{dif:.1f} °C sobre lo normal ({valor:.1f} °C).",
-    "q_sembrar": "Siembra {rotacion}: es la rotación con mejor puntaje ({p}/100)",
+    "q_sembrar": "Siembra {rotacion}: es la mejor opción para tu parcela",
     "q_sembrar_m": "Ningún indicador está en nivel alto y {mes} es mes de siembra de {cultivo}.",
     "q_esperar_mes": "Espera a {mes} para sembrar {rotacion}",
     "q_esperar_mes_m": "{mes_hoy} no es mes de siembra recomendado de {cultivo}; ningún indicador está en nivel alto.",
@@ -119,12 +157,12 @@ TEXTOS["es"].update({
     "p_motivo": "{etapa} en {mes}: {razon}",
     # Validación
     "v_evento_2017": "El Niño costero 2017",
-    "v_accion_mur": "Vigila el mar: prepara drenajes y no siembres en zonas que se inundan",
+    "v_accion_mur": "Vigila el mar: el agua se está calentando. Revisa tus drenajes y prepárate por si llega El Niño",
     "v_accion_drenaje": "Prepara los drenajes y no siembres en zonas bajas que se inundan",
-    "v_motivo_mur": "El mar en Niño 1+2 llegó a {signo}{anom:.2f} °C sobre lo normal (semana del {semana}).",
+    "v_motivo_mur": "El mar frente a la costa llegó a {anom:.1f} °C más caliente de lo normal (semana del {semana}).",
     "v_accion_lluvia": "Prepara drenajes: la lluvia ya está muy por encima de lo normal",
     "v_motivo_lluvia": "La lluvia de {mes} fue {veces:.1f} veces lo normal.",
-    "v_nota_lluvia": "Alerta calculada solo con lluvia; con MUR SST sería más anticipada",
+    "v_nota_lluvia": "Alerta calculada solo con la lluvia; con la temperatura del mar llegaría antes",
     "v_resumen": "En {mes} llovió {veces:.1f} veces lo normal ({fuente}). AllpaShift habría alertado el {fecha}, "
                  "{semanas} semanas antes.",
     "v_resumen_sin_alerta": "Lluvia máxima en {mes} ({veces:.1f} veces lo normal, {fuente}). Con las reglas actuales "
@@ -143,18 +181,31 @@ TEXTOS["en"].update({
     "c_exceso": "{mes} normally gets {mm:.0f} mm of rain: {veces:.1f} times what {cultivo} needs.",
     "c_deficit": "{mes} normally gets {mm:.0f} mm of the ~{nec:.0f} mm {cultivo} needs: it depends on irrigation.",
     "c_ok": "The normal climate in {mes} is within what {cultivo} tolerates.",
-    "c_nino": "Coastal El Niño ({signo}{anom:.1f} °C, MUR SST) raises the rain risk by one level.",
-    "c_exceso_nino": "{mes} normally gets {mm:.0f} mm, but coastal El Niño ({signo}{anom:.1f} °C, MUR SST) "
-                     "raises the risk of extreme rain.",
+    "c_nino": "El Niño (the sea is {anom:.1f} °C warmer) raises the rain risk.",
+    "c_exceso_nino": "{mes} normally gets {mm:.0f} mm, but with El Niño (the sea is {anom:.1f} °C warmer) heavy rain may come.",
     "c_sin_nino": "No El Niño signal available.",
     "r_ok": "Climate takes no points off: the season suits it.",
     "r_pierde": "Climate takes off {p} points, mainly because of {razon}.",
     "r_agua": "its high water use with {ind} in deficit",
     "r_temp": "{n} month(s) outside its temperature range",
     "r_alto": "{n} month(s) of the season at high risk",
+    "r_medio": "{n} month(s) of the season at medium risk",
+    "t_buena": "A good option this year, although {razones}.",
+    "t_regular": "Fair this year: {razones}.",
+    "t_riesgosa": "Very risky this year: {razones}.",
+    "t_nino": "El Niño is coming (the sea is {anom:.1f} °C warmer)",
+    "t_agua": "it uses a lot of water",
+    "t_repetir": "repeating {cultivo} tires the soil and keeps its pests",
+    "t_epoca": "it is not its planting season",
+    "v_def_evento": "Event = February–April rainfall of {veces:.0f} or more times normal (same satellite data).",
+    "esc_sin_efecto": "This scenario changes no month and no score: it barely rains here at that time of year, "
+                      "so the risk depends on irrigation, not rainfall.",
+    "elnino_hipotetico": "Simulation: the sea {valor:.1f} °C {dir} normal (not measured data).",
+    "elnino_contraste_ok": "Another measuring center (NOAA, USA) sees the same: {valor:.1f} °C.",
+    "elnino_contraste_no": "Another measuring center (NOAA, USA) sees a different value ({valor:.1f} °C): check with ENFEN or your farm agency.",
     "r_siembra": "planting {cultivo} outside its recommended months",
-    "r_nino_extremo": "the extraordinary El Niño signal ({signo}{anom:.1f} °C in the sea off the coast): rain and flooding far beyond normal",
-    "r_tradicional": " It is the traditional rotation of the area, for comparison.",
+    "r_nino_extremo": "El Niño: the sea is {anom:.1f} °C warmer and rain and floods may come",
+    "r_tradicional": " It is what is always planted in your area: shown for comparison.",
     # Soil health
     "s_monocultivo": "Repeating {cultivo} drains the same soil nutrients and keeps its pests.",
     "s_familia": "{a} and {b} are from the same family ({familia}): they take the same nutrients and share pests.",
@@ -173,14 +224,13 @@ TEXTOS["en"].update({
     "agua_bajo": "low", "agua_medio": "medium", "agua_alto": "high",
     "ind_lluvia": "rainfall", "ind_humedadSuelo": "soil moisture",
     "q_drenaje": "Prepare drainage and don't plant in low, flood-prone areas",
-    "q_drenaje_m": "The sea off Peru and Ecuador is {signo}{anom:.1f} °C above normal (week of {semana}): "
-                   "a sign of coastal El Niño and extreme rain.",
+    "q_drenaje_m": "The sea off Peru and Ecuador is {anom:.1f} °C warmer than normal (week of {semana}): it is El Niño and heavy rain may come.",
     "q_esperar_seco": "Wait to plant: the soil is dry",
     "q_regar": "Irrigate your {cultivo}: the soil is dry",
     "q_seco_m": "{ind} is {abs:.0f}% below normal.",
     "q_proteger": "Protect the crop from heat: irrigate early and avoid working in the hottest hours",
     "q_proteger_m": "The maximum temperature is {signo}{dif:.1f} °C above normal ({valor:.1f} °C).",
-    "q_sembrar": "Plant {rotacion}: it is the rotation with the best score ({p}/100)",
+    "q_sembrar": "Plant {rotacion}: it is the best option for your plot",
     "q_sembrar_m": "No indicator is at high level and {mes} is a planting month for {cultivo}.",
     "q_esperar_mes": "Wait until {mes} to plant {rotacion}",
     "q_esperar_mes_m": "{mes_hoy} is not a recommended planting month for {cultivo}; no indicator is at high level.",
@@ -188,12 +238,12 @@ TEXTOS["en"].update({
     "q_plan_m": "No indicator is at high level.",
     "p_motivo": "{etapa} in {mes}: {razon}",
     "v_evento_2017": "Coastal El Niño 2017",
-    "v_accion_mur": "Watch the sea: prepare drainage and don't plant in flood-prone areas",
+    "v_accion_mur": "Watch the sea: the water is warming. Check your drains and get ready in case El Niño comes",
     "v_accion_drenaje": "Prepare drainage and don't plant in low, flood-prone areas",
-    "v_motivo_mur": "The sea in Niño 1+2 reached {signo}{anom:.2f} °C above normal (week of {semana}).",
+    "v_motivo_mur": "The sea off the coast reached {anom:.1f} °C warmer than normal (week of {semana}).",
     "v_accion_lluvia": "Prepare drainage: rainfall is already far above normal",
     "v_motivo_lluvia": "Rainfall in {mes} was {veces:.1f} times normal.",
-    "v_nota_lluvia": "Alert computed with rainfall only; with MUR SST it would come earlier",
+    "v_nota_lluvia": "Alert computed with rainfall only; with sea temperature it would come earlier",
     "v_resumen": "In {mes} it rained {veces:.1f} times the normal amount ({fuente}). AllpaShift would have warned on "
                  "{fecha}, {semanas} weeks earlier.",
     "v_resumen_sin_alerta": "Peak rainfall in {mes} ({veces:.1f} times normal, {fuente}). With the current rules no "

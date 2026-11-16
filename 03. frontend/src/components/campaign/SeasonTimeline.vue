@@ -85,7 +85,7 @@ const etiquetaCelda = (m: Mes) =>
       <span
         v-for="(e, i) in etapas"
         :key="i"
-        class="flex min-w-0 items-center justify-center gap-1 rounded-md px-1 py-1 text-[10px] font-bold tracking-wide uppercase"
+        class="flex min-w-0 items-center justify-center gap-1 rounded-md px-1 py-1 text-xs font-bold tracking-wide uppercase"
         :class="sobreOscuro ? 'bg-white/10 text-white/85' : 'bg-tinta/6 text-stone-600 dark:bg-white/8 dark:text-stone-300'"
         :style="{ flex: `${e.n} 1 0%` }"
         :title="e.etapa"
@@ -150,7 +150,7 @@ const etiquetaCelda = (m: Mes) =>
           <Satellite class="size-3.5" aria-hidden="true" />{{ $t('campana.fuente', { fuente: detalle.fuente }) }}
         </p>
       </div>
-      <p v-else class="mt-2 text-[11px]" :class="sobreOscuro ? 'text-white/60' : 'text-stone-500 dark:text-stone-400'">{{ $t('campana.tocaMes') }}</p>
+      <p v-else class="mt-2 text-xs" :class="sobreOscuro ? 'text-white/60' : 'text-stone-500 dark:text-stone-400'">{{ $t('campana.tocaMes') }}</p>
     </Transition>
   </div>
 </template>

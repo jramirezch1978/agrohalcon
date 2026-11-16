@@ -12,8 +12,9 @@ import type {
   RespuestaAsistente,
   Validacion,
   SueloPropuesto,
+  ResumenValidacion,
 } from '@/types/api'
-import { aniosValidacion, detalleLluvia, calcularMapa, calcularRecomendacion, calcularValidacion, CALCULOS_URL, soloConDato, sueloPython } from './calculos'
+import { aniosValidacion, resumenValidacion, detalleLluvia, calcularMapa, calcularRecomendacion, calcularValidacion, CALCULOS_URL, soloConDato, sueloPython } from './calculos'
 import { mockAniosValidacion, mockCultivos, mockMapa, mockRecomendacion, mockValidacion } from './mocks'
 import { responderConPlantillas } from './asistentePlantillas'
 import { climatologiaPower } from './nasaPower'
@@ -95,7 +96,7 @@ export const api = {
         throw aApiError(e)
       }
     }
-    const { tipoCultivo, mesSiembra, cultivo, prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible, escenario } = opciones
+    const { tipoCultivo, mesSiembra, cultivo, prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible, escenario, ninoHipotetico } = opciones
     const temporal = tipoCultivo !== 'permanente'
     const params = {
       lat,
@@ -104,7 +105,7 @@ export const api = {
       tipoCultivo,
       mesSiembra: temporal ? mesSiembra : undefined,
       cultivo: temporal ? undefined : cultivo,
-      ...(temporal ? { prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible, escenario } : {}),
+      ...(temporal ? { prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible, escenario, ninoHipotetico } : {}),
     }
     const r = await http.get<Recomendacion>('/api/recomendacion', { params })
     marcarOrigenJava('recomendacion', r.headers)
@@ -188,6 +189,18 @@ export const api = {
     if (MODO === 'ejemplo') throw new ApiError('Sin detalle diario en modo de ejemplo', 'desconocido')
     const { data } = await http.get<DetalleLluvia>('/api/validacion/detalle', { params: { anio, mes, lat, lon }, timeout: 60000 })
     return data
+  },
+
+  /** Aciertos y falsas alarmas de todos los años. null = no disponible (modo de ejemplo o servicio caído). */
+  async getResumenValidacion(lat: number, lon: number, idioma: Idioma = 'es'): Promise<ResumenValidacion | null> {
+    try {
+      if (MODO === 'python') return await resumenValidacion(lat, lon, idioma)
+      if (MODO === 'ejemplo') return null
+      const { data } = await http.get<ResumenValidacion>('/api/validacion/resumen', { params: { lat, lon, lang: idioma }, timeout: 90000 })
+      return data
+    } catch {
+      return null
+    }
   },
 
   /** Años con datos reales (el selector de "¿Funciona?" solo ofrece estos). */

@@ -76,6 +76,13 @@ def descuentos_rotacion(cultivos: list[Cultivo], siembras: list[pd.Period], mese
         desc.append({"indicador": "campana", "puntos": ur["mes_riesgo_alto"] * len(altos), "fuente": fuentes[-1],
                      "regla": "riesgo_alto", "meses": len(altos)})
 
+    # 3b) Meses con riesgo medio (resta poco, pero cada cambio de la barra de meses se ve en el puntaje)
+    medios = [m for m in meses if m["riesgo"] == "medio"]
+    if medios and ur.get("mes_riesgo_medio"):
+        fuentes = sorted({m["fuente"] for m in medios}, key=len)
+        desc.append({"indicador": "campana", "puntos": ur["mes_riesgo_medio"] * len(medios), "fuente": fuentes[-1],
+                     "regla": "riesgo_medio", "meses": len(medios)})
+
     # 4) Siembra fuera de los meses recomendados (cada cultivo)
     for c, mes in zip(cultivos, siembras):
         if c.meses_siembra and mes.month not in c.meses_siembra:
@@ -112,11 +119,41 @@ def explicacion(cultivos: list[Cultivo], desc: list[dict], tradicional: bool, la
             razon = texto(lang, "r_temp", n=mayor["meses"])
         elif regla == "riesgo_alto":
             razon = texto(lang, "r_alto", n=mayor["meses"])
+        elif regla == "riesgo_medio":
+            razon = texto(lang, "r_medio", n=mayor["meses"])
         else:
             c = next(c for c in cultivos if c.id == mayor["cultivo"])
             razon = texto(lang, "r_siembra", cultivo=c.nombre_en(lang).lower())
         frase = texto(lang, "r_pierde", p=total, razon=razon)
     return frase + (texto(lang, "r_tradicional") if tradicional else "")
+
+
+def calificacion(puntaje: int, u: dict) -> str:
+    """Lo que el agricultor lee en lugar del número: buena / regular / riesgosa (mismos cortes que el riesgo)."""
+    return {"bajo": "buena", "medio": "regular", "alto": "riesgosa"}[nivel_puntaje(puntaje, u)]
+
+
+def _lista(lang: str, partes: list[str]) -> str:
+    y = " and " if lang == "en" else " y "
+    return partes[0] if len(partes) == 1 else ", ".join(partes[:-1]) + y + partes[-1]
+
+
+def explicacion_tradicional(cultivos: list[Cultivo], desc: list[dict], desc_suelo: list[dict], uso: str,
+                            calif: str, lang: str) -> str:
+    """Para la rotación de siempre (p. ej. Arroz - Arroz), en UNA frase y en palabras de campo: por qué sale así.
+    Junta las causas de los tres puntajes (clima, suelo y agua), no solo la del clima."""
+    razones = []
+    if (n := next((d for d in desc if d["regla"] == "el_nino_extremo"), None)):
+        razones.append(texto(lang, "t_nino", anom=abs(n["valor"])))
+    if uso == "alto":
+        razones.append(texto(lang, "t_agua"))
+    if any(d["regla"] in ("monocultivo", "misma_familia") for d in desc_suelo):
+        razones.append(texto(lang, "t_repetir", cultivo=cultivos[0].nombre_en(lang).lower()))
+    if any(d["regla"] == "siembra" for d in desc):
+        razones.append(texto(lang, "t_epoca"))
+    if not razones:
+        return explicacion(cultivos, desc, True, lang)
+    return texto(lang, f"t_{calif}", razones=_lista(lang, razones)) + texto(lang, "r_tradicional")
 
 
 def evaluar_rotacion(cultivos: list[Cultivo], mes_siembra: str, clima: pd.DataFrame, indicadores: dict,
@@ -139,16 +176,33 @@ def evaluar_rotacion(cultivos: list[Cultivo], mes_siembra: str, clima: pd.DataFr
     suelo, desc_suelo = puntaje_suelo(cultivos, u, lang, salinidad, tipo_suelo, fuente_suelo)
     tabla_agua = u["prioridades"].get("puntaje_agua_disponible", {}).get(agua_disponible or "", u["prioridades"]["puntaje_agua"])
     agua_p = tabla_agua[uso]
+    final = puntaje_final(clima_p, suelo, agua_p, prioridad, u)
+    calif = calificacion(final, u)
+    texto_rot = (explicacion_tradicional(cultivos, desc, desc_suelo, uso, calif, lang) if tradicional
+                 else explicacion(cultivos, desc, tradicional, lang))
     return {
         "nombre": " - ".join(c.nombre_en(lang) for c in cultivos),
         "cultivos": [c.id for c in cultivos],
-        "puntaje": puntaje_final(clima_p, suelo, agua_p, prioridad, u), "riesgo": nivel_puntaje(clima_p, u), "usoAgua": uso,
+        "puntaje": final, "calificacion": calif, "riesgo": nivel_puntaje(clima_p, u), "usoAgua": uso,
         "riesgoClimatico": clima_p, "saludSuelo": suelo, "puntajeAgua": agua_p, "descuentosSuelo": desc_suelo,
-        "explicacion": explicacion(cultivos, desc, tradicional, lang),
+        "explicacion": texto_rot,
         "descuentos": desc, "tradicional": tradicional,
         "ciclo": armar_ciclo(meses),
         "mesesSueloDesnudo": meses_suelo_desnudo(cultivos),
     }
+
+
+NIVELES_AGUA = ["poca", "normal", "suficiente"]
+
+
+def agua_con_escenario(agua_disponible: str | None, escenario: str | None, u: dict) -> str | None:
+    """Agua de riego que tendría el agricultor si el año viene seco o lluvioso (sin dato se parte de "normal").
+    Escenario normal o sin escenario → el dato del agricultor tal cual."""
+    paso = u.get("escenarios_agua", {}).get(escenario or "normal", 0)
+    if not paso:
+        return agua_disponible
+    i = NIVELES_AGUA.index(agua_disponible or "normal") + paso
+    return NIVELES_AGUA[max(0, min(len(NIVELES_AGUA) - 1, i))]
 
 
 def prioridad_o_defecto(prioridad: str | None, u: dict) -> str:
