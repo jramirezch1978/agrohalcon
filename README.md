@@ -108,6 +108,8 @@ What the farmer sees:
 | 🛰️ **Use of AI and NASA Data** | The six NASA datasets, how each is used, and where SI was used | [AllpaShift_AI_and_NASA_Data_EN.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_AI_and_NASA_Data_EN.pdf) |
 | 📚 **References** | Data, papers, software and licenses | [AllpaShift_References_EN.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_References_EN.pdf) |
 | 📱 **Mobile app guide** | How to install the Android APK and build the iOS app | [05. mobile/README.md](05.%20mobile/README.md) |
+| 🔒 **HTTPS setup guide** (Spanish) | How the domain, Cloudflare and the certificate were set up from scratch, step by step | [AllpaShift_HTTPS_paso_a_paso.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/AllpaShift_HTTPS_paso_a_paso.pdf) |
+| 🔍 **Technical audit** (Spanish) | Final diagnosis of the live app: scores, findings and what was fixed | [AllpaShift_Diagnostico_Auditoria_261115.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/AllpaShift_Diagnostico_Auditoria_261115.pdf) |
 
 ---
 
