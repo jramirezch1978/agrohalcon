@@ -52,9 +52,13 @@ public class AsistenteController {
         return r;
     }
 
-    /** Detrás de nginx y del api-gateway la IP real viene en X-Forwarded-For (la primera). */
+    /**
+     * IP real del cliente para el límite de preguntas. Se usa X-Real-IP, que nginx SOBRESCRIBE con $remote_addr
+     * (el cliente no lo puede falsificar). Nunca el primer valor de X-Forwarded-For: ese lo escribe el propio cliente
+     * y bastaría cambiarlo en cada pregunta para saltarse el límite. Sin nginx (desarrollo): la IP de la conexión.
+     */
     static String ip(HttpServletRequest http) {
-        String xff = http.getHeader("X-Forwarded-For");
-        return xff != null && !xff.isBlank() ? xff.split(",")[0].trim() : http.getRemoteAddr();
+        String real = http.getHeader("X-Real-IP");
+        return real != null && !real.isBlank() ? real.trim() : http.getRemoteAddr();
     }
 }

@@ -39,6 +39,9 @@ services:
     restart: unless-stopped
     environment:
       TZ: America/Lima
+      WEB_CONCURRENCY: ${CALCULOS_WORKERS:-4}
+    volumes:
+      - calculos_cache:/var/cache/allpashift   # la caché sobrevive a cada despliegue
     networks: [allpashift_net]
 
   climate-service:
@@ -65,6 +68,9 @@ services:
     depends_on:
       - api-gateway
     networks: [allpashift_net]
+
+volumes:
+  calculos_cache:
 
 networks:
   allpashift_net:

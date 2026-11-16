@@ -12,6 +12,7 @@ FROM nginx:1.27-alpine
 RUN apk add --no-cache openssl
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY app-locations.inc /etc/nginx/conf.d/app-locations.inc
+COPY cloudflare-realip.inc /etc/nginx/conf.d/cloudflare-realip.inc
 COPY 40-certificado-tls.sh /docker-entrypoint.d/40-certificado-tls.sh
 RUN chmod +x /docker-entrypoint.d/40-certificado-tls.sh
 COPY --from=build /app/dist /usr/share/nginx/html

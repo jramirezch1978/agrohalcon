@@ -6,7 +6,7 @@
  * Estas funciones LANZAN error si el servicio falla: quien llama decide el respaldo y lo avisa.
  */
 import axios from 'axios'
-import type { AniosValidacion, DetalleLluvia, ClaveIndicador, Indicador, MapaRiesgo, OpcionesRecomendacion, Recomendacion, SueloPropuesto, Validacion } from '@/types/api'
+import type { ResumenValidacion, AniosValidacion, DetalleLluvia, ClaveIndicador, Indicador, MapaRiesgo, OpcionesRecomendacion, Recomendacion, SueloPropuesto, Validacion } from '@/types/api'
 
 export const CALCULOS_URL: string = import.meta.env.VITE_CALCULOS_URL || ''
 
@@ -27,7 +27,7 @@ export function soloConDato(indicadores: Record<string, IndicadorPython>): Recom
 }
 
 export async function calcularRecomendacion(lat: number, lon: number, idioma: Idioma, opciones: OpcionesRecomendacion): Promise<Recomendacion> {
-  const { tipoCultivo, mesSiembra, cultivo, prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible, escenario } = opciones
+  const { tipoCultivo, mesSiembra, cultivo, prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible, escenario, ninoHipotetico } = opciones
   const temporal = tipoCultivo !== 'permanente'
   const { data } = await http.post('/calcular', {
     lat,
@@ -36,7 +36,7 @@ export async function calcularRecomendacion(lat: number, lon: number, idioma: Id
     tipoCultivo: tipoCultivo ?? 'temporal',
     mesSiembra: temporal ? mesSiembra : undefined,
     cultivo: temporal ? undefined : cultivo,
-    ...(temporal ? { prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible, escenario } : {}),
+    ...(temporal ? { prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible, escenario, ninoHipotetico } : {}),
   })
   return { ...data, indicadores: soloConDato(data.indicadores) } as Recomendacion
 }
@@ -63,5 +63,10 @@ export async function detalleLluvia(anio: number, mes: number, lat: number, lon:
 
 export async function aniosValidacion(lat: number, lon: number): Promise<AniosValidacion> {
   const { data } = await http.get<AniosValidacion>('/validacion/anios', { params: { lat, lon } })
+  return data
+}
+
+export async function resumenValidacion(lat: number, lon: number, idioma: Idioma): Promise<ResumenValidacion> {
+  const { data } = await http.get<ResumenValidacion>('/validacion/resumen', { params: { lat, lon, lang: idioma }, timeout: 90000 })
   return data
 }

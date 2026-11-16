@@ -52,4 +52,15 @@ class PerfilAgricultorTest {
         assertThat(PerfilAgricultor.de(null, null, null, null, null, "normal").escenario()).isNull();
         assertThatThrownBy(() -> PerfilAgricultor.de(null, null, null, null, null, "catastrofe")).isInstanceOf(ErroresApi.ApiError.class);
     }
+
+    @Test
+    void ninoHipoteticoSeValidaYCambiaLaClave() {
+        Map<String, Object> pedido = new LinkedHashMap<>();
+        var sim = PerfilAgricultor.de(null, null, null, null, null, null, 3.5);
+        sim.ponerEn(pedido);
+        assertThat(pedido).containsEntry("ninoHipotetico", 3.5);
+        assertThat(sim.clave()).endsWith(",nino=3.5").isNotEqualTo(PerfilAgricultor.VACIO.clave());
+        assertThatThrownBy(() -> PerfilAgricultor.de(null, null, null, null, null, null, 9.0)).isInstanceOf(ErroresApi.ApiError.class);
+        assertThatThrownBy(() -> PerfilAgricultor.de(null, null, null, null, null, null, Double.NaN)).isInstanceOf(ErroresApi.ApiError.class);
+    }
 }

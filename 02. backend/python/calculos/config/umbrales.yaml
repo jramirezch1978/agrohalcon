@@ -60,6 +60,8 @@ rotaciones:
   temperatura_por_mes: -10
   temperatura_maximo: -30
   mes_riesgo_alto: -10
+  # Cada mes en riesgo MEDIO también resta (poco): así cada cambio de color de la barra de meses se nota en el puntaje.
+  mes_riesgo_medio: -3          # supuesto del equipo
   siembra_fuera_de_meses: -15   # por cada cultivo de la rotación sembrado fuera de sus meses
   riesgo_bajo_desde: 70         # puntaje >= 70 → bajo
   riesgo_medio_desde: 45        # 45-69 → medio; < 45 → alto
@@ -121,3 +123,25 @@ escenarios:
   seco: 0.6
   normal: 1.0
   lluvioso: 1.6
+
+# En la costa de Piura casi no llueve: lo que un año seco o lluvioso cambia es el agua de RIEGO (reservorios
+# Poechos y San Lorenzo). El escenario mueve el agua disponible del agricultor estos niveles (poca < normal < suficiente).
+# Sin dato del agricultor se parte de "normal". Supuesto del equipo.
+escenarios_agua:
+  seco: -1
+  normal: 0
+  lluvioso: 1
+
+# Contraste del dato de MUR SST con el índice semanal Niño 1+2 de NOAA (OISST v2.1, base 1991-2020; NO es NASA).
+# Las bases climatológicas difieren (MUR: 2003-2014), así que unas décimas de diferencia son normales.
+contraste_nino:
+  max_diferencia_c: 1.0     # más que esto → "no concuerda" y se avisa (supuesto)
+  max_dias_entre_semanas: 10
+
+# Simulador "¿y si el mar sube?": rango permitido de la anomalía hipotética (°C)
+nino_hipotetico: {min: -2.0, max: 5.0}
+
+# ---------- Validación de todos los años ("¿Funciona?") ----------
+validacion:
+  # "Evento" = lluvia de febrero a abril >= N veces la normal (mismo dato satelital). Supuesto del equipo.
+  evento_ratio: 2.0

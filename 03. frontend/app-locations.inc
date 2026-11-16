@@ -2,6 +2,7 @@
 
 # API: todo pasa por el api-gateway
 location /api/ {
+    limit_req zone=api burst=20 nodelay;   # ráfagas de la app (varias pantallas a la vez) pasan; abuso sostenido -> 429
     proxy_pass http://api-gateway:8080;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
@@ -12,6 +13,7 @@ location /api/ {
 
 # Proxy a ERDDAP de NOAA (MUR SST de NASA JPL): no permite CORS desde el navegador
 location /nasa/erddap/ {
+    limit_req zone=erddap burst=5 nodelay;
     proxy_pass https://coastwatch.pfeg.noaa.gov/erddap/;
     proxy_set_header Host coastwatch.pfeg.noaa.gov;
     proxy_ssl_server_name on;

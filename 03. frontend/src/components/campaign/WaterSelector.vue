@@ -15,7 +15,7 @@ const actual = () => store.aguaDisponible ?? 'normal'
 
 <template>
   <section class="superficie p-3 sm:p-4">
-    <p id="titulo-agua" class="mb-2 flex items-center gap-1.5 px-1 text-[11px] font-bold tracking-[0.12em] text-stone-500 uppercase dark:text-stone-400">
+    <p id="titulo-agua" class="mb-2 flex items-center gap-1.5 px-1 text-xs font-bold tracking-[0.12em] text-stone-500 uppercase dark:text-stone-400">
       <Droplets class="size-3.5" aria-hidden="true" />{{ $t('aguaDisponible.titulo') }}
     </p>
     <div role="radiogroup" aria-labelledby="titulo-agua" class="grid grid-cols-3 gap-2">
@@ -38,6 +38,6 @@ const actual = () => store.aguaDisponible ?? 'normal'
         <span class="font-display text-sm leading-tight font-bold">{{ $t(`aguaDisponible.${o.id}`) }}</span>
       </button>
     </div>
-    <p class="mt-2 px-1 text-[11px] leading-snug text-stone-500 dark:text-stone-400">{{ $t('aguaDisponible.ayuda') }}</p>
+    <p class="mt-2 px-1 text-xs leading-snug text-stone-500 dark:text-stone-400">{{ $t('aguaDisponible.ayuda') }}</p>
   </section>
 </template>

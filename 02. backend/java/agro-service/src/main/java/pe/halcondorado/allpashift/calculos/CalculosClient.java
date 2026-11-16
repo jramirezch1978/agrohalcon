@@ -45,6 +45,13 @@ public class CalculosClient {
                 .queryParam("lon", lon).queryParam("lang", lang).build()).retrieve().body(Map.class));
     }
 
+    /** GET /validacion/resumen?lat=&lon=&lang= → aciertos y falsas alarmas de todos los años. */
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> resumenValidacion(double lat, double lon, String lang) {
+        return llamar(() -> calculos.get().uri(u -> u.path("/validacion/resumen").queryParam("lat", lat).queryParam("lon", lon)
+                .queryParam("lang", lang).build()).retrieve().body(Map.class));
+    }
+
     /** GET /validacion/detalle?anio=&mes=&lat=&lon= → lluvia del mes día por día y por semana (IMERG diario). */
     public Map<String, Object> detalleLluvia(int anio, int mes, double lat, double lon) {
         try {

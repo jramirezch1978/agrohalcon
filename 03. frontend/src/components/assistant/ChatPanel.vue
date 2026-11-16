@@ -110,7 +110,7 @@ defineExpose({ enfocar: () => entrada.value?.focus() })
 
     <!-- Aviso fijo + caja de texto -->
     <div class="border-t border-tinta/6 px-3 pt-2 pb-3 dark:border-white/8">
-      <p class="mb-2 flex items-center justify-center gap-1.5 px-2 text-center text-[11px] leading-tight text-stone-500 dark:text-stone-400">
+      <p class="mb-2 flex items-center justify-center gap-1.5 px-2 text-center text-xs leading-tight text-stone-500 dark:text-stone-400">
         <Info class="size-3.5 shrink-0" aria-hidden="true" />{{ $t('asistente.aviso') }}
       </p>
       <form class="flex items-end gap-2 rounded-[22px] bg-arena p-1.5 pl-4 ring-1 ring-tinta/8 focus-within:ring-2 focus-within:ring-agro-600 dark:bg-white/5 dark:ring-white/10" @submit.prevent="enviar()">
@@ -138,7 +138,7 @@ defineExpose({ enfocar: () => entrada.value?.focus() })
       </form>
       <p
         id="contador-asistente"
-        class="mt-1 pr-2 text-right text-[11px] tabular-nums"
+        class="mt-1 pr-2 text-right text-xs tabular-nums"
         :class="texto.length >= MAX_CARACTERES ? 'font-semibold text-red-600 dark:text-red-400' : 'text-stone-400'"
         :aria-label="t('asistente.contador', { n: texto.length, max: MAX_CARACTERES })"
       >
