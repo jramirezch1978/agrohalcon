@@ -48,6 +48,8 @@ if command -v apt-get >/dev/null 2>&1; then
   apt-get update -y
   apt-get install -y certbot python3-certbot-dns-cloudflare
 elif command -v dnf >/dev/null 2>&1; then
+  # En Rocky/RHEL, certbot y su plugin de Cloudflare están en el repositorio EPEL
+  dnf install -y epel-release
   dnf install -y certbot python3-certbot-dns-cloudflare
 else
   echo "ERROR: no encuentro apt-get ni dnf; instala certbot y python3-certbot-dns-cloudflare a mano"
