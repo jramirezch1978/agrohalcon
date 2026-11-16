@@ -217,6 +217,10 @@ const en: typeof es = {
     capaMapa: 'Map view',
   },
   rotaciones: {
+    teRecomendamos: 'We recommend planting',
+    porQue: 'Why?',
+    deCien: '{p} out of 100',
+    compara: 'Compare the 3 options',
     titulo: 'What should I plant?',
     subtitulo: 'We compare 3 rotations against the expected climate on your plot',
     tocaTarjeta: 'Tap a card to see why it got that score',
@@ -431,6 +435,14 @@ const en: typeof es = {
       { p: 'Where does the suggested soil type come from?', r: 'From SoilGrids, a world soil map by ISRIC (CC-BY 4.0 license). It is not NASA data and may not match your plot: you decide whether to use it or choose another.' },
       { p: 'Can I ask it questions?', r: 'Yes: tap "Ask AllpaShift". It explains the recommendation with the same data; it does not invent new advice.' },
     ],
+  },
+  miCaso: {
+    titulo: 'Adjust to my case (optional)',
+    ayuda: 'We already set common values. Change them only if you know your case.',
+    suelo: '{v} soil',
+    sinSuelo: 'Soil: no data',
+    agua: '{v} water',
+    anio: '{v} year',
   },
   escenario: {
     titulo: 'What if the year is…?',

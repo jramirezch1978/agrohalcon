@@ -28,7 +28,11 @@ watch(
     buscando.value = true
     const r = await api.getSuelo(p.lat, p.lon)
     // la parcela pudo cambiar mientras se esperaba
-    if (store.parcela && store.parcela.lat === p.lat && store.parcela.lon === p.lon) propuesta.value = r
+    if (store.parcela && store.parcela.lat === p.lat && store.parcela.lon === p.lon) {
+      propuesta.value = r
+      // Se aplica sola (el agricultor no tiene que hacer nada); puede cambiarla o quitarla
+      if (r?.tipoSuelo && !store.parcela.tipoSuelo) store.elegirSuelo({ tipoSuelo: r.tipoSuelo, fuenteSuelo: 'soilgrids' })
+    }
     buscando.value = false
   },
   { immediate: true },
@@ -78,6 +82,10 @@ const chip = (activo: boolean) =>
     <template v-if="tipo">
       <p class="mt-1.5 flex items-center gap-1 px-1 text-[11px] text-stone-500 dark:text-stone-400">
         <BookOpen class="size-3 shrink-0" aria-hidden="true" />{{ store.parcela?.fuenteSuelo === 'soilgrids' ? $t('suelo.fuenteSoilgrids') : $t('suelo.fuenteAgricultor') }}
+      </p>
+      <p v-if="store.parcela?.fuenteSuelo === 'soilgrids' && propuesta?.tipoSuelo === tipo" class="mt-0.5 px-1 text-[11px] text-stone-600 dark:text-stone-300">
+        {{ $t('suelo.propuesta', { tipo: $t(`suelo.${tipo}`).toLowerCase(), arena: Math.round(propuesta.arena ?? 0), arcilla: Math.round(propuesta.arcilla ?? 0) }) }}
+        <template v-if="propuesta.carbonoOrganico != null"> {{ $t('suelo.materiaOrganica', { soc: propuesta.carbonoOrganico }) }}</template>
       </p>
       <p class="mt-0.5 px-1 text-[11px] text-stone-600 dark:text-stone-300">{{ $t(`suelo.infiltracion_${INFILTRACION[tipo]}`) }}</p>
     </template>

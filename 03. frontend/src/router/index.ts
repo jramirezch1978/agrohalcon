@@ -33,6 +33,18 @@ export const router = createRouter({
   ],
 })
 
+// Precarga las demás pantallas cuando el navegador está libre (si no, el primer cambio de pantalla tarda)
+router.isReady().then(() => {
+  const precargar = () => {
+    void import('@/views/RotationsView.vue')
+    void import('@/views/MapView.vue')
+    void import('@/views/NasaDataView.vue')
+    void import('@/views/AssistantView.vue')
+  }
+  if ('requestIdleCallback' in window) window.requestIdleCallback(precargar, { timeout: 3000 })
+  else setTimeout(precargar, 1500)
+})
+
 router.beforeEach((to) => {
   const store = useAppStore()
   // Primera vez: mostrar la bienvenida

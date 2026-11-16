@@ -21,7 +21,7 @@ const PERMANENTES: CultivoPermanente[] = ['mango', 'limon', 'banano']
         type="button"
         role="radio"
         :aria-checked="store.miCultivo.tipo === t.id"
-        class="flex min-h-16 items-center gap-2.5 rounded-2xl p-3 text-left transition active:scale-[0.98]"
+        class="flex min-h-16 flex-col items-start gap-1.5 rounded-2xl p-3 text-left transition active:scale-[0.98] min-[400px]:flex-row min-[400px]:items-center min-[400px]:gap-2.5"
         :class="
           store.miCultivo.tipo === t.id
             ? 'bg-agro-700 text-white shadow-[0_6px_18px_-8px_rgb(25_97_58/0.7)] dark:bg-brote-400 dark:text-tinta'
@@ -30,7 +30,7 @@ const PERMANENTES: CultivoPermanente[] = ['mango', 'limon', 'banano']
         @click="store.miCultivo.tipo = t.id"
       >
         <component :is="t.icono" class="size-6 shrink-0" aria-hidden="true" />
-        <span class="min-w-0">
+        <span class="min-w-0 hyphens-auto break-words">
           <span class="block text-sm leading-tight font-bold">{{ $t(`cultivo.${t.id}`) }}</span>
           <span class="mt-0.5 block text-[11px] leading-tight opacity-80">{{ $t(`cultivo.${t.id}Detalle`) }}</span>
         </span>

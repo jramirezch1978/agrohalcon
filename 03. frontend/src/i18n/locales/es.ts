@@ -215,6 +215,10 @@ export default {
     capaMapa: 'Vista mapa',
   },
   rotaciones: {
+    teRecomendamos: 'Te recomendamos sembrar',
+    porQue: '¿Por qué?',
+    deCien: '{p} de 100',
+    compara: 'Compara las 3 opciones',
     titulo: '¿Qué me conviene sembrar?',
     subtitulo: 'Comparamos 3 rotaciones con el clima esperado en tu parcela',
     tocaTarjeta: 'Toca una tarjeta para ver por qué tiene ese puntaje',
@@ -429,6 +433,14 @@ export default {
       { p: '¿De dónde sale el tipo de suelo que me sugiere?', r: 'De SoilGrids, un mapa mundial de suelos de ISRIC (licencia CC-BY 4.0). No es dato de la NASA y puede no coincidir con tu parcela: tú decides si lo usas o eliges otro.' },
       { p: '¿Puedo hacerle preguntas?', r: 'Sí: toca «Pregúntale a AllpaShift». Te explica la recomendación con los mismos datos; no inventa consejos nuevos.' },
     ],
+  },
+  miCaso: {
+    titulo: 'Ajustar mi caso (opcional)',
+    ayuda: 'Ya pusimos valores comunes. Cámbialos solo si conoces tu caso.',
+    suelo: 'Suelo {v}',
+    sinSuelo: 'Suelo sin dato',
+    agua: 'Agua {v}',
+    anio: 'Año {v}',
   },
   escenario: {
     titulo: '¿Y si el año viene…?',
