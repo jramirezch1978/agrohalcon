@@ -14,6 +14,8 @@ const razonSuelo = computed(() => {
   const mas = (props.rotacion.descuentosSuelo ?? []).filter((d) => d.puntos > 0).sort((a, b) => b.puntos - a.puntos)
   return mas[0]?.explicacion
 })
+/** Aviso cuando la rotación gasta mucho agua (puntaje de agua bajo) */
+const aguaBaja = computed(() => props.rotacion.puntajeAgua != null && props.rotacion.puntajeAgua <= 30)
 /** Clima · suelo · agua: solo si el cálculo trae los tres puntajes */
 const tresPuntajes = computed(() => props.rotacion.saludSuelo != null && props.rotacion.riesgoClimatico != null)
 </script>
@@ -49,6 +51,7 @@ const tresPuntajes = computed(() => props.rotacion.saludSuelo != null && props.r
         </span>
       </p>
       <p v-if="razonSuelo" class="mt-1.5 line-clamp-2 text-sm leading-snug text-agro-800 dark:text-agro-200">🌱 {{ razonSuelo }}</p>
+      <p v-if="aguaBaja" class="mt-1.5 text-sm leading-snug font-semibold text-amber-700 dark:text-amber-300">💧 {{ $t('rotaciones.avisoAguaBaja', { n: rotacion.puntajeAgua }) }}</p>
       <p class="mt-1 line-clamp-2 text-sm leading-snug text-stone-500 dark:text-stone-400">{{ rotacion.motivoRecomendada ?? rotacion.explicacion }}</p>
     </div>
     <ArrowRight class="size-5 shrink-0 text-stone-400 transition group-hover:translate-x-1" aria-hidden="true" />

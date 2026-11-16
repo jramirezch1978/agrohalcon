@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ArrowRight, MapPinned } from 'lucide-vue-next'
 import RiskBadge from '@/components/ui/RiskBadge.vue'
-import type { ZonaRiesgo } from '@/types/api'
+import type { MapaRiesgo, ZonaRiesgo } from '@/types/api'
 
-defineProps<{ zona: ZonaRiesgo }>()
+defineProps<{ zona: ZonaRiesgo; elNino?: MapaRiesgo['elNino'] }>()
 defineEmits<{ ver: [] }>()
 </script>
 
@@ -15,6 +15,7 @@ defineEmits<{ ver: [] }>()
     <p class="mt-1 font-display text-xl leading-tight font-bold tracking-tight">{{ zona.nombre }}</p>
     <RiskBadge v-if="zona.nivel" class="mt-2" :nivel="zona.nivel" con-titulo tamano="md" />
     <p v-else class="mt-2 text-sm font-semibold text-stone-500">{{ $t('mapa.sinDato') }}</p>
+    <p v-if="elNino && elNino.nivel && elNino.nivel !== 'bajo'" class="mt-2 text-xs leading-snug text-stone-600 dark:text-stone-300">{{ $t('mapa.zonaYElNino') }}</p>
     <button
       type="button"
       class="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-agro-700 px-4 text-sm font-semibold text-white transition hover:bg-agro-800 active:scale-[0.98] dark:bg-agro-600"
