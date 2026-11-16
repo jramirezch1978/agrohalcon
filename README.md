@@ -75,9 +75,9 @@ What the farmer sees:
 
 <div align="center">
 
-[![Watch the AllpaShift video](https://img.youtube.com/vi/3UVyc3Y5eFw/hqdefault.jpg)](https://www.youtube.com/watch?v=3UVyc3Y5eFw)
+[![Watch the AllpaShift video](https://img.youtube.com/vi/Grg0eaWUsZE/hqdefault.jpg)](https://youtu.be/Grg0eaWUsZE)
 
-**[▶ Watch on YouTube](https://www.youtube.com/watch?v=3UVyc3Y5eFw)** · English subtitles available · <sub>Contains SI-generated scenes (Gemini).</sub>
+**[▶ Watch on YouTube](https://youtu.be/Grg0eaWUsZE)** · English subtitles available · <sub>Contains SI-generated scenes (Gemini).</sub>
 
 **Slides (7, English):** [AllpaShift_Demo_EN.pdf](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Demo_EN.pdf) · [AllpaShift_Demo_EN.pptx](https://github.com/jramirezch1978/allpashift/blob/main/01.%20documentacion/entrega/AllpaShift_Demo_EN.pptx)
 <sub>Problem and challenge · NASA data · Solution · How it works · Demo with real screenshots · Impact (2017 validation)</sub>
@@ -93,7 +93,7 @@ What the farmer sees:
 | | Link |
 |---|---|
 | 💻 **Source code** | https://github.com/jramirezch1978/allpashift |
-| 🎬 **Demo video** | https://www.youtube.com/watch?v=3UVyc3Y5eFw |
+| 🎬 **Demo video** | https://youtu.be/Grg0eaWUsZE |
 | 🌐 **Live app** (team server, HTTPS) | https://allpashift.crisaor.org |
 | 📱 **Android app** (APK 1.0.0, signed, release) | [allpashift-1.0.0.apk](05.%20mobile/release/android/allpashift-1.0.0.apk) |
 | 🍎 **iOS project** (Xcode) | [allpashift-ios-xcode.zip](05.%20mobile/release/ios/allpashift-ios-xcode.zip) |
