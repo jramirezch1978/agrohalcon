@@ -51,7 +51,7 @@
 4. **Mapa:** el prototipo usa un mapa mundial. Para la demo de Piura conviene sumar la **capa de los 18 valles** y la superficie agrícola (doc 24, sección 4).
 5. **Cultivos:** las tarjetas usan frijol, maíz, algodón y arroz. El catálogo ya tiene 37 (doc 17), con uva, mango y limón para la opción "Ya tengo un cultivo permanente".
 
-## 5. Implementado en AllpaShift (2026-11-14, desplegado en http://2.29.101.199)
+## 5. Implementado en AllpaShift (2026-11-14, desplegado en https://allpashift.crisaor.org)
 
 Interfaz reconstruida con el mismo diseño del prototipo: menú lateral verde, acento lima, tarjetas blancas, tarjeta de acción oscura, ES/EN y modo oscuro. Pantallas:
 - **Mapa:** buscador mundial (OpenStreetMap Nominatim), "Usar mi ubicación", leyenda de riesgo, los **18 valles** marcados y la tarjeta "Mi parcela" con "Analizar esta parcela".

@@ -120,7 +120,7 @@ const elNino = ref<MapaRiesgo['elNino']>(null)
 /** Contenido del popup como componente Vue (con i18n), montado en un div para Leaflet. */
 function contenidoPopup(z: ZonaRiesgo): HTMLElement {
   const el = document.createElement('div')
-  const vnode = h(ZonePopup, { zona: z, onVer: () => analizar(z.lat, z.lon, `${z.nombre}, Piura`) })
+  const vnode = h(ZonePopup, { zona: z, elNino: elNino.value, onVer: () => analizar(z.lat, z.lon, `${z.nombre}, Piura`) })
   vnode.appContext = appContext
   render(vnode, el)
   popupsMontados.push(el)
