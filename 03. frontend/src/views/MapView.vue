@@ -354,7 +354,7 @@ onBeforeUnmount(() => {
               <MapPin class="size-5" aria-hidden="true" />
             </span>
             <div class="min-w-0 flex-1">
-              <p class="text-[11px] font-bold tracking-[0.12em] text-stone-500 uppercase">{{ $t('mapa.miParcela') }}</p>
+              <p class="text-xs font-bold tracking-[0.12em] text-stone-500 uppercase">{{ $t('mapa.miParcela') }}</p>
               <p class="truncate font-display text-lg font-bold tracking-tight">
                 <span v-if="punto.buscandoNombre" class="inline-block h-5 w-32 animate-pulse rounded bg-tinta/8 align-middle dark:bg-white/10" />
                 <template v-else>{{ punto.nombre ?? $t('mapa.puntoElegido') }}</template>

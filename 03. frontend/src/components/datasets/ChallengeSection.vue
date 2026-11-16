@@ -74,7 +74,7 @@ const PESOS = [
           <component :is="c.icono" class="size-5" aria-hidden="true" />
         </span>
         <span class="min-w-0">
-          <span class="block text-[11px] font-bold tracking-[0.1em] text-stone-500 uppercase dark:text-stone-400">{{ c.pide }}</span>
+          <span class="block text-xs font-bold tracking-[0.1em] text-stone-500 uppercase dark:text-stone-400">{{ c.pide }}</span>
           <span class="mt-0.5 block text-[15px] leading-snug">{{ c.app }}</span>
         </span>
       </li>

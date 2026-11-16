@@ -29,7 +29,7 @@ const NIVELES: NivelRiesgo[] = ['alto', 'medio', 'bajo']
     </button>
     <aside v-else class="superficie max-w-[11rem] !rounded-2xl p-3 shadow-float" :aria-label="$t('riesgo.leyenda')">
       <div class="mb-2 flex items-center justify-between gap-2">
-        <p class="text-[11px] font-bold tracking-[0.12em] text-stone-500 uppercase dark:text-stone-400">{{ $t('riesgo.leyenda') }}</p>
+        <p class="text-xs font-bold tracking-[0.12em] text-stone-500 uppercase dark:text-stone-400">{{ $t('riesgo.leyenda') }}</p>
         <button type="button" :aria-label="$t('acciones.cerrar')" aria-expanded="true" class="-m-1.5 grid size-8 shrink-0 place-items-center rounded-full hover:bg-tinta/5 dark:hover:bg-white/8" @click="abierta = false">
           <X class="size-4" aria-hidden="true" />
         </button>
@@ -41,7 +41,7 @@ const NIVELES: NivelRiesgo[] = ['alto', 'medio', 'bajo']
         <p class="flex items-center gap-1.5 text-xs font-bold text-red-700 dark:text-red-300">
           <Waves class="size-4 shrink-0" aria-hidden="true" />{{ $t('mapa.elNinoTitulo', { valor: `${elNino.valor > 0 ? '+' : ''}${elNino.valor}` }) }}
         </p>
-        <p class="mt-1 text-[11px] leading-snug text-stone-600 dark:text-stone-300">{{ $t('mapa.elNinoTexto', { fuente: elNino.fuente }) }}</p>
+        <p class="mt-1 text-xs leading-snug text-stone-600 dark:text-stone-300">{{ $t('mapa.elNinoTexto', { fuente: elNino.fuente }) }}</p>
       </div>
     </aside>
   </div>

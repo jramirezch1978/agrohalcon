@@ -15,7 +15,7 @@ import pandas as pd
 
 from app.calculos.reglas import nivel_el_nino
 from app.fuentes.precalculado import SerieMur, serie_mur
-from app.textos.plantillas import UNIDADES, signo, texto
+from app.textos.plantillas import UNIDADES, dir_mar, signo, texto
 
 FUENTE_MUR = "MUR SST"
 SIN_DATO = "sin dato"
@@ -57,7 +57,8 @@ def indicador_el_nino(lat: float, lon: float, lang: str, u: dict, hoy: date,
         "desactualizado": (hoy - fin_semana).days > DIAS_DESACTUALIZADO,
         "aplicaAjusteCosta": en_zona_costera(lat, lon),
         "disponible": True,
-        "detalle": texto(lang, "elnino", signo=signo(anom), valor=abs(anom), semana=semana.date().isoformat()),
+        "detalle": texto(lang, "elnino", signo=signo(anom), valor=abs(anom), dir=dir_mar(lang, anom),
+                         semana=semana.date().isoformat()),
     }
 
 

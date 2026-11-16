@@ -4,6 +4,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import RainChart from '@/components/charts/RainChart.vue'
 import RainDetailSheet from '@/components/charts/RainDetailSheet.vue'
+import ValidationSummary from '@/components/charts/ValidationSummary.vue'
 import ErrorState from '@/components/ui/ErrorState.vue'
 import NasaSourceTag from '@/components/ui/NasaSourceTag.vue'
 import PageHeader from '@/components/ui/PageHeader.vue'
@@ -198,7 +199,11 @@ const signo = (v: number) => `${v > 0 ? '+' : ''}${v.toFixed(1)}`
       <article class="bosque stagger relative overflow-hidden rounded-[30px] p-6 text-white shadow-float sm:p-8" style="--i: 2">
         <History class="absolute -right-6 -bottom-8 size-48 text-white/5" aria-hidden="true" />
         <p class="text-xs font-bold tracking-[0.14em] text-brote-300 uppercase">
-          {{ datos.alerta ? $t('validacion.habriaAvisado', { fecha: fmtFecha(datos.alerta.fecha) }) : $t('validacion.habriaRecomendado') }}
+          <template v-if="datos.alerta">
+            {{ $t('validacion.habriaAvisadoAnio', { anio, fecha: fmtFecha(datos.alerta.fecha) })
+            }}{{ datos.semanasAnticipacion ? $t('validacion.semanasAntes', { n: datos.semanasAnticipacion }) : '' }}
+          </template>
+          <template v-else>{{ $t('validacion.habriaRecomendado') }}</template>
         </p>
         <p class="mt-3 max-w-[30ch] font-display text-2xl leading-tight font-bold tracking-tight text-balance sm:text-3xl">
           {{ datos.alerta?.accion ?? datos.recomendacionPrevia.accion }}
@@ -258,6 +263,9 @@ const signo = (v: number) => `${v > 0 ? '+' : ''}${v.toFixed(1)}`
           </li>
         </ol>
       </div>
+
+      <!-- Todos los años: aciertos y falsas alarmas (no solo 2017) -->
+      <ValidationSummary :anio="anio" @elegir="anio = $event" />
     </div>
   </section>
 </template>

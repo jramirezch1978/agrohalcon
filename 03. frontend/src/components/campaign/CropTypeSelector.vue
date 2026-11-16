@@ -13,7 +13,7 @@ const PERMANENTES: CultivoPermanente[] = ['mango', 'limon', 'banano']
 
 <template>
   <section class="superficie p-3 sm:p-4" :aria-label="$t('cultivo.pregunta')">
-    <p class="mb-2 px-1 text-[11px] font-bold tracking-[0.12em] text-stone-500 uppercase dark:text-stone-400">{{ $t('cultivo.pregunta') }}</p>
+    <p class="mb-2 px-1 text-xs font-bold tracking-[0.12em] text-stone-500 uppercase dark:text-stone-400">{{ $t('cultivo.pregunta') }}</p>
     <div role="radiogroup" :aria-label="$t('cultivo.pregunta')" class="grid grid-cols-2 gap-2">
       <button
         v-for="t in TIPOS"
@@ -32,7 +32,7 @@ const PERMANENTES: CultivoPermanente[] = ['mango', 'limon', 'banano']
         <component :is="t.icono" class="size-6 shrink-0" aria-hidden="true" />
         <span class="min-w-0 hyphens-auto break-words">
           <span class="block text-sm leading-tight font-bold">{{ $t(`cultivo.${t.id}`) }}</span>
-          <span class="mt-0.5 block text-[11px] leading-tight opacity-80">{{ $t(`cultivo.${t.id}Detalle`) }}</span>
+          <span class="mt-0.5 block text-xs leading-tight opacity-80">{{ $t(`cultivo.${t.id}Detalle`) }}</span>
         </span>
       </button>
     </div>

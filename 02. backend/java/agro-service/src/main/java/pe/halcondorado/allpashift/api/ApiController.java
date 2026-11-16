@@ -60,10 +60,11 @@ public class ApiController {
                                                              @RequestParam(required = false) String salinidad,
                                                              @RequestParam(required = false) String fuenteSuelo,
                                                              @RequestParam(required = false) String aguaDisponible,
-                                                             @RequestParam(required = false) String escenario) {
+                                                             @RequestParam(required = false) String escenario,
+                                                             @RequestParam(required = false) Double ninoHipotetico) {
         ErroresApi.validarCoordenadas(lat, lon);
         ErroresApi.validarLang(lang);
-        var perfil = PerfilAgricultor.de(prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible, escenario);
+        var perfil = PerfilAgricultor.de(prioridad, tipoSuelo, salinidad, fuenteSuelo, aguaDisponible, escenario, ninoHipotetico);
         return responder(reco.recomendacion(lat, lon, lang, tipoCultivo, mesSiembra, cultivo, perfil));
     }
 
@@ -131,6 +132,18 @@ public class ApiController {
     public Map<String, Object> anios(@RequestParam(defaultValue = "-5.19") double lat, @RequestParam(defaultValue = "-80.63") double lon) {
         ErroresApi.validarCoordenadas(lat, lon);
         return calculos.anios(lat, lon);
+    }
+
+    /** Todos los años desde 2016: aciertos, falsas alarmas y eventos no avisados. Se guarda 6 h (incluye el año en curso). */
+    @GetMapping("/validacion/resumen")
+    public ResponseEntity<Map<String, Object>> resumenValidacion(@RequestParam(defaultValue = "-5.19") double lat,
+                                                                 @RequestParam(defaultValue = "-80.63") double lon,
+                                                                 @RequestParam(defaultValue = "es") String lang) {
+        ErroresApi.validarCoordenadas(lat, lon);
+        ErroresApi.validarLang(lang);
+        String clave = String.format(Locale.ROOT, "valres:%.3f,%.3f:%s", lat, lon, lang);
+        return responder(reco.primeroBd("validacion_resumen", clave, Duration.ofHours(6), lat, lon, null,
+                () -> calculos.resumenValidacion(lat, lon, lang)));
     }
 
     /** Datos históricos: se guardan 30 días en la BD (no cambian). */

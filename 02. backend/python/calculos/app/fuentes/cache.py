@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import time
 from pathlib import Path
 from typing import Any
@@ -31,6 +32,6 @@ class CacheDisco:
 
     def guardar(self, clave: str, datos: Any) -> None:
         ruta = self._ruta(clave)
-        tmp = ruta.with_suffix(".tmp")
+        tmp = ruta.with_suffix(f".{os.getpid()}.tmp")   # único por proceso: con varios workers no se pisan
         tmp.write_text(json.dumps({"clave": clave, "guardado": time.time(), "datos": datos}), encoding="utf-8")
         tmp.replace(ruta)  # escritura atómica

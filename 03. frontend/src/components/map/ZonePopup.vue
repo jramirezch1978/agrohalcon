@@ -9,7 +9,7 @@ defineEmits<{ ver: [] }>()
 
 <template>
   <div class="w-56 font-sans text-tinta dark:text-white">
-    <p class="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.12em] text-stone-500 uppercase">
+    <p class="flex items-center gap-1.5 text-xs font-bold tracking-[0.12em] text-stone-500 uppercase">
       <MapPinned class="size-3.5" aria-hidden="true" />{{ $t('mapa.zona') }}
     </p>
     <p class="mt-1 font-display text-xl leading-tight font-bold tracking-tight">{{ zona.nombre }}</p>

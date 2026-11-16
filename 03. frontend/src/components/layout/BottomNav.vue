@@ -14,7 +14,7 @@ import { NAV_ITEMS } from './NavItems'
           <a
             :href="href"
             :aria-current="isActive ? 'page' : undefined"
-            class="relative flex h-14 min-w-0 flex-col items-center justify-center gap-0.5 rounded-[20px] px-0.5 text-[10px] min-[380px]:text-[10.5px] leading-tight font-semibold transition duration-200 active:scale-95"
+            class="relative flex h-14 min-w-0 flex-col items-center justify-center gap-0.5 rounded-[20px] px-0.5 text-xs min-[380px]:text-[10.5px] leading-tight font-semibold transition duration-200 active:scale-95"
             :class="isActive ? 'bg-brote-400 text-tinta' : 'text-stone-300 hover:bg-white/8 hover:text-white'"
             @click="navigate"
           >
