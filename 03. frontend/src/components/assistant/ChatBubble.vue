@@ -27,7 +27,7 @@ defineProps<{ mensaje: Pick<MensajeChat, 'rol' | 'texto' | 'fuentes' | 'respaldo
       </p>
       <p class="whitespace-pre-line">{{ mensaje.texto || $t('estados.error') }}</p>
       <div v-if="mensaje.fuentes?.length" class="mt-3 flex flex-wrap items-center gap-1.5 border-t border-tinta/6 pt-3 dark:border-white/8">
-        <span class="text-[11px] font-bold tracking-wide text-stone-500 uppercase dark:text-stone-400">{{ $t('asistente.fuentes') }}</span>
+        <span class="text-xs font-bold tracking-wide text-stone-500 uppercase dark:text-stone-400">{{ $t('asistente.fuentes') }}</span>
         <NasaSourceTag v-for="f in mensaje.fuentes" :key="f" :fuente="f" corta />
       </div>
     </div>

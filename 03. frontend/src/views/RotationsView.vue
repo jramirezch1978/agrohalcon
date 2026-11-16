@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CalendarDays, MapPin } from 'lucide-vue-next'
+import { Award, CalendarDays, ChevronDown, ChevronRight, MapPin, SlidersHorizontal } from 'lucide-vue-next'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import CropTypeSelector from '@/components/campaign/CropTypeSelector.vue'
@@ -51,6 +51,17 @@ const modoPermanente = computed(() => store.tipoCultivo === 'permanente')
 /** Esperando el plan (la respuesta que hay en pantalla aún es del modo anterior) */
 const esperandoModo = computed(() => store.cargando && modoPermanente.value !== !!rec.value?.plan)
 
+// Resumen de los ajustes opcionales (valores por defecto si el agricultor no tocó nada)
+const resumenAjustes = computed(() => {
+  const suelo = store.parcela?.tipoSuelo
+  return [
+    t(`prioridad.${store.prioridad ?? 'arriesgar_menos'}`),
+    suelo ? t('miCaso.suelo', { v: t(`suelo.${suelo}`).toLowerCase() }) : t('miCaso.sinSuelo'),
+    t('miCaso.agua', { v: t(`aguaDisponible.${store.aguaDisponible ?? 'normal'}`).toLowerCase() }),
+    t('miCaso.anio', { v: t(`escenario.${store.escenario}`).toLowerCase() }),
+  ].join(' · ')
+})
+
 // Detalle "¿Por qué este puntaje?"
 const abierta = ref<Rotacion | null>(null)
 
@@ -84,14 +95,8 @@ onUnmounted(() => (chat.sugerenciaPantalla = null))
       <div class="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
         <CropTypeSelector />
         <PlantingMonthSelector v-if="!modoPermanente" />
-        <template v-if="!modoPermanente">
-          <PrioritySelector />
-          <SoilSelector />
-          <WaterSelector />
-          <ScenarioSelector />
-        </template>
       </div>
-      <HonestyNote class="mt-3" />
+      <HonestyNote v-if="modoPermanente" class="mt-3" />
     </header>
 
     <!-- Cargando -->
@@ -112,6 +117,41 @@ onUnmounted(() => (chat.sugerenciaPantalla = null))
       <p v-if="modoPermanente" class="mb-4 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900 ring-1 ring-amber-300 dark:bg-amber-400/10 dark:text-amber-100 dark:ring-amber-400/30">
         {{ $t('plan.sinPlan') }}
       </p>
+      <!-- La respuesta, grande y arriba -->
+      <div v-if="rotaciones[0]" class="bosque stagger mb-3 flex flex-col gap-4 rounded-[28px] p-5 text-white shadow-float ring-[3px] ring-brote-400 transition-opacity sm:flex-row sm:items-center sm:p-7" :class="store.cargando && 'opacity-60'">
+        <div class="min-w-0 flex-1">
+          <p class="inline-flex items-center gap-1.5 text-xs font-bold tracking-[0.12em] text-brote-300 uppercase"><Award class="size-4" aria-hidden="true" />{{ $t('rotaciones.teRecomendamos') }}</p>
+          <h2 class="mt-1 font-display text-3xl leading-tight font-extrabold tracking-tight sm:text-4xl">{{ nombreRotacion(rotaciones[0].nombre) }}</h2>
+          <p class="mt-2 text-[15px] leading-relaxed text-white/85">{{ rotaciones[0].motivoRecomendada ?? rotaciones[0].explicacion }}</p>
+        </div>
+        <div class="flex shrink-0 items-center gap-3 sm:flex-col sm:items-end">
+          <span class="font-display text-2xl font-extrabold tabular-nums">{{ $t('rotaciones.deCien', { p: rotaciones[0].puntaje }) }}</span>
+          <button type="button" class="inline-flex min-h-11 items-center gap-1 rounded-full bg-brote-400 px-5 py-2 text-sm font-bold text-tinta transition active:scale-[0.97]" @click="abierta = rotaciones[0]">
+            {{ $t('rotaciones.porQue') }}<ChevronRight class="size-4" aria-hidden="true" />
+          </button>
+        </div>
+      </div>
+
+      <!-- Ajustes opcionales: ya tienen valores comunes, el agricultor no necesita tocarlos -->
+      <details class="group superficie mb-8 p-3 sm:p-4">
+        <summary class="flex cursor-pointer list-none items-center gap-3 rounded-2xl px-1 py-1 [&::-webkit-details-marker]:hidden">
+          <SlidersHorizontal class="size-5 shrink-0 text-agro-700 dark:text-brote-400" aria-hidden="true" />
+          <span class="min-w-0 flex-1">
+            <span class="block font-display text-[15px] font-bold">{{ $t('miCaso.titulo') }}</span>
+            <span class="block truncate text-xs text-stone-500 dark:text-stone-400">{{ resumenAjustes }}</span>
+          </span>
+          <ChevronDown class="size-5 shrink-0 text-stone-500 transition group-open:rotate-180" aria-hidden="true" />
+        </summary>
+        <p class="mt-2 px-1 text-xs text-stone-600 dark:text-stone-300">{{ $t('miCaso.ayuda') }}</p>
+        <div class="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-2">
+          <PrioritySelector />
+          <SoilSelector />
+          <WaterSelector />
+          <ScenarioSelector />
+        </div>
+      </details>
+      <HonestyNote class="-mt-5 mb-8" />
+      <SectionTitle :titulo="$t('rotaciones.compara')" class="mb-4" />
       <div class="grid grid-cols-1 gap-5 pt-2 transition-opacity md:grid-cols-3 md:items-start" :class="store.cargando && 'opacity-60'">
         <RotationCard
           v-for="(r, i) in rotaciones"

@@ -11,7 +11,11 @@ spring:
           globalcors:
             cors-configurations:
               '[/**]':
-                allowed-origins: "*"
+                # Solo la app: en el servidor la web llega por nginx (mismo origen, sin CORS); estos son la app
+                # móvil (Capacitor) y el desarrollo local. Otros orígenes: CORS_ORIGINS=a,b,c
+                allowed-origins: ${CORS_ORIGINS:https://localhost,http://localhost,capacitor://localhost,http://localhost:5173}
+                # Desarrollo desde el celular en la red local (Vite en la IP de la PC)
+                allowed-origin-patterns: "http://192.168.*:5173,http://10.*:5173"
                 allowed-methods: "*"
                 allowed-headers: "*"
           routes:

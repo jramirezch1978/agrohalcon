@@ -20,5 +20,7 @@ class PeticionCalculo(BaseModel):
     fuenteSuelo: Literal["soilgrids", "agricultor"] | None = None   # de dónde salió tipoSuelo
     aguaDisponible: Literal["poca", "normal", "suficiente"] | None = None  # agua de riego que tiene el agricultor
     escenario: Literal["seco", "normal", "lluvioso"] | None = None         # "¿y si el año viene…?" (hipotético)
+    # "¿Y si el mar sube?": anomalía HIPOTÉTICA de Niño 1+2 (°C). Reemplaza el dato real solo en rotaciones y "qué hacer".
+    ninoHipotetico: float | None = Field(default=None, ge=-2.0, le=5.0)
     # Catálogo que envía Java. Se tipa en la fase 2 (rotaciones y campaña).
     catalogo: list[dict[str, Any]] = Field(default_factory=list)

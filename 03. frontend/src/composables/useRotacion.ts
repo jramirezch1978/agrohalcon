@@ -1,8 +1,15 @@
 import { useI18n } from 'vue-i18n'
-import type { Descuento, Indicadores } from '@/types/api'
+import type { Calificacion, Descuento, Indicadores, NivelRiesgo, Rotacion } from '@/types/api'
 
 /** "Frijol - Maíz" -> "Frijol → Maíz" (muestra el orden de la rotación) */
 export const nombreRotacion = (nombre: string) => nombre.replace(/\s*-\s*/g, ' → ')
+
+/** Calificación en palabras (la manda el servidor; si no, se deduce del puntaje con los mismos cortes). */
+export const calificacionDe = (r: Pick<Rotacion, 'puntaje' | 'calificacion'>): Calificacion =>
+  r.calificacion ?? (r.puntaje >= 70 ? 'buena' : r.puntaje >= 45 ? 'regular' : 'riesgosa')
+
+/** Color de la calificación (verde / ámbar / rojo) */
+export const NIVEL_CALIFICACION: Record<Calificacion, NivelRiesgo> = { buena: 'bajo', regular: 'medio', riesgosa: 'alto' }
 
 export function useRotacion() {
   const { t } = useI18n()

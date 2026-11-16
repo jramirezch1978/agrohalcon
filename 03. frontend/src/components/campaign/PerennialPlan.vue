@@ -48,7 +48,7 @@ const esActual = (etapa: string, actual: string) => etapa.toLowerCase() === actu
           <div class="min-w-0 flex-1">
             <p class="flex flex-wrap items-center gap-2 text-xs font-bold tracking-wide text-stone-500 uppercase dark:text-stone-400">
               {{ a.etapa }}
-              <span v-if="esActual(a.etapa, plan.etapaActual)" class="rounded-full bg-agro-700 px-2 py-0.5 text-[10px] text-white dark:bg-brote-400 dark:text-tinta">{{ $t('plan.ahora') }}</span>
+              <span v-if="esActual(a.etapa, plan.etapaActual)" class="rounded-full bg-agro-700 px-2 py-0.5 text-xs text-white dark:bg-brote-400 dark:text-tinta">{{ $t('plan.ahora') }}</span>
             </p>
             <p class="mt-1 font-display text-lg leading-snug font-bold tracking-tight">{{ a.accion }}</p>
             <p class="mt-1 text-sm text-stone-700 dark:text-stone-300">{{ a.motivo }}</p>
