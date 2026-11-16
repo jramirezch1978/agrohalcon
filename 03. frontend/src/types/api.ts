@@ -30,6 +30,19 @@ export interface Indicador {
   detalle?: string
   /** Opcional: aviso de calidad del dato (p. ej. dato satelital atrasado) */
   aviso?: string
+  /** Solo El Niño: contraste del dato MUR SST con el índice semanal de NOAA (no es NASA; solo dice si concuerda) */
+  contraste?: ContrasteNino
+}
+
+export interface ContrasteNino {
+  fuente: string
+  url: string
+  semana: string
+  anomalia: number
+  sst: number
+  diferencia: number
+  concuerda: boolean
+  nota?: string
 }
 
 /** Un indicador puede faltar si no hay dato real (p. ej. El Niño sin MUR SST): nunca se rellena. */
@@ -51,10 +64,16 @@ export interface DescuentoSuelo {
   fuente: string
 }
 
+export type Calificacion = 'buena' | 'regular' | 'riesgosa'
+
 export interface Rotacion {
   id: number
   nombre: string
   puntaje: number // 0 - 100
+  /** Lo que el agricultor lee en vez del número (mismos cortes: >= 70 buena, 45-69 regular, < 45 riesgosa) */
+  calificacion?: Calificacion
+  /** true = la rotación de siempre en la zona (p. ej. Arroz - Arroz), mostrada para comparar */
+  tradicional?: boolean
   riesgo: NivelRiesgo
   explicacion: string
   /** Opcional: uso de agua estimado */
@@ -98,6 +117,13 @@ export interface PerfilRecomendacion {
   escenario?: Escenario
   /** Multiplicador de la lluvia normal del escenario (1 = normal) */
   factorLluvia?: number
+  /** Agua de riego con la que se calculó (el escenario seco la baja un nivel, el lluvioso la sube) */
+  aguaConEscenario?: AguaDisponible | null
+  /** true = el escenario no cambia ningún mes ni puntaje (y notaEscenario explica por qué) */
+  escenarioSinEfecto?: boolean
+  notaEscenario?: string | null
+  /** Anomalía hipotética de El Niño usada en el simulador (null = dato real) */
+  ninoHipotetico?: number | null
 }
 
 /** Tipo de suelo propuesto por SoilGrids (GET /api/suelo). tipoSuelo null = sin dato */
@@ -188,6 +214,8 @@ export interface OpcionesRecomendacion {
   fuenteSuelo?: FuenteSuelo
   aguaDisponible?: AguaDisponible
   escenario?: Escenario
+  /** "¿Y si el mar sube?": anomalía HIPOTÉTICA de Niño 1+2 en °C (-2 a 5) */
+  ninoHipotetico?: number
 }
 
 export interface ZonaRiesgo {
@@ -310,4 +338,31 @@ export interface RespuestaAsistente {
   respuesta: string
   /** Solo las fuentes que trae la recomendación calculada */
   fuentes: FuenteDato[]
+}
+
+/** GET /api/validacion/resumen: aciertos y falsas alarmas de todos los años (no solo 2017) */
+export type ResultadoAnio = 'acierto' | 'falsa_alarma' | 'no_avisado' | 'correcto' | 'pendiente'
+
+export interface FilaResumenValidacion {
+  anio: number
+  alertaDrenaje: { fecha: string; valor: number | null; fuente: string } | null
+  vigilar: string | null
+  lluviaTemporada: number | null
+  normalTemporada: number | null
+  veces: number | null
+  evento: boolean | null
+  fuenteLluvia: string
+  resultado: ResultadoAnio
+}
+
+export interface ResumenValidacion {
+  lat: number
+  lon: number
+  filas: FilaResumenValidacion[]
+  cuenta: Record<ResultadoAnio, number>
+  /** Fracción de eventos que se avisaron (0-1) */
+  deteccion: number | null
+  /** Fracción de alertas de drenaje que fueron falsas (0-1) */
+  falsasAlarmas: number | null
+  definicionEvento: string
 }

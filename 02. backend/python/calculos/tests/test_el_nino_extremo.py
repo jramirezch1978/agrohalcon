@@ -33,7 +33,7 @@ def test_el_nino_extraordinario_resta_35_a_la_rotacion(umbrales):
     d = next(x for x in r["descuentos"] if x["regla"] == "el_nino_extremo")
     assert (d["indicador"], d["puntos"], d["fuente"], d["valor"]) == ("elNino", -35, "MUR SST", 6.0)
     assert r["riesgoClimatico"] == base["riesgoClimatico"] - 35
-    assert "El Niño" in r["explicacion"] and "+6.0 °C" in r["explicacion"]
+    assert "El Niño" in r["explicacion"] and "6.0 °C más caliente" in r["explicacion"]
 
 
 def test_justo_en_el_umbral_cuenta_y_por_debajo_no(umbrales):
@@ -57,11 +57,15 @@ def test_si_el_yaml_no_trae_el_umbral_la_regla_queda_apagada(umbrales):
     assert nino_extremo(nino(6.0), *PIURA, u) is None  # un UMBRALES_PATH viejo sigue funcionando
 
 
-def test_todas_las_rotaciones_pierden_lo_mismo_y_el_orden_no_cambia(umbrales):
+def test_todas_las_rotaciones_pierden_al_menos_35_y_siguen_ordenadas(umbrales):
     sin = generar_rotaciones(CAT, "2026-12", clima_normal(), indicadores(), *PIURA, "es", umbrales)
     con = generar_rotaciones(CAT, "2026-12", clima_normal(), indicadores(nino=nino(6.0)), *PIURA, "es", umbrales)
     antes = {r["nombre"]: r["riesgoClimatico"] for r in sin}
-    assert len(con) == len(sin) and all(r["riesgoClimatico"] == max(0, antes[r["nombre"]] - 35) for r in con)  # todas pierden 35 (mínimo 0)
+    assert len(con) == len(sin)
+    # Todas llevan el descuento de -35. Además El Niño sube el riesgo de lluvia de enero-abril (meses "medio"),
+    # así que pueden perder algo más y cambiar de orden entre ellas.
+    assert all(any(d["regla"] == "el_nino_extremo" and d["puntos"] == -35 for d in r["descuentos"]) for r in con)
+    assert all(r["riesgoClimatico"] <= max(0, antes[r["nombre"]] - 35) for r in con if r["nombre"] in antes)
     assert [r["nombre"] for r in con] == [r["nombre"] for r in sorted(con, key=lambda r: -r["puntaje"])]  # y siguen ordenadas
 
 
@@ -78,4 +82,4 @@ def test_la_app_ya_no_pide_drenar_y_a_la_vez_muestra_riesgo_bajo(umbrales):
 
 def test_explicacion_en_ingles(umbrales):
     r = evaluar_rotacion([ARROZ], "2026-12", clima_normal(), indicadores(nino=nino(6.0)), *PIURA, "en", umbrales)
-    assert "extraordinary El Niño" in r["explicacion"]
+    assert "El Niño: the sea is 6.0 °C warmer" in r["explicacion"]

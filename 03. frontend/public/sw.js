@@ -2,11 +2,25 @@
 // - Navegación: red primero, si falla usa index.html en caché.
 // - Archivos estáticos (JS, CSS, fuentes, íconos): caché primero.
 // - API y mapas: siempre red (la última recomendación se guarda en el dispositivo).
-const CACHE = 'allpashift-v2'
+// - Al instalarse guarda TODO el build (precache.json lo genera vite.config.ts): cualquier pantalla abre sin internet.
+const CACHE = 'allpashift-v3'
 const BASE = ['./', './index.html', './manifest.webmanifest', './favicon.svg']
 
+/** Lista de archivos del build; si falta (modo dev), solo la base. Un archivo que falla no impide instalar. */
+async function precachear(c) {
+  await c.addAll(BASE)
+  try {
+    const r = await fetch('./precache.json', { cache: 'no-store' })
+    if (!r.ok) return
+    const archivos = await r.json()
+    await Promise.allSettled(archivos.map((f) => c.add(f)))
+  } catch {
+    /* sin lista: se guardan al usarse, como antes */
+  }
+}
+
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(BASE)).then(() => self.skipWaiting()))
+  e.waitUntil(caches.open(CACHE).then(precachear).then(() => self.skipWaiting()))
 })
 
 self.addEventListener('activate', (e) => {

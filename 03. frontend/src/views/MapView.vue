@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { MotivoUbicacion } from '@/services/ubicacion'
 import { ArrowRight, Crosshair, Info, LoaderCircle, Map as IconoMapa, MapPin, Satellite, Search, X } from 'lucide-vue-next'
-import { getCurrentInstance, h, onBeforeUnmount, onMounted, ref, render, shallowRef, watch } from 'vue'
+import { computed, getCurrentInstance, h, onBeforeUnmount, onMounted, ref, render, shallowRef, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import MapLegend from '@/components/map/MapLegend.vue'
@@ -114,6 +114,7 @@ function analizar(lat: number, lon: number, nombre?: string) {
 // Zonas de riesgo (GET /api/mapa?region=piura)
 // ---------------------------------------------------------------------------
 const errorZonas = ref(false)
+const leyendaAbierta = ref(false)
 const elNino = ref<MapaRiesgo['elNino']>(null)
 
 /** Contenido del popup como componente Vue (con i18n), montado en un div para Leaflet. */
@@ -139,7 +140,7 @@ async function dibujarZonas() {
       // bubblingMouseEvents: false -> tocar una zona no dispara el clic del mapa (que marcaría "Mi parcela")
       L.circle([z.lat, z.lon], { radius: 11000, color, weight: 2.5, opacity: 0.95, fillColor: color, fillOpacity: 0.3, bubblingMouseEvents: false })
         .bindTooltip(`${z.nombre} · ${etiqueta}`, { className: 'zona-tooltip', direction: 'top', sticky: true })
-        .bindPopup(() => contenidoPopup(z), { className: 'zona-popup', closeButton: true, autoPanPadding: [24, 120] })
+        .bindPopup(() => contenidoPopup(z), { className: 'zona-popup', closeButton: true, maxWidth: 260, autoPanPaddingTopLeft: [16, 96], autoPanPaddingBottomRight: [16, 120] })
         .addTo(m)
     }
   } catch {
@@ -154,6 +155,7 @@ const consulta = ref('')
 const resultados = ref<LugarEncontrado[]>([])
 const buscando = ref(false)
 const sinResultados = ref(false)
+const hayResultados = computed(() => resultados.value.length > 0 || sinResultados.value)
 let temporizador: number | undefined
 let controlador: AbortController | undefined
 
@@ -230,11 +232,23 @@ async function usarMiUbicacion() {
 // ---------------------------------------------------------------------------
 onMounted(() => {
   const inicio = store.parcela ?? PARCELA_PIURA
-  const m = L.map(contenedor.value!, { zoomControl: false, worldCopyJump: true }).setView([inicio.lat, inicio.lon], 9)
+  // Solo zonas que existen: latitud entre -85 y 85 (no se arrastra más allá de los polos)
+  const m = L.map(contenedor.value!, {
+    zoomControl: false,
+    worldCopyJump: true,
+    minZoom: 2,
+    maxBounds: [[-85, -540], [85, 540]],
+    maxBoundsViscosity: 1,
+  }).setView([inicio.lat, inicio.lon], 9)
   L.control.zoom({ position: 'bottomright' }).addTo(m)
   mapa.value = m
   ponerVista(vista.value)
-  m.on('click', (e: L.LeafletMouseEvent) => marcarParcela(e.latlng.lat, e.latlng.lng))
+  // wrap(): la longitud siempre entre -180 y 180 aunque se haya dado la vuelta al mundo
+  m.on('click', (e: L.LeafletMouseEvent) => {
+    const { lat, lng } = e.latlng.wrap()
+    if (Math.abs(lat) <= 85) marcarParcela(lat, lng)
+  })
+  m.on('popupopen', () => (leyendaAbierta.value = false))
   dibujarZonas()
   if (store.parcela) marcarParcela(store.parcela.lat, store.parcela.lon, store.parcela.nombre)
 })
@@ -254,7 +268,7 @@ onBeforeUnmount(() => {
     <div ref="contenedor" class="absolute inset-0 z-0" role="application" :aria-label="$t('mapa.tocaMapa')" />
 
     <!-- Buscador -->
-    <div class="absolute inset-x-3 top-3 z-[400] mx-auto max-w-xl lg:top-6">
+    <div class="absolute inset-x-3 top-3 z-[460] mx-auto max-w-xl lg:top-6">
       <div class="superficie flex items-center gap-2 !rounded-2xl px-4 shadow-float">
         <Search class="size-5 shrink-0 text-stone-400" aria-hidden="true" />
         <input
@@ -263,7 +277,7 @@ onBeforeUnmount(() => {
           enterkeyhint="search"
           :placeholder="$t('mapa.buscarLugar')"
           :aria-label="$t('mapa.buscarLugar')"
-          class="h-14 min-w-0 flex-1 bg-transparent text-[16px] outline-none placeholder:text-stone-400"
+          class="h-14 min-w-0 flex-1 bg-transparent text-[16px] outline-none placeholder:text-stone-400 [&::-webkit-search-cancel-button]:hidden"
           @keydown.enter="alPresionarEnter"
         />
         <LoaderCircle v-if="buscando" class="size-5 animate-spin text-stone-400" :aria-label="$t('mapa.buscando')" />
@@ -271,7 +285,7 @@ onBeforeUnmount(() => {
           <X class="size-4" aria-hidden="true" />
         </button>
       </div>
-      <ul v-if="resultados.length || sinResultados" class="superficie mt-2 overflow-hidden !rounded-2xl shadow-float">
+      <ul v-if="resultados.length || sinResultados" class="superficie mt-2 max-h-[50dvh] overflow-y-auto !rounded-2xl shadow-float">
         <li v-if="sinResultados" class="px-4 py-3 text-sm text-stone-500">{{ $t('mapa.sinResultados') }}</li>
         <li v-for="r in resultados" :key="`${r.lat},${r.lon}`">
           <button type="button" class="flex min-h-14 w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-arena dark:hover:bg-white/5" @click="irA(r)">
@@ -294,10 +308,10 @@ onBeforeUnmount(() => {
     </p>
 
     <!-- Leyenda (esquina superior izquierda) -->
-    <MapLegend :el-nino="elNino" class="absolute top-[5.5rem] left-3 z-[400] lg:top-28 lg:left-6" />
+    <MapLegend v-show="!hayResultados" v-model:abierta="leyendaAbierta" :el-nino="elNino" class="absolute top-[5.5rem] left-3 z-[400] lg:top-28 lg:left-6" />
 
     <!-- Controles flotantes (esquina superior derecha) -->
-    <div class="absolute top-[5.5rem] right-3 z-[400] flex flex-col items-end gap-2 lg:top-28 lg:right-6">
+    <div v-show="!hayResultados" class="absolute top-[5.5rem] right-3 z-[400] flex flex-col items-end gap-2 lg:top-28 lg:right-6">
       <button
         type="button"
         class="flex min-h-12 items-center gap-2 rounded-2xl bg-agro-700 px-4 text-sm font-semibold text-white shadow-float transition hover:bg-agro-800 active:scale-95 disabled:opacity-80 dark:bg-brote-400 dark:text-tinta"
@@ -333,14 +347,14 @@ onBeforeUnmount(() => {
 
     <!-- Tarjeta inferior: "Mi parcela" -->
     <Transition enter-from-class="translate-y-6 opacity-0" leave-to-class="translate-y-6 opacity-0" enter-active-class="transition duration-300" leave-active-class="transition duration-200">
-      <div v-if="punto" class="absolute inset-x-3 bottom-[calc(6.5rem+env(safe-area-inset-bottom))] z-[450] mx-auto max-w-md lg:bottom-6">
+      <div v-if="punto && !hayResultados" class="absolute inset-x-3 bottom-[calc(6.5rem+env(safe-area-inset-bottom))] z-[450] mx-auto max-w-md lg:bottom-6">
         <div class="superficie p-4 shadow-float">
           <div class="flex items-start gap-3">
             <span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-tinta text-brote-300 dark:bg-brote-400 dark:text-tinta">
               <MapPin class="size-5" aria-hidden="true" />
             </span>
             <div class="min-w-0 flex-1">
-              <p class="text-[11px] font-bold tracking-[0.12em] text-stone-500 uppercase">{{ $t('mapa.miParcela') }}</p>
+              <p class="text-xs font-bold tracking-[0.12em] text-stone-500 uppercase">{{ $t('mapa.miParcela') }}</p>
               <p class="truncate font-display text-lg font-bold tracking-tight">
                 <span v-if="punto.buscandoNombre" class="inline-block h-5 w-32 animate-pulse rounded bg-tinta/8 align-middle dark:bg-white/10" />
                 <template v-else>{{ punto.nombre ?? $t('mapa.puntoElegido') }}</template>

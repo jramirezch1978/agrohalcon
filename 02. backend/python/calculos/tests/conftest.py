@@ -1,9 +1,12 @@
 """Respuestas falsas con la MISMA forma que la NASA POWER API real (verificada en nov. 2026)."""
 from __future__ import annotations
 
+import os
 from datetime import date, timedelta
 
 import pytest
+
+os.environ["NOAA_CONTRASTE"] = "0"   # los tests no salen a internet (contraste con NOAA apagado)
 
 from app.fuentes.nasa_power import MESES_POWER
 

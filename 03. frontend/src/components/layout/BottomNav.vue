@@ -14,12 +14,12 @@ import { NAV_ITEMS } from './NavItems'
           <a
             :href="href"
             :aria-current="isActive ? 'page' : undefined"
-            class="relative flex h-14 flex-col items-center justify-center gap-0.5 rounded-[20px] text-[10.5px] leading-tight font-semibold transition duration-200 active:scale-95"
+            class="relative flex h-14 min-w-0 flex-col items-center justify-center gap-0.5 rounded-[20px] px-0.5 text-xs min-[380px]:text-[10.5px] leading-tight font-semibold transition duration-200 active:scale-95"
             :class="isActive ? 'bg-brote-400 text-tinta' : 'text-stone-300 hover:bg-white/8 hover:text-white'"
             @click="navigate"
           >
             <component :is="item.icono" class="size-[22px]" :stroke-width="isActive ? 2.4 : 2" aria-hidden="true" />
-            <span>{{ $t(item.clave) }}</span>
+            <span class="max-w-full text-center leading-[1.1]">{{ $t(item.clave) }}</span>
           </a>
         </RouterLink>
       </li>

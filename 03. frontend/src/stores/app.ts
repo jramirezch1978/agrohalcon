@@ -167,6 +167,8 @@ export const useAppStore = defineStore('app', () => {
   /** "¿Y si el año viene seco o lluvioso?" (escenario hipotético; normal = sin cambio) */
   const escenario = ref<Escenario>(leer<Escenario>(CLAVES.escenario) ?? 'normal')
   watch(escenario, (e) => guardar(CLAVES.escenario, e))
+  /** "¿Y si el mar sube?": anomalía HIPOTÉTICA de El Niño (°C). null = dato real. No se guarda: es solo para explorar. */
+  const ninoHipotetico = ref<number | null>(null)
 
   /** Suelo de la parcela: lo elige el agricultor (o acepta la propuesta de SoilGrids) */
   function elegirSuelo(cambio: { tipoSuelo?: TipoSuelo; salinidad?: Salinidad; fuenteSuelo?: FuenteSuelo }) {
@@ -184,6 +186,7 @@ export const useAppStore = defineStore('app', () => {
     if (prioridad.value) o.prioridad = prioridad.value
     if (aguaDisponible.value) o.aguaDisponible = aguaDisponible.value
     if (escenario.value !== 'normal') o.escenario = escenario.value
+    if (ninoHipotetico.value !== null) o.ninoHipotetico = ninoHipotetico.value
     if (p?.tipoSuelo) {
       o.tipoSuelo = p.tipoSuelo
       o.fuenteSuelo = p.fuenteSuelo ?? 'agricultor'
@@ -284,6 +287,7 @@ export const useAppStore = defineStore('app', () => {
     prioridad,
     aguaDisponible,
     escenario,
+    ninoHipotetico,
     elegirSuelo,
     opcionesCultivo,
     cargando,

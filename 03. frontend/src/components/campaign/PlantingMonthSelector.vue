@@ -14,7 +14,7 @@ const OPCIONES = [
 
 <template>
   <section class="superficie p-3 sm:p-4">
-    <p id="titulo-mes-siembra" class="mb-2 flex items-center gap-1.5 px-1 text-[11px] font-bold tracking-[0.12em] text-stone-500 uppercase dark:text-stone-400">
+    <p id="titulo-mes-siembra" class="mb-2 flex items-center gap-1.5 px-1 text-xs font-bold tracking-[0.12em] text-stone-500 uppercase dark:text-stone-400">
       <CalendarClock class="size-3.5" aria-hidden="true" />{{ $t('campana.mesSiembra') }}
     </p>
     <div role="radiogroup" aria-labelledby="titulo-mes-siembra" class="grid grid-cols-3 gap-2">
@@ -34,7 +34,7 @@ const OPCIONES = [
         @click="store.miCultivo.mesSiembraOffset = o.offset"
       >
         <span class="font-display text-base leading-tight font-bold capitalize">{{ largo(mesDesdeHoy(o.offset)) }}</span>
-        <span class="text-[11px] opacity-75">{{ $t(o.clave) }}</span>
+        <span class="text-xs opacity-75">{{ $t(o.clave) }}</span>
       </button>
     </div>
   </section>

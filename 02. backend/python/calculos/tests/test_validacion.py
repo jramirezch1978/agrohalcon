@@ -40,7 +40,7 @@ def test_2017_sin_mur_lluvia_imerg_y_alerta_solo_lluvia(cliente_api, con_imerg):
         assert r["series"][k]["fuente"] == "sin dato" and r["series"][k]["valores"] == [None] * 12
     # Enero: 57.3 vs 19.1 → +200 % (alto) → alerta al cierre de enero, solo con lluvia
     assert r["alerta"]["fecha"] == "2017-01-31" and r["alerta"]["fuente"] == "GPM IMERG"
-    assert r["alerta"]["nota"] == "Alerta calculada solo con lluvia; con MUR SST sería más anticipada"
+    assert r["alerta"]["nota"] == "Alerta calculada solo con la lluvia; con la temperatura del mar llegaría antes"
     assert r["mesLluviaMaxima"] == "2017-03" and r["semanasAnticipacion"] == 4
     assert r["evento"]["nombre"] == "El Niño costero 2017" and r["realidad"]["fuente"] == "INDECI"
     # Compatibilidad con el frontend actual
