@@ -39,16 +39,19 @@ Necesitamos: **API Java 17 (Spring Boot)** + **servicio Python (FastAPI)** + **w
 
 - **Hetzner CPX32** (4 vCPU AMD, 8 GB RAM, 160 GB) · Helsinki · Rocky Linux 9.8 · nombre `allpashift-vps` · IP pública `2.29.101.199` · ~US$36/mes por hora.
 - Docker 29.9.3 + Compose v5.7.1 · contexto Docker `allpashift-vps` (ssh://root@2.29.101.199) · firewall Hetzner aplicado.
-- En línea: http://2.29.101.199 (web), `/api/agro/health`, `/api/climate/health`.
+- En línea: **https://allpashift.crisaor.org** (web, HTTPS), `/api/agro/health`, `/api/climate/health`. La IP `http://2.29.101.199` sigue activa solo por HTTP, para la app móvil ya publicada.
 
-## Pendiente: HTTPS con Cloudflare (decisión de Jhonny)
+## HTTPS con Cloudflare (hecho el 2026-11-15)
 
-1. Conseguir un dominio (Cloudflare no regala dominios: comprarlo en Cloudflare Registrar ~US$10/año o en otro registrador y apuntar los DNS a Cloudflare).
-2. En Cloudflare: registro **A** `allpashift.<dominio>` → `2.29.101.199` con **proxy activado (nube naranja)**.
-3. SSL/TLS: modo **Full** con certificado *Origin* de Cloudflare instalado en el Nginx del frontend (o **Flexible** como solución rápida para la demo).
-4. Firewall Hetzner: dejar 80/443 abiertos (idealmente solo a los rangos IP de Cloudflare) y 22 para el despliegue.
-5. Actualizar `05. mobile/capacitor.config.json` → `https://allpashift.<dominio>` y quitar `cleartext` / `usesCleartextTraffic`.
-6. Alternativa sin abrir puertos: **Cloudflare Tunnel** (`cloudflared` en el VPS).
+Dominio: **https://allpashift.crisaor.org**. Se reutilizó el dominio `crisaor.org` que ya estaba en Cloudflare (no se compró uno nuevo). Paso a paso en [`deploy/vps/HTTPS_CLOUDFLARE.md`](../deploy/vps/HTTPS_CLOUDFLARE.md).
+
+1. En Cloudflare: registro **A** `allpashift` → `2.29.101.199` con **proxy activado (nube naranja)**.
+2. SSL/TLS: modo **Full (strict)**.
+3. Certificado de **Let's Encrypt** emitido en el servidor por DNS con la API de Cloudflare (renovación automática) y montado en el Nginx del frontend (puerto 443).
+4. Nginx: el dominio por HTTP redirige a HTTPS; la IP por HTTP **no** se redirige, para no romper el APK y el iOS ya publicados.
+5. Despliegue: `deploy.bat frontend --force`.
+
+**Pendiente:** publicar un APK/iOS nuevo con `VITE_API_URL=https://allpashift.crisaor.org` en `03. frontend/.env.mobile` y quitar `allowMixedContent` de `capacitor.config.ts` (Android) y `NSAllowsArbitraryLoads` (iOS).
 
 ## Fuentes
 - [Oracle Cloud Always Free Tier Cut 2026](https://braindetox.kr/en/posts/oracle_always_free_tier_reduced_2026.html)

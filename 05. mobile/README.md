@@ -13,7 +13,7 @@ Los archivos web van dentro de la app y esta llama a la API Java del servidor (r
 - Barra de estado verde `#0f2a1f` con texto claro; pantalla de inicio (splash) con el logo.
 - Botón "atrás" de Android: vuelve a la pantalla anterior; en la portada cierra la app.
 - Ubicación con GPS (permiso explicado en iOS), navegación inferior y áreas seguras (notch).
-- API: `VITE_API_URL=http://2.29.101.199` (`03. frontend/.env.mobile`). Cuando haya HTTPS (Cloudflare) se cambia aquí y se quita `usesCleartextTraffic` / `NSAllowsArbitraryLoads`.
+- API: `VITE_API_URL=http://2.29.101.199` (`03. frontend/.env.mobile`): el APK/iOS ya publicados usan la IP por HTTP, que sigue activa. El HTTPS ya existe (`https://allpashift.crisaor.org`): para el próximo APK/iOS se cambia aquí a esa URL y se quita `usesCleartextTraffic` / `NSAllowsArbitraryLoads`.
 
 ## Volver a generar
 ```bash

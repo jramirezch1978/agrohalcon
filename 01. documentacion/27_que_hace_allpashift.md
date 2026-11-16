@@ -55,7 +55,7 @@ El agricultor necesita saber antes cuál es el riesgo y qué alternativa le conv
 | API | Java 17 + Spring Boot (api-gateway + agro-service) |
 | Datos NASA y riesgo | Python + FastAPI (climate-service) |
 | Base de datos | PostgreSQL 17 (modelo en [26_modelo_base_de_datos](26_modelo_base_de_datos.md)) |
-| Infraestructura | Docker en un VPS Hetzner: http://2.29.101.199 |
+| Infraestructura | Docker en un VPS Hetzner: https://allpashift.crisaor.org |
 
 ## Uso de IA (declarado)
 

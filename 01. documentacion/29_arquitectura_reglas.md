@@ -65,7 +65,7 @@
 
 ## Estado frente a las reglas (2026-11-14)
 
-- ✅ Web → `/api/...` → agro-service (Java) → servicio de cálculos (Python): funcionando en http://2.29.101.199, desplegado desde `develop`.
+- ✅ Web → `/api/...` → agro-service (Java) → servicio de cálculos (Python): funcionando en https://allpashift.crisaor.org, desplegado desde `develop`.
 - ✅ Java no descarga de la NASA: lo hace Python. Java lee primero `agro.consultas` y graba `agro.consultas`, `nasa.datos_nasa` y `agro.riesgo_mensual`.
 - ✅ Python no se conecta a PostgreSQL en el servidor: se quitó `DATABASE_URL` del climate-service.
 - ⚠️ **Hay dos servicios de cálculo en Python:** `calculos` (Sheila, puerto 8001), que es el que usa hoy agro-service, y `climate-service` (David, puerto 8000). El equipo debe decidir con cuál se queda.
