@@ -94,7 +94,7 @@ What the farmer sees:
 |---|---|
 | 💻 **Source code** | https://github.com/jramirezch1978/allpashift |
 | 🎬 **Demo video** | https://www.youtube.com/watch?v=3UVyc3Y5eFw |
-| 🌐 **Live app** (team server) | http://2.29.101.199 |
+| 🌐 **Live app** (team server, HTTPS) | https://allpashift.crisaor.org |
 | 📱 **Android app** (APK 1.0.0, signed, release) | [allpashift-1.0.0.apk](05.%20mobile/release/android/allpashift-1.0.0.apk) |
 | 🍎 **iOS project** (Xcode) | [allpashift-ios-xcode.zip](05.%20mobile/release/ios/allpashift-ios-xcode.zip) |
 
